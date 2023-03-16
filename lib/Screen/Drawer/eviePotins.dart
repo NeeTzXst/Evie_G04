@@ -53,7 +53,7 @@ class _eviePointsState extends State<eviePoints> {
         centerTitle: false,
         elevation: 2,
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
           child: Align(
