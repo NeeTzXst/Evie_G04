@@ -466,7 +466,7 @@ class _eviePointsState extends State<eviePoints> {
                                               color: Colors.transparent,
                                               width: 1,
                                             ),
-                                            borderRadius: 10,
+                                            borderRadius: 10, decoration: BoxDecoration(), 
                                           ),
                                         ),
                                       )

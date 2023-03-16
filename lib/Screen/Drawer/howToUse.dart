@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/homePage.dart';
+import 'package:myapp/Screen/letyouin.dart';
 import 'package:myapp/Widget/howToUsePage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -46,7 +47,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Welcome to Evie',
                   subtitle: "Let's get to know what you can do with evie",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -54,7 +55,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Nerby charging station',
                   subtitle: "Explore charging spot and parking lots around you",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -62,7 +63,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Choose your own spots',
                   subtitle: "Up to you. Charging or Parking?",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -70,7 +71,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Use QR code',
                   subtitle: "Use this QR Code to access your spots",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -79,7 +80,7 @@ class _howToUseState extends State<howToUse> {
                   subtitle:
                       "Receive special privileges and great deals from us",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
               ],
             ),

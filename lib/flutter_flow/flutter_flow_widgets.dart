@@ -17,7 +17,7 @@ class FFButtonOptions {
     this.iconColor,
     this.iconPadding,
     this.borderRadius,
-    this.borderSide,
+    this.borderSide, required BoxDecoration decoration,
   });
 
   final TextStyle? textStyle;
