@@ -1,16 +1,14 @@
-# myapp
+# Evie_Project
+Evie is an ev car application platform that will help you to book car park and charging station. 
 
-A new Flutter project.
+<b>Website Dev</b><br/>
+- Maythaporn Klangburee<br/>
+- Pitawat kankaew<br/>
+- Suphang Kraisopa<br/>
+- Thanakom Worathanyathorn<br/>
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<b>Application Dev</b><br/>
+- Pattima Sommai<<br/>
+- Wipop kornpitak<br/>
+- Wiyada Kanjanadee<br/>
+- Aueangkoon Klatithong
