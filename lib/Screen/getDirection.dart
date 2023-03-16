@@ -83,7 +83,7 @@ class _getDirectionState extends State<getDirection> {
           ),
         ),
         title: Text(
-          "Get Direction",
+          "Get Directions",
           style: headerText,
         ),
       ),
