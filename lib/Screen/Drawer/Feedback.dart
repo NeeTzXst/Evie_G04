@@ -134,19 +134,18 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0)),
                       hintText: 'Search topics',
-                      hintStyle:
-                          FlutterFlowTheme.of(context).bodyText1.override(
-                                fontFamily: 'Montserrat',
-                                color: Color(0xFF9E9E9E),
-                                fontSize: 18,
-                              ),
-                      labelStyle:
-                          FlutterFlowTheme.of(context).bodyText1.override(
-                                fontFamily: 'Montserrat',
-                                color: Color(0xFF9E9E9E),
-                                fontSize: 18,
-                              ),
+                      hintStyle: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Montserrat',
+                        color: Color(0xFF9E9E9E),
+                      ),
                     ),
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF1A74E2),
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                        ),
                     validator: (value) {
                       if (value!.isEmpty) {
                         print(value);
@@ -189,7 +188,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                         color: Colors.transparent,
                         width: 1,
                       ),
-                      borderRadius: 8, decoration: BoxDecoration(), 
+                      borderRadius: 8,
+                      decoration: BoxDecoration(),
                     ),
                   ),
                 ),
@@ -222,7 +222,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                         color: Colors.transparent,
                         width: 1,
                       ),
-                      borderRadius: 8, decoration: BoxDecoration(), 
+                      borderRadius: 8,
+                      decoration: BoxDecoration(),
                     ),
                   ),
                 ),
@@ -230,8 +231,15 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(30, 30, 20, 0),
                   child: TextFormField(
                     maxLines: 10,
+                    textCapitalization: TextCapitalization.none,
+                    obscureText: false,
                     decoration: InputDecoration(
                       hintText: 'Put your feedback here!',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF9E9E9E),
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xff6bcfff))),
                       filled: true,
@@ -239,8 +247,9 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                     ),
                     style: FlutterFlowTheme.of(context).bodyText1.override(
                           fontFamily: 'Montserrat',
-                          color: Color(0xFF9E9E9E),
+                          color: Colors.black,
                           fontSize: 16,
+                          fontWeight: FontWeight.normal,
                         ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -248,6 +257,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                       }
                       return null;
                     },
+                    keyboardType: TextInputType.text,
                     onSaved: (value) {
                       // Do something with the feedback value
                     },

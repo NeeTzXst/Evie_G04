@@ -77,7 +77,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
         centerTitle: false,
         elevation: 2,
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
           child: Column(
@@ -689,6 +689,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                       width: 1,
                     ),
                     borderRadius: 10,
+                    decoration: BoxDecoration(),
                   ),
                 ),
               ),
