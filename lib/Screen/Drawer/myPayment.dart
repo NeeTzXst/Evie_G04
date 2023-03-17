@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Widget/styles.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';

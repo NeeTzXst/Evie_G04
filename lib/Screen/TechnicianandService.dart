@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import 'Drawer/helpCenter.dart';
-
-// import 'technicianand_service_model.dart';
-// export 'technicianand_service_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +9,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,34 +27,8 @@ class TechnicianandServiceWidget extends StatefulWidget {
 
 class _TechnicianandServiceWidgetState
     extends State<TechnicianandServiceWidget> {
-  // late TechnicianandServiceModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    // _model = createModel(context, () => TechnicianandServiceModel());
-
-    // On page load action.
-    // SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //   context.pushNamed('HelpCenter');
-    // });
-  }
-
-  void dispose() {
-    _unfocusNode.dispose();
-    super.dispose();
-  }
-
-  // @override
-  // void dispose() {
-  //   _model.dispose();
-
-  //   _unfocusNode.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
