@@ -60,6 +60,7 @@ dependencies:
   timeago: ^3.3.0
   json_path: ^0.4.2
   auto_size_text: ^3.0.0
+  google_sign_in: ^6.0.2
 
 dev_dependencies:
   flutter_test:

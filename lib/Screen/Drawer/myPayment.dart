@@ -70,21 +70,20 @@ class _MyWidgetState extends State<myPayment> {
                   },
                   text: 'Add Credit Card\n',
                   options: FFButtonOptions(
-                      width: 330,
-                      height: 55,
-                      color: Color.fromARGB(216, 107, 208, 255),
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Montserrat',
-                                color: Color(0xFF1A74E2),
-                                fontSize: 20,
-                              ),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
-                      ),
-                      borderRadius: 10,
-                      decoration: BoxDecoration()),
+                    width: 330,
+                    height: 55,
+                    color: Color.fromARGB(216, 107, 208, 255),
+                    textStyle: FlutterFlowTheme.of(context).subtitle2.override(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF1A74E2),
+                          fontSize: 20,
+                        ),
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 1,
+                    ),
+                    borderRadius: 10, decoration: BoxDecoration(),
+                  ),
                 ),
               ],
             ),
