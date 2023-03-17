@@ -678,10 +678,10 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                   options: FFButtonOptions(
                     width: 330,
                     height: 55,
-                    color: Color.fromARGB(255, 107, 208, 255),
+                    color: Color(0xFF6BCFFF),
                     textStyle: TextStyle(
                       fontFamily: 'Montserrat',
-                      color: Color.fromARGB(255, 26, 116, 226),
+                      color: Color(0xFF1A74E2),
                       fontSize: 20,
                     ),
                     borderSide: BorderSide(
