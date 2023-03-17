@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Widget/styles.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 import '../homePage.dart';
 
 class eviePoints extends StatefulWidget {
-  const eviePoints({super.key});
-
   @override
   State<eviePoints> createState() => _eviePointsState();
 }
@@ -466,7 +463,8 @@ class _eviePointsState extends State<eviePoints> {
                                               color: Colors.transparent,
                                               width: 1,
                                             ),
-                                            borderRadius: 10, decoration: BoxDecoration(), 
+                                            borderRadius: 10,
+                                            decoration: BoxDecoration(),
                                           ),
                                         ),
                                       )

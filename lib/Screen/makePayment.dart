@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: makePaymentWidget(),
     );
@@ -17,8 +18,6 @@ class MyApp extends StatelessWidget {
 }
 
 class makePaymentWidget extends StatefulWidget {
-  const makePaymentWidget({Key? key}) : super(key: key);
-
   @override
   _MakePaymentWidgetState createState() => _MakePaymentWidgetState();
 }

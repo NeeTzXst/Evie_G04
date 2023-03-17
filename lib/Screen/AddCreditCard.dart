@@ -1,16 +1,10 @@
-// import 'package:add_credit_card/MyPaymentMethod.dart';
-// import 'package:add_credit_card/TechnicianandService.dart';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-// import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:flutter/material.dart';
 
 import '../../flutter_flow/flutter_flow_radio_button.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
-import 'myPayment.dart';
+import 'Drawer/myPayment.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: AddCreditCardWidget(),
     );
@@ -29,8 +24,6 @@ class MyApp extends StatelessWidget {
 }
 
 class AddCreditCardWidget extends StatefulWidget {
-  const AddCreditCardWidget({Key? key}) : super(key: key);
-
   @override
   _AddCreditCardWidgetState createState() => _AddCreditCardWidgetState();
 }

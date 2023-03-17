@@ -2,14 +2,10 @@ import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'Drawer/helpCenter.dart';
 import 'GPSandTracking.dart';
-import 'HelpCenter.dart';
 import 'TechnicianandService.dart';
-
-// import 'feedback_model.dart';
-// export 'feedback_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: FeedbackWidget(),
     );
@@ -28,42 +25,15 @@ class MyApp extends StatelessWidget {
 }
 
 class FeedbackWidget extends StatefulWidget {
-  const FeedbackWidget({Key? key}) : super(key: key);
-
   @override
   _FeedbackWidgetState createState() => _FeedbackWidgetState();
 }
 
 class _FeedbackWidgetState extends State<FeedbackWidget> {
-  // late GPSandTrackingModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
-    // _model = createModel(context, () => TechnicianandServiceModel());
-
-    // On page load action.
-    // SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //   context.pushNamed('HelpCenter');
-    // });
-  }
-
-  void dispose() {
-    _unfocusNode.dispose();
-    super.dispose();
-  }
-
-  // @override
-  // void dispose() {
-  //   _model.dispose();
-
-  //   _unfocusNode.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Widget/styles.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
+import '../Feedback.dart';
+import '../GPSandTracking.dart';
+import '../TechnicianandService.dart';
 import '../homePage.dart';
-import 'Feedback.dart';
-import 'GPSandTracking.dart';
-import 'TechnicianandService.dart';
 
 class helpCenter extends StatefulWidget {
-  const helpCenter({super.key});
-
   @override
   State<helpCenter> createState() => _helpCenterState();
 }

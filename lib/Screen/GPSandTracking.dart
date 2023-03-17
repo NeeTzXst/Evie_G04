@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
-import 'HelpCenter.dart';
-
-// import 'technicianand_service_model.dart';
-// export 'technicianand_service_model.dart';
+import 'Drawer/helpCenter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,50 +13,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: TechnicianandServiceWidget(),
+      home: GPSandTrackingWidget(),
     );
   }
 }
 
-class TechnicianandServiceWidget extends StatefulWidget {
-  const TechnicianandServiceWidget({Key? key}) : super(key: key);
-
+class GPSandTrackingWidget extends StatefulWidget {
   @override
-  _TechnicianandServiceWidgetState createState() =>
-      _TechnicianandServiceWidgetState();
+  _GPSandTrackingWidgetState createState() => _GPSandTrackingWidgetState();
 }
 
-class _TechnicianandServiceWidgetState
-    extends State<TechnicianandServiceWidget> {
-  // late TechnicianandServiceModel _model;
-
+class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    // _model = createModel(context, () => TechnicianandServiceModel());
-
-    // On page load action.
-    // SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //   context.pushNamed('HelpCenter');
-    // });
-  }
-
-  void dispose() {
-    _unfocusNode.dispose();
-    super.dispose();
-  }
-
-  // @override
-  // void dispose() {
-  //   _model.dispose();
-
-  //   _unfocusNode.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +54,7 @@ class _TechnicianandServiceWidgetState
         title: Align(
           alignment: AlignmentDirectional(-1, 0),
           child: Text(
-            'Technician and Service',
+            'GPS  and Tracking ',
             style: FlutterFlowTheme.of(context).title1.override(
                   fontFamily: 'Montserrat',
                   color: Color(0xFF1A74E2),
