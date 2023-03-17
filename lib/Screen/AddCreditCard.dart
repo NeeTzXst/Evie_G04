@@ -1,16 +1,10 @@
-// import 'package:add_credit_card/MyPaymentMethod.dart';
-// import 'package:add_credit_card/TechnicianandService.dart';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-// import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:flutter/material.dart';
 
 import '../../flutter_flow/flutter_flow_radio_button.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
-import 'myPayment.dart';
+import 'Drawer/myPayment.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,10 +12,10 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: AddCreditCardWidget(),
     );
@@ -29,8 +23,6 @@ class MyApp extends StatelessWidget {
 }
 
 class AddCreditCardWidget extends StatefulWidget {
-  const AddCreditCardWidget({Key? key}) : super(key: key);
-
   @override
   _AddCreditCardWidgetState createState() => _AddCreditCardWidgetState();
 }
@@ -77,7 +69,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
         centerTitle: false,
         elevation: 2,
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
           child: Column(
@@ -678,10 +670,10 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                   options: FFButtonOptions(
                     width: 330,
                     height: 55,
-                    color: Color.fromARGB(255, 107, 208, 255),
+                    color: Color(0xFF6BCFFF),
                     textStyle: TextStyle(
                       fontFamily: 'Montserrat',
-                      color: Color.fromARGB(255, 26, 116, 226),
+                      color: Color(0xFF1A74E2),
                       fontSize: 20,
                     ),
                     borderSide: BorderSide(
@@ -689,6 +681,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                       width: 1,
                     ),
                     borderRadius: 10,
+                    decoration: BoxDecoration(),
                   ),
                 ),
               ),

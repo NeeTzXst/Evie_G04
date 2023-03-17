@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Widget/styles.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
+import '../AddCreditCard.dart';
 import '../homePage.dart';
-import 'AddCreditCard.dart';
 
 class myPayment extends StatefulWidget {
   const myPayment({super.key});
@@ -71,20 +70,21 @@ class _MyWidgetState extends State<myPayment> {
                   },
                   text: 'Add Credit Card\n',
                   options: FFButtonOptions(
-                    width: 330,
-                    height: 55,
-                    color: Color.fromARGB(216, 107, 208, 255),
-                    textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF1A74E2),
-                          fontSize: 20,
-                        ),
-                    borderSide: BorderSide(
-                      color: Colors.transparent,
-                      width: 1,
-                    ),
-                    borderRadius: 10,
-                  ),
+                      width: 330,
+                      height: 55,
+                      color: Color.fromARGB(216, 107, 208, 255),
+                      textStyle:
+                          FlutterFlowTheme.of(context).subtitle2.override(
+                                fontFamily: 'Montserrat',
+                                color: Color(0xFF1A74E2),
+                                fontSize: 20,
+                              ),
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 1,
+                      ),
+                      borderRadius: 10,
+                      decoration: BoxDecoration()),
                 ),
               ],
             ),

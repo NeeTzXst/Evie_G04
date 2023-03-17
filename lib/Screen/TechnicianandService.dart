@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
-import 'HelpCenter.dart';
-// import 'g_p_sand_tracking_model.dart';
-// export 'g_p_sand_tracking_model.dart';
+import 'Drawer/helpCenter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,52 +9,26 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: GPSandTrackingWidget(),
+      home: TechnicianandServiceWidget(),
     );
   }
 }
 
-class GPSandTrackingWidget extends StatefulWidget {
-  const GPSandTrackingWidget({Key? key}) : super(key: key);
-
+class TechnicianandServiceWidget extends StatefulWidget {
   @override
-  _GPSandTrackingWidgetState createState() => _GPSandTrackingWidgetState();
+  _TechnicianandServiceWidgetState createState() =>
+      _TechnicianandServiceWidgetState();
 }
 
-class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
-  // late GPSandTrackingModel _model;
-
+class _TechnicianandServiceWidgetState
+    extends State<TechnicianandServiceWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    // _model = createModel(context, () => TechnicianandServiceModel());
-
-    // On page load action.
-    // SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //   context.pushNamed('HelpCenter');
-    // });
-  }
-
-  void dispose() {
-    _unfocusNode.dispose();
-    super.dispose();
-  }
-
-  // @override
-  // void dispose() {
-  //   _model.dispose();
-
-  //   _unfocusNode.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +55,7 @@ class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
         title: Align(
           alignment: AlignmentDirectional(-1, 0),
           child: Text(
-            'GPS  and Tracking ',
+            'Technician and Service',
             style: FlutterFlowTheme.of(context).title1.override(
                   fontFamily: 'Montserrat',
                   color: Color(0xFF1A74E2),

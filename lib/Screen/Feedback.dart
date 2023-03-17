@@ -2,14 +2,10 @@ import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'Drawer/helpCenter.dart';
 import 'GPSandTracking.dart';
-import 'HelpCenter.dart';
 import 'TechnicianandService.dart';
-
-// import 'feedback_model.dart';
-// export 'feedback_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,10 +13,10 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: FeedbackWidget(),
     );
@@ -28,42 +24,15 @@ class MyApp extends StatelessWidget {
 }
 
 class FeedbackWidget extends StatefulWidget {
-  const FeedbackWidget({Key? key}) : super(key: key);
-
   @override
   _FeedbackWidgetState createState() => _FeedbackWidgetState();
 }
 
 class _FeedbackWidgetState extends State<FeedbackWidget> {
-  // late GPSandTrackingModel _model;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
 
   @override
-  void initState() {
-    super.initState();
-    // _model = createModel(context, () => TechnicianandServiceModel());
-
-    // On page load action.
-    // SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //   context.pushNamed('HelpCenter');
-    // });
-  }
-
-  void dispose() {
-    _unfocusNode.dispose();
-    super.dispose();
-  }
-
-  // @override
-  // void dispose() {
-  //   _model.dispose();
-
-  //   _unfocusNode.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,19 +103,18 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20.0)),
                       hintText: 'Search topics',
-                      hintStyle:
-                          FlutterFlowTheme.of(context).bodyText1.override(
-                                fontFamily: 'Montserrat',
-                                color: Color(0xFF9E9E9E),
-                                fontSize: 18,
-                              ),
-                      labelStyle:
-                          FlutterFlowTheme.of(context).bodyText1.override(
-                                fontFamily: 'Montserrat',
-                                color: Color(0xFF9E9E9E),
-                                fontSize: 18,
-                              ),
+                      hintStyle: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Montserrat',
+                        color: Color(0xFF9E9E9E),
+                      ),
                     ),
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF1A74E2),
+                          fontSize: 18,
+                          fontWeight: FontWeight.normal,
+                        ),
                     validator: (value) {
                       if (value!.isEmpty) {
                         print(value);
@@ -189,7 +157,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                         color: Colors.transparent,
                         width: 1,
                       ),
-                      borderRadius: 8, decoration: BoxDecoration(), 
+                      borderRadius: 8,
+                      decoration: BoxDecoration(),
                     ),
                   ),
                 ),
@@ -222,7 +191,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                         color: Colors.transparent,
                         width: 1,
                       ),
-                      borderRadius: 8, decoration: BoxDecoration(), 
+                      borderRadius: 8,
+                      decoration: BoxDecoration(),
                     ),
                   ),
                 ),
@@ -230,8 +200,15 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(30, 30, 20, 0),
                   child: TextFormField(
                     maxLines: 10,
+                    textCapitalization: TextCapitalization.none,
+                    obscureText: false,
                     decoration: InputDecoration(
                       hintText: 'Put your feedback here!',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Color(0xFF9E9E9E),
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xff6bcfff))),
                       filled: true,
@@ -239,8 +216,9 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                     ),
                     style: FlutterFlowTheme.of(context).bodyText1.override(
                           fontFamily: 'Montserrat',
-                          color: Color(0xFF9E9E9E),
+                          color: Colors.black,
                           fontSize: 16,
+                          fontWeight: FontWeight.normal,
                         ),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -248,6 +226,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                       }
                       return null;
                     },
+                    keyboardType: TextInputType.text,
                     onSaved: (value) {
                       // Do something with the feedback value
                     },

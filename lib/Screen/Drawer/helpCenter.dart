@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Widget/styles.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
+import '../Feedback.dart';
+import '../GPSandTracking.dart';
+import '../TechnicianandService.dart';
 import '../homePage.dart';
-import 'Feedback.dart';
-import 'GPSandTracking.dart';
-import 'TechnicianandService.dart';
 
 class helpCenter extends StatefulWidget {
-  const helpCenter({super.key});
-
   @override
   State<helpCenter> createState() => _helpCenterState();
 }
@@ -94,12 +91,13 @@ class _helpCenterState extends State<helpCenter> {
                           fontFamily: 'Montserrat',
                           color: Color(0xFF9E9E9E),
                         ),
-                        labelStyle: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF1A74E2),
-                        ),
                       ),
+                      style: FlutterFlowTheme.of(context).bodyText1.override(
+                            fontFamily: 'Montserrat',
+                            color: Color(0xFF1A74E2),
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                          ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           print(value);
@@ -143,7 +141,8 @@ class _helpCenterState extends State<helpCenter> {
                           color: Colors.transparent,
                           width: 1,
                         ),
-                        borderRadius: 8, decoration: BoxDecoration(), 
+                        borderRadius: 8,
+                        decoration: BoxDecoration(),
                       ),
                     ),
                   ),
@@ -176,7 +175,8 @@ class _helpCenterState extends State<helpCenter> {
                           color: Colors.transparent,
                           width: 1,
                         ),
-                        borderRadius: 8, decoration: BoxDecoration(), 
+                        borderRadius: 8,
+                        decoration: BoxDecoration(),
                       ),
                     ),
                   ),
@@ -189,7 +189,7 @@ class _helpCenterState extends State<helpCenter> {
                         size: 26,
                       ),
                       onPressed: () {
-                        print('Feedbac Button pressed ...');
+                        print('Feedback Button pressed ...');
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -209,7 +209,8 @@ class _helpCenterState extends State<helpCenter> {
                           color: Colors.transparent,
                           width: 1,
                         ),
-                        borderRadius: 8, decoration: BoxDecoration(), 
+                        borderRadius: 8,
+                        decoration: BoxDecoration(),
                       ),
                     ),
                   ),
