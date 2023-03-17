@@ -41,9 +41,10 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                 size: 33,
               ),
               onTap: () async {
+                print("wait for condition");
                 // wait for condition
                 // Navigator.push(
-                //     context, MaterialPageRoute(builder: (context) => Payment()));
+                //     context, MaterialPageRoute(builder: (context) => `wait page navigate`()));
               }),
         ),
         title: Align(
