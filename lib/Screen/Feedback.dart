@@ -67,7 +67,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
         ),
         actions: [],
         centerTitle: false,
-        elevation: 2,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: GestureDetector(
