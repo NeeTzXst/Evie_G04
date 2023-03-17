@@ -1,8 +1,10 @@
 // ignore_for_file: unnecessary_import, avoid_print,, prefer_const_constructors, duplicate_ignore 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/login.dart';
 import 'package:myapp/Screen/signup.dart';
@@ -13,7 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LetyouIn extends StatefulWidget {
   const LetyouIn({Key? key}) : super(key: key);
-
+  
   @override
   // ignore: library_private_types_in_public_api
   _LetyouInState createState() => _LetyouInState();
@@ -22,11 +24,27 @@ class LetyouIn extends StatefulWidget {
 class _LetyouInState extends State<LetyouIn> {
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   void dispose() {
     _unfocusNode.dispose();
     super.dispose();
+  }
+
+  singInWithGoogle() async {
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+    AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+    print(userCredential.user?.displayName);
   }
   
 
@@ -65,11 +83,12 @@ class _LetyouInState extends State<LetyouIn> {
                     child: FFButtonWidget(
                       onPressed: () {
                         print('ButtonGoogle pressed ...');
+                        singInWithGoogle();
                       },
                       text: 'Continue with',
                       icon: const FaIcon(
-                        FontAwesomeIcons.facebook,
-                        color: Color(0xFF184E77),
+                        FontAwesomeIcons.google,
+                        color: Color(0xFFB92C2C),
                       ),
                       options: FFButtonOptions(
                         width: 251,
@@ -101,8 +120,8 @@ class _LetyouInState extends State<LetyouIn> {
                       },
                       text: 'Continue with',
                       icon: const FaIcon(
-                        FontAwesomeIcons.google,
-                        color: Color(0xFFB92C2C),
+                        FontAwesomeIcons.facebook,
+                        color: Color(0xFF184E77),
                       ),
                       options: FFButtonOptions(
                         width: 251,
