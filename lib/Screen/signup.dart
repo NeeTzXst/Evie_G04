@@ -2,6 +2,7 @@
 
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,10 +20,11 @@ class SignupScreen extends StatefulWidget {
 }
 
 // ignore: non_constant_identifier_names
-FlatButton(
-    {required void Function() onPressed,
-    required EdgeInsets padding,
-    required Text child}) {}
+FlatButton({
+  required void Function() onPressed,
+  required EdgeInsets padding,
+  required Text child,
+}) {}
 
 class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
@@ -31,12 +33,33 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isObscure = true;
 
   Future signUp() async {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
-        password: _passwordController.text.trim());
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => ProfileScreen()),
-    );
+        password: _passwordController.text.trim(),
+      );
+      print('======== Email : ${_emailController.text} ============');
+      print('======== Password : ${_passwordController.text} =======');
+      print('================ Create ==============');
+      await FirebaseFirestore.instance
+          .collection('app')
+          .doc('member')
+          .collection('ID')
+          .doc(userCredential.user?.uid)
+          .set({
+        'uid': userCredential.user?.uid,
+        'Email': _emailController.text,
+        'password': _passwordController.text,
+      });
+      ;
+      print('================ Put Firebase ==============');
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => ProfileScreen()),
+      );
+    } catch (error, stackTrace) {
+      // Handle the error here
+    }
   }
 
   @override

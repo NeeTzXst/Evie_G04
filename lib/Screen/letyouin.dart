@@ -1,8 +1,11 @@
-// ignore_for_file: unnecessary_import, avoid_print,, prefer_const_constructors, duplicate_ignore 
+// ignore_for_file: unnecessary_import, avoid_print,, prefer_const_constructors, duplicate_ignore
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myapp/Screen/homePage.dart';
@@ -15,7 +18,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LetyouIn extends StatefulWidget {
   const LetyouIn({Key? key}) : super(key: key);
-  
+
   @override
   // ignore: library_private_types_in_public_api
   _LetyouInState createState() => _LetyouInState();
@@ -24,7 +27,6 @@ class LetyouIn extends StatefulWidget {
 class _LetyouInState extends State<LetyouIn> {
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   void dispose() {
@@ -32,7 +34,7 @@ class _LetyouInState extends State<LetyouIn> {
     super.dispose();
   }
 
-  singInWithGoogle() async {
+  Future<void> singInWithGoogle() async {
     GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
@@ -42,11 +44,11 @@ class _LetyouInState extends State<LetyouIn> {
       idToken: googleAuth.idToken,
     );
 
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
     print(userCredential.user?.displayName);
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class _LetyouInState extends State<LetyouIn> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children:[
+              children: [
                 Align(
                   alignment: const AlignmentDirectional(0, 0),
                   child: Text(
@@ -94,8 +96,8 @@ class _LetyouInState extends State<LetyouIn> {
                         width: 251,
                         height: 47,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                          
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
                         color: const Color(0xFF6BCFFF),
                         textStyle:
                             FlutterFlowTheme.of(context).subtitle2.override(
@@ -105,7 +107,6 @@ class _LetyouInState extends State<LetyouIn> {
                         borderSide: const BorderSide(
                           color: Colors.transparent,
                         ),
-                        
                       ),
                     ),
                   ),
@@ -127,7 +128,8 @@ class _LetyouInState extends State<LetyouIn> {
                         width: 251,
                         height: 47,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
                         color: const Color(0xFF6BCFFF),
                         textStyle:
                             FlutterFlowTheme.of(context).subtitle2.override(
@@ -156,7 +158,8 @@ class _LetyouInState extends State<LetyouIn> {
                       width: 251,
                       height: 47,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       color: const Color(0xFF6BCFFF),
                       textStyle:
                           FlutterFlowTheme.of(context).subtitle2.override(
@@ -170,50 +173,51 @@ class _LetyouInState extends State<LetyouIn> {
                   ),
                 ),
                 Row(
-  // ignore: prefer_const_literals_to_create_immutables
-  children: [
-    Expanded(
-      child: Divider(
-        color: Color(0xff1A74E2),
-        height: 36,
-        thickness: 5,
-      ),
-    ),
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Text(
-        'Or',
-        style: TextStyle(
-          fontSize: 16,
-          fontFamily: 'Montserrat',
-          color: Color(0xff1A74E2),
-        ),
-      ),
-    ),
-    Expanded(
-      child: Divider(
-        color: Color(0xff1A74E2),
-        height: 36,
-        thickness: 5,
-      ),
-    ),
-  ],
-),
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: Color(0xff1A74E2),
+                        height: 36,
+                        thickness: 3,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        'Or',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Montserrat',
+                          color: Color(0xff1A74E2),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Color(0xff1A74E2),
+                        height: 36,
+                        thickness: 3,
+                      ),
+                    ),
+                  ],
+                ),
                 Align(
                   alignment: const AlignmentDirectional(0, 0),
                   child: FFButtonWidget(
                     onPressed: () {
                       print('Signin pressed ...');
                       Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => LoginScreen()),
-                            );
+                        MaterialPageRoute(builder: (_) => LoginScreen()),
+                      );
                     },
                     text: 'Sign in with password',
                     options: FFButtonOptions(
                       width: 282,
                       height: 47,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       color: const Color(0xFF1A74E2),
                       textStyle:
                           FlutterFlowTheme.of(context).subtitle2.override(
@@ -231,37 +235,39 @@ class _LetyouInState extends State<LetyouIn> {
                   // ignore: prefer_const_constructors
                   alignment: AlignmentDirectional(0, 0),
                   child: GestureDetector(
-                    onTap: () {Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => homePage()),
-                            ); },
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => homePage()),
+                      );
+                    },
                     child: RichText(
                       text: TextSpan(
-        // ignore: prefer_const_literals_to_create_immutables
-        children: [
-          TextSpan(
-            text: 'Sign in with ',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Montserrat',
-            )
-          ),
-          TextSpan(
-            text: 'Guest',
-            style: TextStyle(
-              color: Color(0xff1A74E2),
-              fontSize: 18,
-              fontFamily: 'Montserrat',
-              height: 3,
-              //fontWeight: FontWeight.bold
-              // height: 10,
-            )
-          )
-        ]
-      )
-    )
-  )
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          TextSpan(
+                            text: 'Sign in with ',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Montserrat',
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'Guest',
+                            style: TextStyle(
+                              color: Color(0xff1A74E2),
+                              fontSize: 18,
+                              fontFamily: 'Montserrat',
+                              height: 3,
+                              //fontWeight: FontWeight.bold
+                              // height: 10,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 Padding(
                   // ignore: prefer_const_constructors
@@ -270,44 +276,41 @@ class _LetyouInState extends State<LetyouIn> {
                     onTap: () {
                       print("sign up ");
                       Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => SignupScreen()),
-                            ); 
+                        MaterialPageRoute(builder: (_) => SignupScreen()),
+                      );
                     },
                     child: RichText(
                       text: TextSpan(
-        // ignore: prefer_const_literals_to_create_immutables
-        children: [
-          TextSpan(
-            text: 'Don\'t have an account? ',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Montserrat',
-            )
-          ),
-          TextSpan(
-            text: 'Sign Up',
-            style: TextStyle(
-              color: Color(0xff1A74E2),
-              fontSize: 18,
-              fontFamily: 'Montserrat',
-              //fontWeight: FontWeight.bold
-              height: 1,
-            )
-          )
-        ]
-      )
-    )
-  )
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          TextSpan(
+                              text: 'Don\'t have an account? ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Montserrat',
+                              )),
+                          TextSpan(
+                            text: 'Sign Up',
+                            style: TextStyle(
+                              color: Color(0xff1A74E2),
+                              fontSize: 18,
+                              fontFamily: 'Montserrat',
+                              //fontWeight: FontWeight.bold
+                              height: 1,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ]
                 ),
-              ),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 }
-
-

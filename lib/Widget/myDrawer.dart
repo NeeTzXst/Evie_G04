@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/Drawer/eviePotins.dart';
 import 'package:myapp/Screen/Drawer/financialNews.dart';
@@ -11,7 +12,8 @@ import 'package:myapp/Screen/Drawer/profile.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class myDrawer extends StatefulWidget {
-  const myDrawer({super.key});
+  final bool isLoggedIn;
+  const myDrawer({Key? key, required this.isLoggedIn}) : super(key: key);
 
   @override
   State<myDrawer> createState() => _MyWidgetState();
@@ -38,6 +40,7 @@ class _MyWidgetState extends State<myDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    log('${widget.isLoggedIn}');
     return SafeArea(
       child: Drawer(
         child: SingleChildScrollView(

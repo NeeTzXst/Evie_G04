@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, duplicate_import, file_names, duplicate_ignore, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/homePage.dart';
-
-
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
@@ -35,6 +35,24 @@ class AddVehicleState extends State<AddVehicle> {
 
   String? _selectedBrand;
   String? _selectedType;
+  final _LicenseNum = TextEditingController();
+
+  Future<void> addVehicle() async {
+    print('============== addVehicle ==============');
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userId)
+        .collection('Vehicle')
+        .doc()
+        .set({
+      'Brand': _selectedBrand,
+      'Charger type': _selectedType,
+      'License Number': _LicenseNum.text
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +89,7 @@ class AddVehicleState extends State<AddVehicle> {
                         onChanged: (value) {
                           setState(() {
                             _selectedBrand = value;
+                            print('Type :  $_selectedBrand');
                           });
                         },
                         // ignore: avoid_unnecessary_containers
@@ -140,6 +159,7 @@ class AddVehicleState extends State<AddVehicle> {
                         onChanged: (value1) {
                           setState(() {
                             _selectedType = value1;
+                            print('Type :  $_selectedType');
                           });
                         },
                         // ignore: avoid_unnecessary_containers
@@ -198,13 +218,13 @@ class AddVehicleState extends State<AddVehicle> {
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
                 padding: const EdgeInsets.only(left: 13),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                            controller: _LicenseNum,
                             decoration: InputDecoration(
                                 hintText: "Enter your License number",
                                 hintStyle: TextStyle(
@@ -230,8 +250,7 @@ class AddVehicleState extends State<AddVehicle> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     color: Color.fromRGBO(142, 219, 255, 0.543)),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       TextButton(
@@ -245,10 +264,10 @@ class AddVehicleState extends State<AddVehicle> {
                               fontSize: 21.0),
                         ),
                         onPressed: () {
-                         Navigator.push(
+                          addVehicle().then((value) => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => homePage())); 
+                                  builder: (context) => homePage())));
                         },
                       )
                     ])),
