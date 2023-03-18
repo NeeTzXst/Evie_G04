@@ -62,7 +62,7 @@ class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
         ),
         actions: [],
         centerTitle: false,
-        elevation: 2,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: GestureDetector(

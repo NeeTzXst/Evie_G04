@@ -48,7 +48,7 @@ class _eviePointsState extends State<eviePoints> {
         ),
         actions: [],
         centerTitle: false,
-        elevation: 2,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: GestureDetector(

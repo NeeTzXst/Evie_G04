@@ -67,7 +67,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
         ),
         actions: [],
         centerTitle: false,
-        elevation: 2,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: GestureDetector(
@@ -680,7 +680,8 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                       color: Colors.transparent,
                       width: 1,
                     ),
-                    borderRadius: 10, decoration: BoxDecoration(),
+                    borderRadius: 10,
+                    decoration: BoxDecoration(),
                   ),
                 ),
               ),
