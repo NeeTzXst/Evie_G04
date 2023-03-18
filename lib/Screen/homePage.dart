@@ -259,13 +259,6 @@ class _homePageState extends State<homePage> {
     );
   }
 
-  bool isUserLoggedIn() {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final User? user = auth.currentUser;
-    log('${user}');
-    return user != null;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -274,7 +267,6 @@ class _homePageState extends State<homePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoggedIn = isUserLoggedIn();
     return Scaffold(
         key: scaffoldKey,
         drawer: SafeArea(
@@ -283,7 +275,7 @@ class _homePageState extends State<homePage> {
               topRight: Radius.circular(20),
               bottomRight: Radius.circular(20),
             ),
-            child: myDrawer(isLoggedIn: isLoggedIn),
+            child: myDrawer(),
           ),
         ),
         body: Stack(

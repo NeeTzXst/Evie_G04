@@ -31,13 +31,26 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isObscure = true;
 
   Future<void> signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => homePage()),
-    );
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          )
+          .then((value) => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => homePage()),
+              ));
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'user-not-found') {
+        print('No user found with this email.');
+      } else if (error.code == 'wrong-password') {
+        print('Wrong password provided for this user.');
+      } else {
+        print('Error: ${error.code}');
+      }
+    } catch (error) {
+      print('Unknown error occurred: $error');
+    }
   }
 
   @override
