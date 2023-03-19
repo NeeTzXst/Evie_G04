@@ -7,6 +7,22 @@ import '../GPSandTracking.dart';
 import '../TechnicianandService.dart';
 import '../homePage.dart';
 
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      home: helpCenter(),
+    );
+  }
+}
+
 class helpCenter extends StatefulWidget {
   @override
   State<helpCenter> createState() => _helpCenterState();
