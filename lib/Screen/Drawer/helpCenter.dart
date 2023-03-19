@@ -145,6 +145,7 @@ class _helpCenterState extends State<helpCenter> {
                       },
                       text: 'Technician and Service',
                       options: FFButtonOptions(
+                        elevation: 0,
                         width: 320,
                         height: 60,
                         color: Color(0xFF6BCFFF),
@@ -179,6 +180,7 @@ class _helpCenterState extends State<helpCenter> {
                       },
                       text: 'GPS  and Tracking ',
                       options: FFButtonOptions(
+                        elevation: 0,
                         width: 320,
                         height: 60,
                         color: Color(0xFF6BCFFF),
@@ -213,6 +215,7 @@ class _helpCenterState extends State<helpCenter> {
                       },
                       text: 'Feedback',
                       options: FFButtonOptions(
+                        elevation: 0,
                         width: 320,
                         height: 60,
                         color: Color(0xFF6BCFFF),
