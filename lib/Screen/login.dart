@@ -1,8 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Database/authService.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myapp/Screen/forgotpassword.dart';
 import 'package:myapp/Screen/homePage.dart';
@@ -19,39 +19,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 // ignore: non_constant_identifier_names
-FlatButton(
-    {required void Function() onPressed,
-    required EdgeInsets padding,
-    required Text child}) {}
+FlatButton({
+  required void Function() onPressed,
+  required EdgeInsets padding,
+  required Text child,
+}) {}
 
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool isRememberMe = false;
   bool isObscure = true;
-
-  Future<void> signIn() async {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text.trim(),
-          )
-          .then((value) => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => homePage()),
-              ));
-    } on FirebaseAuthException catch (error) {
-      if (error.code == 'user-not-found') {
-        print('No user found with this email.');
-      } else if (error.code == 'wrong-password') {
-        print('Wrong password provided for this user.');
-      } else {
-        print('Error: ${error.code}');
-      }
-    } catch (error) {
-      print('Unknown error occurred: $error');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -275,9 +253,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   TextButton(
                     onPressed: () {
-                      signIn();
-                      print(
-                          '${_emailController.text} , ${_passwordController.text}');
+                      authService()
+                          .signIn(
+                              _emailController.text, _passwordController.text)
+                          .then(
+                        (value) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => homePage(),
+                            ),
+                          );
+                        },
+                      );
                     },
                     child: Text(
                       "Sign in",

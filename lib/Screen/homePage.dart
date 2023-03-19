@@ -61,7 +61,7 @@ class _homePageState extends State<homePage> {
   );
 
   Future<void> _addPolyline(List<LatLng>? _coordinates) async {
-    print(" _addPolyline");
+    log(" _addPolyline");
     if (_coordinates == null || _coordinates.isEmpty) {
       return;
     }
@@ -79,18 +79,16 @@ class _homePageState extends State<homePage> {
   }
 
   Future<void> _getPolylinesWithLocation() async {
-    print(" 1 _getPolylinesWithLocation");
-    print(
-        '2 Poly ======================================= destination : $destinations ================================');
-    print(
-        '3 Poly ================================= currentLocations : $currentLocations =============================');
+    log(" _getPolylinesWithLocation");
+    log('destination : $destinations');
+    log('currentLocations : $currentLocations');
     if (currentLocations.isNotEmpty &&
         currentLocations[0].latitude != null &&
         currentLocations[0].longitude != null &&
         destinations.isNotEmpty &&
         destinations[0].latitude != null &&
         destinations[0].longitude != null) {
-      print("4 not empty ");
+      log("not empty ");
       List<LatLng>? _coordinates =
           await _googleMapPolyline.getCoordinatesWithLocation(
         origin: LatLng(
@@ -118,7 +116,7 @@ class _homePageState extends State<homePage> {
   Future<Position> getUserCurrentLocation() async {
     await Geolocator.requestPermission().then((value) {}).onError(
       (error, stackTrace) {
-        print("Error");
+        log("Error");
       },
     );
     Position position = await Geolocator.getCurrentPosition();
@@ -136,20 +134,19 @@ class _homePageState extends State<homePage> {
         latitude: position.latitude,
         longitude: position.longitude,
       );
-      print('Currenta location description: $description');
+      log('Currenta location description: $description');
       await dbManager.saveCurrentLocation(userLocation);
 
       await fetchCurrentLocation();
     } catch (error) {
-      print('Error getting description: $error');
+      log('Error getting description: $error');
     }
     return position;
   }
 
   // Fetch Usr current latitude longitude from Firebase
   Future<void> fetchCurrentLocation() async {
-    print(
-        "5 ===================== Fetching Current location... ====================");
+    log("Fetching Current location...");
     CollectionReference location =
         FirebaseFirestore.instance.collection('Test');
     DocumentSnapshot<Map<String, dynamic>> snapshot = await location
@@ -157,13 +154,12 @@ class _homePageState extends State<homePage> {
         .get() as DocumentSnapshot<Map<String, dynamic>>;
     currentLocation current = currentLocation.fromJson(snapshot.data()!);
     currentLocations = [current];
-    print(
-        "6 ==================== currentLocation : ${currentLocations} ====================");
+    log("currentLocation : ${currentLocations}");
   }
 
   // Fetch Destination Location, latitude ,longitude from Firebase
   Future<void> fetchDestinationtLocation() async {
-    print("7 Fetching Destination location...");
+    log("Fetching Destination location...");
     CollectionReference location =
         FirebaseFirestore.instance.collection('Test');
     DocumentSnapshot<Map<String, dynamic>> snapshot = await location
@@ -171,7 +167,7 @@ class _homePageState extends State<homePage> {
         .get() as DocumentSnapshot<Map<String, dynamic>>;
     destination destinationLocation = destination.fromJson(snapshot.data()!);
     destinations = [destinationLocation];
-    print('8 fetch ============= destination : ${destinations} ===========');
+    log('destination : ${destinations}');
   }
 
   //Set Destination Maker
@@ -179,7 +175,7 @@ class _homePageState extends State<homePage> {
     if (destinations.isNotEmpty &&
         destinations[0].latitude != null &&
         destinations[0].longitude != null) {
-      print("00 ================= destination is not empty ==============");
+      log("destination is not empty");
       Marker destinationMarker = await Marker(
         markerId: MarkerId("2"),
         position: LatLng(
@@ -192,33 +188,32 @@ class _homePageState extends State<homePage> {
       setState(
         () {
           // Add the destination marker
-          print(
-              "9 ====================== Add the destination marker ====================");
+          log("Add the destination marker");
           _markers.add(destinationMarker);
         },
       );
     } else {
-      print("Destibation is null");
+      log("Destibation is null");
     }
   }
 
   Future<void> marker() async {
-    print("10 ======================== Marker ========================");
+    log("Marker");
 
     try {
       await fetchDestinationtLocation();
-      print(
-          "11 =========================== destination $destinations ===============");
+      ;
+      log("destination $destinations");
       await markDestination();
       await _getPolylinesWithLocation();
     } catch (error) {
-      print('Error in marker: $error');
+      log('Error in marker: $error');
     }
   }
 
   // Load Current Location and Mark on Map
   Future<void> loadData() async {
-    print("9 ======================== loadData ========================");
+    log("loadData");
     getUserCurrentLocation().then(
       (value) async {
         // Mark User current location
@@ -252,9 +247,7 @@ class _homePageState extends State<homePage> {
         await marker();
 
         // update widget state
-        setState(() {
-          //_getPolylinesWithLocation();
-        });
+        setState(() {});
       },
     );
   }

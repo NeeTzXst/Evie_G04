@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/Drawer/eviePotins.dart';
 import 'package:myapp/Screen/Drawer/financialNews.dart';
@@ -9,6 +10,7 @@ import 'package:myapp/Screen/Drawer/myCar.dart';
 import 'package:myapp/Screen/Drawer/myPayment.dart';
 import 'package:myapp/Screen/Drawer/setting.dart';
 import 'package:myapp/Screen/Drawer/profile.dart';
+import 'package:myapp/Screen/letyouin.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class myDrawer extends StatefulWidget {
@@ -21,6 +23,9 @@ class myDrawer extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<myDrawer> {
+  User? currentUser;
+  List<Widget>? drawerItem;
+
   final List<Widget> Members = [
     myPayment(),
     myCar(),
@@ -39,6 +44,25 @@ class _MyWidgetState extends State<myDrawer> {
     setting(),
   ];
 
+  void getCurrentUser() async {
+    currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      setState(() {
+        drawerItem = currentUser!.isAnonymous ? Guest : Members;
+      });
+    } else {
+      setState(() {
+        drawerItem = Guest;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -46,8 +70,8 @@ class _MyWidgetState extends State<myDrawer> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              header(context, Members),
-              menuItem(context, Members),
+              header(context, drawerItem ?? []),
+              menuItem(context, drawerItem ?? []),
             ],
           ),
         ),
@@ -113,19 +137,26 @@ Widget header(BuildContext context, List<Widget> name) {
                     width: 120,
                     height: 120,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Container(
-                      width: 250,
-                      height: 55,
-                      decoration: BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Sign in to Evie",
-                          style: itemWhiteDrawerText,
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => LetyouIn()),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Container(
+                        width: 250,
+                        height: 55,
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "Sign in to Evie",
+                            style: itemWhiteDrawerText,
+                          ),
                         ),
                       ),
                     ),

@@ -1,6 +1,4 @@
 // ignore_for_file: unnecessary_import, avoid_print,, prefer_const_constructors, duplicate_ignore
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/login.dart';
 import 'package:myapp/Screen/signup.dart';
@@ -236,9 +235,11 @@ class _LetyouInState extends State<LetyouIn> {
                   alignment: AlignmentDirectional(0, 0),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => homePage()),
-                      );
+                      authService().signInAnonymous().then((value) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => homePage()),
+                        );
+                      });
                     },
                     child: RichText(
                       text: TextSpan(

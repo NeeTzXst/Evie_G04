@@ -1,12 +1,11 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, no_leading_underscores_for_local_identifiers, prefer_typing_uninitialized_variables
-
-import 'dart:math';
-
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/addprofile.dart';
+import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/login.dart';
 
 // ignore: unused_import
@@ -31,36 +30,6 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   bool isRememberMe = false;
   bool isObscure = true;
-
-  Future signUp() async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      print('======== Email : ${_emailController.text} ============');
-      print('======== Password : ${_passwordController.text} =======');
-      print('================ Create ==============');
-      await FirebaseFirestore.instance
-          .collection('app')
-          .doc('member')
-          .collection('ID')
-          .doc(userCredential.user?.uid)
-          .set({
-        'uid': userCredential.user?.uid,
-        'Email': _emailController.text,
-        'password': _passwordController.text,
-      });
-      ;
-      print('================ Put Firebase ==============');
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
-      );
-    } catch (error, stackTrace) {
-      // Handle the error here
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -232,8 +201,17 @@ class _SignupScreenState extends State<SignupScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 1.0),
             child: TextButton(
               onPressed: () {
-                signUp();
-                print('${_emailController.text} , ${_passwordController.text}');
+                authService()
+                    .signUp(_emailController.text, _passwordController.text)
+                    .then(
+                  (value) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => homePage(),
+                      ),
+                    );
+                  },
+                );
               },
               child: Text(
                 "Register",
