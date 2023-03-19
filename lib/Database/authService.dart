@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:myapp/Screen/letyouin.dart';
 
 class authService {
   // Sign up
@@ -77,5 +79,58 @@ class authService {
     } catch (error) {
       log('Unknown error occurred: $error');
     }
+  }
+
+  //Sign out
+  Future<void> signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance
+          .signOut()
+          .then((value) => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => LetyouIn(),
+                ),
+              ));
+    } catch (e) {
+      print('Error while signing out: $e');
+    }
+  }
+
+  //Add Profile
+  Future<void> addProfile(
+      String fullname, String nickname, String number, String email) async {
+    log('fullname : $fullname');
+    print('nickname : $nickname');
+    print('number : $number');
+    print('email : $email ');
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userId)
+        .update({
+      'Fullname': fullname,
+      'Nickname': nickname,
+      'Phone': number,
+    });
+  }
+
+  //Add Vehicle
+  Future<void> addVehicle(String Brand, String Type, String LicenseNum) async {
+    log('SddVehicle');
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userId)
+        .collection('Vehicle')
+        .doc()
+        .set({
+      'Brand': Brand,
+      'Charger type': Type,
+      'License Number': LicenseNum
+    });
   }
 }

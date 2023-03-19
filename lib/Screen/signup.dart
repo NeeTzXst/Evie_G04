@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/addprofile.dart';
+import 'package:myapp/Screen/addvehicle.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/login.dart';
 
@@ -207,7 +208,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   (value) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => homePage(),
+                        builder: (context) => ProfileScreen(),
                       ),
                     );
                   },

@@ -1,6 +1,9 @@
 import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/Drawer/eviePotins.dart';
 import 'package:myapp/Screen/Drawer/financialNews.dart';
 import 'package:myapp/Screen/Drawer/helpCenter.dart';
@@ -8,8 +11,8 @@ import 'package:myapp/Screen/Drawer/history.dart';
 import 'package:myapp/Screen/Drawer/howToUse.dart';
 import 'package:myapp/Screen/Drawer/myCar.dart';
 import 'package:myapp/Screen/Drawer/myPayment.dart';
-import 'package:myapp/Screen/Drawer/setting.dart';
 import 'package:myapp/Screen/Drawer/profile.dart';
+import 'package:myapp/Screen/Drawer/setting.dart';
 import 'package:myapp/Screen/letyouin.dart';
 import 'package:myapp/Widget/styles.dart';
 
@@ -26,41 +29,332 @@ class _MyWidgetState extends State<myDrawer> {
   User? currentUser;
   List<Widget>? drawerItem;
 
-  final List<Widget> Members = [
-    myPayment(),
-    myCar(),
-    history(),
-    financialNews(),
-    eviePoints(),
-    helpCenter(),
-    howToUse(),
-    setting(),
-  ];
+  String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
-  final List<Widget> Guest = [
-    financialNews(),
-    helpCenter(),
-    howToUse(),
-    setting(),
-  ];
+  DocumentReference get userDocument {
+    return FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userUID);
+  }
 
-  void getCurrentUser() async {
-    currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
-      setState(() {
-        drawerItem = currentUser!.isAnonymous ? Guest : Members;
-      });
-    } else {
-      setState(() {
-        drawerItem = Guest;
-      });
-    }
+  Future<DocumentSnapshot> getUserData() async {
+    return await userDocument.get();
   }
 
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
+    currentUser = FirebaseAuth.instance.currentUser;
+  }
+
+  Widget memberHeader(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: getUserData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show a loading indicator while waiting for the data.
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final userData = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.only(left: 10, top: 10),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.arrow_back,
+                        size: 45,
+                        color: primaryColor,
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => profile()),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 45,
+                          backgroundColor: primaryColor,
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Container(
+                          width: 175,
+                          child: Text(
+                            userData['Fullname'],
+                            style: ProfileDrawerText,
+                            overflow: TextOverflow.clip,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget memberMenu(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 5),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              'My Payment methods',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => myPayment(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'My Car',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => myCar(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'History',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => history(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Financial News',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => financialNews(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Evie Point',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => eviePoints(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Help Center',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => helpCenter(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'How to use',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => howToUse(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Setting',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => setting(),
+                ),
+              );
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 55),
+            child: ListTile(
+              title: Center(
+                child: Text(
+                  'Logout',
+                  style: itemDrawerlogputText,
+                ),
+              ),
+              onTap: () {
+                authService().signOut(context);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget guestHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, top: 15),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.arrow_back,
+                  size: 45,
+                  color: primaryColor,
+                )
+              ],
+            ),
+          ),
+          Image.asset(
+            'assets/EVIE.png',
+            width: 150,
+            height: 150,
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => LetyouIn()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Container(
+                width: 250,
+                height: 55,
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Center(
+                  child: Text(
+                    "Sign in to Evie",
+                    style: itemWhiteDrawerText,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget guestMenu(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 5),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(
+              'Financial News',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => financialNews(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Help Center',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => helpCenter(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'How to use',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => howToUse(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Setting',
+              style: itemDrawerText,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => setting(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -70,144 +364,16 @@ class _MyWidgetState extends State<myDrawer> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              header(context, drawerItem ?? []),
-              menuItem(context, drawerItem ?? []),
+              currentUser == null || currentUser!.isAnonymous
+                  ? guestHeader(context)
+                  : memberHeader(context),
+              currentUser == null || currentUser!.isAnonymous
+                  ? guestMenu(context)
+                  : memberMenu(context),
             ],
           ),
         ),
       ),
     );
   }
-}
-
-Widget header(BuildContext context, List<Widget> name) {
-  return Container(
-    child: Column(
-      children: [
-        // Back Arrow
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(
-                  Icons.arrow_back,
-                  size: 45,
-                  color: primaryColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-        name.length > 7
-            // Member Profile header
-            ? GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => profile()),
-                  );
-                },
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: CircleAvatar(
-                          radius: 45,
-                          backgroundColor: primaryColor,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "Proflie",
-                      style: ProfileDrawerText,
-                    )
-                  ],
-                ),
-              )
-            // Geust header
-            : Column(
-                children: [
-                  Image.asset(
-                    'assets/EVIE.png',
-                    width: 120,
-                    height: 120,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => LetyouIn()),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Container(
-                        width: 250,
-                        height: 55,
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Sign in to Evie",
-                            style: itemWhiteDrawerText,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              )
-      ],
-    ),
-  );
-}
-
-Widget menuItem(BuildContext context, List<Widget> name) {
-  return ListView.builder(
-    shrinkWrap: true,
-    physics: NeverScrollableScrollPhysics(),
-    itemCount: name.length,
-    itemBuilder: (BuildContext context, int index) {
-      Widget item = name[index];
-      String title = '';
-
-      if (item is myPayment) {
-        title = 'My Payment Methods';
-      } else if (item is myCar) {
-        title = 'My Car';
-      } else if (item is history) {
-        title = 'History';
-      } else if (item is financialNews) {
-        title = 'Financial News';
-      } else if (item is eviePoints) {
-        title = 'Evie Points';
-      } else if (item is helpCenter) {
-        title = 'Help Center';
-      } else if (item is howToUse) {
-        title = 'How to use';
-      } else if (item is setting) {
-        title = 'Setting';
-      }
-      return ListTile(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => name[index]),
-          );
-        },
-        title: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Text(
-            title,
-            style: itemDrawerText,
-          ),
-        ),
-      );
-    },
-  );
 }

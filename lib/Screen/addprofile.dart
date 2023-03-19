@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/basic.dart';
 // ignore: implementation_imports, unnecessary_import
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/addvehicle.dart';
 // ignore: depend_on_referenced_packages
 // ignore: unused_import
@@ -212,10 +213,18 @@ class ProfileScreenState extends State<ProfileScreen> {
                               fontSize: 20.0),
                         ),
                         onPressed: () async {
-                          await addProfile().then((value) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddVehicle())));
+                          await authService()
+                              .addProfile(_fullname.text, _nickname.text,
+                                  _number.text, _email.text)
+                              .then(
+                                (value) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddVehicle(),
+                                  ),
+                                ),
+                              );
+                          ;
                         },
                       )
                     ])),

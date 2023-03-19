@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/homePage.dart';
 
 class AddVehicle extends StatefulWidget {
@@ -36,23 +37,6 @@ class AddVehicleState extends State<AddVehicle> {
   String? _selectedBrand;
   String? _selectedType;
   final _LicenseNum = TextEditingController();
-
-  Future<void> addVehicle() async {
-    print('============== addVehicle ==============');
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance
-        .collection('app')
-        .doc('member')
-        .collection('ID')
-        .doc(userId)
-        .collection('Vehicle')
-        .doc()
-        .set({
-      'Brand': _selectedBrand,
-      'Charger type': _selectedType,
-      'License Number': _LicenseNum.text
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -263,11 +247,18 @@ class AddVehicleState extends State<AddVehicle> {
                               fontStyle: FontStyle.normal,
                               fontSize: 21.0),
                         ),
-                        onPressed: () {
-                          addVehicle().then((value) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => homePage())));
+                        onPressed: () async {
+                          await authService()
+                              .addVehicle(_selectedBrand!, _selectedType!,
+                                  _LicenseNum.text)
+                              .then(
+                                (value) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => homePage(),
+                                  ),
+                                ),
+                              );
                         },
                       )
                     ])),

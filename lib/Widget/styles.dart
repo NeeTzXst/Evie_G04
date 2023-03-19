@@ -26,6 +26,12 @@ final itemDrawerText = GoogleFonts.montserrat(
   color: primaryColor,
 );
 
+final itemDrawerlogputText = GoogleFonts.montserrat(
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+  color: Colors.red,
+);
+
 final itemWhiteDrawerText = GoogleFonts.montserrat(
   fontSize: 22,
   fontWeight: FontWeight.bold,
