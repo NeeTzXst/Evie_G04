@@ -245,15 +245,7 @@ class _MyWidgetState extends State<editprofile> {
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         TextButton(
-                          child: Text(
-                            "Save",
-                            style: TextStyle(
-                                color: Color.fromRGBO(255, 255, 255, 1),
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Roboto",
-                                fontStyle: FontStyle.normal,
-                                fontSize: 21.0),
-                          ),
+                          child: Text("Save", style: itemWhiteDrawerText),
                           onPressed: () {
                             Navigator.push(
                                 context,

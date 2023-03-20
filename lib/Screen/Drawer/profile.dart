@@ -185,24 +185,23 @@ class _MyWidgetState extends State<profile> {
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    width: 350,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromARGB(255, 107, 207, 255),
-                    ),
-                    padding: const EdgeInsets.only(left: 13),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(userData['Email'], style: TextDisplay),
-                        )
-                      ],
-                    ),
-                  ),
+                      width: 350,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        color: Color.fromARGB(255, 107, 207, 255),
+                      ),
+                      padding: const EdgeInsets.only(left: 13),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child:
+                                  Text(userData['Email'], style: TextDisplay),
+                            )
+                          ])),
                 ),
                 SizedBox(
                   height: 40,
@@ -220,15 +219,8 @@ class _MyWidgetState extends State<profile> {
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         TextButton(
-                          child: Text(
-                            "Edit Profile",
-                            style: TextStyle(
-                                color: Color.fromRGBO(255, 255, 255, 1),
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Montserrat",
-                                fontStyle: FontStyle.normal,
-                                fontSize: 21.0),
-                          ),
+                          child:
+                              Text("Edit Profile", style: itemWhiteDrawerText),
                           onPressed: () {
                             Navigator.push(
                                 context,

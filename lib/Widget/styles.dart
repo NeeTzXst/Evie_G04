@@ -19,6 +19,12 @@ final TextDisplay = GoogleFonts.montserrat(
   color: Colors.black,
 );
 
+final BlueDisplay = GoogleFonts.montserrat(
+  fontSize: 20,
+  fontWeight: FontWeight.normal,
+  color: primaryColor,
+);
+
 final hintText = GoogleFonts.montserrat(
   fontSize: 16,
   fontWeight: FontWeight.w600,
