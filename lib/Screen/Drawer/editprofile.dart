@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Widget/alertBox.dart';
 import 'package:myapp/Widget/styles.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -58,16 +59,21 @@ class _MyWidgetState extends State<editprofile> {
       {
         'Fullname': _fullNameController.text.trim(),
         'Nickname': _nicknameController.text.trim(),
-        'PhoneNumber': _phoneNumberController.text.trim(),
+        'Phone': _phoneNumberController.text.trim(),
         'Email': _emailController.text.trim(),
       },
     ).then(
       (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Profile updated successfully.'),
-          ),
-        );
+        alertBox
+            .showAlertBox(context, 'Successful', 'Edited successfully')
+            .then((value) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => profile(),
+            ),
+          );
+        });
       },
     ).catchError(
       (error) {
@@ -86,7 +92,7 @@ class _MyWidgetState extends State<editprofile> {
     getUserData().then((userData) {
       _fullNameController.text = userData['Fullname'] ?? '';
       _nicknameController.text = userData['Nickname'] ?? '';
-      _phoneNumberController.text = userData['PhoneNumber'] ?? '';
+      _phoneNumberController.text = userData['Phone'] ?? '';
       _emailController.text = userData['Email'] ?? '';
     });
   }
@@ -216,7 +222,6 @@ class _MyWidgetState extends State<editprofile> {
                           child: TextField(
                             controller: _fullNameController,
                             decoration: InputDecoration(
-                              hintText: userData['Fullname'],
                               border: InputBorder.none,
                             ),
                             style: TextDisplay,
@@ -252,7 +257,6 @@ class _MyWidgetState extends State<editprofile> {
                           child: TextField(
                               controller: _nicknameController,
                               decoration: InputDecoration(
-                                hintText: userData['Nickname'],
                                 border: InputBorder.none,
                               ),
                               style: TextDisplay),
@@ -287,7 +291,6 @@ class _MyWidgetState extends State<editprofile> {
                           child: TextField(
                               controller: _phoneNumberController,
                               decoration: InputDecoration(
-                                hintText: userData['Phone'],
                                 border: InputBorder.none,
                               ),
                               style: TextDisplay),
@@ -322,7 +325,6 @@ class _MyWidgetState extends State<editprofile> {
                           child: TextField(
                             controller: _emailController,
                             decoration: InputDecoration(
-                              hintText: userData['Email'],
                               border: InputBorder.none,
                             ),
                             style: TextDisplay,
@@ -351,10 +353,6 @@ class _MyWidgetState extends State<editprofile> {
                           child: Text("Save", style: itemWhiteDrawerText),
                           onPressed: () {
                             _updateUserData();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => profile()));
                           },
                         )
                       ],
