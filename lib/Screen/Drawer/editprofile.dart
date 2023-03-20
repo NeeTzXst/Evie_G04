@@ -36,7 +36,11 @@ class _MyWidgetState extends State<editprofile> {
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
           leading: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => profile(),
+                ),
+              );
             },
             child: Icon(
               Icons.arrow_back,
@@ -126,8 +130,7 @@ class _MyWidgetState extends State<editprofile> {
                     color: Color.fromARGB(255, 107, 207, 255),
                   ),
                   padding: const EdgeInsets.only(left: 13),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         Align(
@@ -156,8 +159,7 @@ class _MyWidgetState extends State<editprofile> {
                     color: Color.fromARGB(255, 107, 207, 255),
                   ),
                   padding: const EdgeInsets.only(left: 13),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         Align(
@@ -186,8 +188,7 @@ class _MyWidgetState extends State<editprofile> {
                     color: Color.fromARGB(255, 107, 207, 255),
                   ),
                   padding: const EdgeInsets.only(left: 13),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         Align(
@@ -216,8 +217,7 @@ class _MyWidgetState extends State<editprofile> {
                     color: Color.fromARGB(255, 107, 207, 255),
                   ),
                   padding: const EdgeInsets.only(left: 13),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         Align(
@@ -241,8 +241,7 @@ class _MyWidgetState extends State<editprofile> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       color: Color.fromRGBO(26, 116, 226, 1)),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         TextButton(

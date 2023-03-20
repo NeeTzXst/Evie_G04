@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
 import 'editprofile.dart';
 
@@ -35,7 +36,11 @@ class _MyWidgetState extends State<profile> {
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         leading: GestureDetector(
           onTap: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => homePage(),
+              ),
+            );
           },
           child: Icon(
             Icons.arrow_back,
