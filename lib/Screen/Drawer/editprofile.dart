@@ -220,6 +220,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                            keyboardType: TextInputType.text,
                             controller: _fullNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
@@ -255,6 +256,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                              keyboardType: TextInputType.text,
                               controller: _nicknameController,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -289,6 +291,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                              keyboardType: TextInputType.number,
                               controller: _phoneNumberController,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -323,6 +326,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                            keyboardType: TextInputType.emailAddress,
                             controller: _emailController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
