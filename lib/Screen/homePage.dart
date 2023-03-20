@@ -9,7 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:myapp/Database/dataBaseManager.dart';
 import 'package:myapp/Models/currentLocation_model.dart';
 import 'package:myapp/Models/destination_model.dart';
-import 'package:myapp/Screen/Drawer/myCar.dart';
+import 'package:myapp/Screen/selectVehicle.dart';
 import 'package:myapp/Screen/timeRemining.dart';
 import 'package:myapp/Widget/IconButton.dart';
 import 'package:myapp/Widget/myDrawer.dart';
@@ -311,7 +311,8 @@ class _homePageState extends State<homePage> {
                           onTap: () {
                             print("Car");
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => myCar()),
+                              MaterialPageRoute(
+                                  builder: (_) => selectVehicle()),
                             );
                           },
                           child: iconButton(

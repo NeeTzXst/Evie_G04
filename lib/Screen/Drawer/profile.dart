@@ -192,8 +192,7 @@ class _MyWidgetState extends State<profile> {
                         color: Color.fromARGB(255, 107, 207, 255),
                       ),
                       padding: const EdgeInsets.only(left: 13),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
                           // ignore: prefer_const_literals_to_create_immutables
                           children: <Widget>[
                             Align(
