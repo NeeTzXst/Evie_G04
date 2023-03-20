@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Widget/styles.dart';
-import 'editprofile.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'profile.dart';
 
-class profile extends StatefulWidget {
-  const profile({super.key});
+class editprofile extends StatefulWidget {
+  const editprofile({super.key});
 
   @override
-  State<profile> createState() => _MyWidgetState();
+  State<editprofile> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<profile> {
+class _MyWidgetState extends State<editprofile> {
+  File? _image;
+
   @override
+  Future<void> getImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    } else {
+      print('No image selected.');
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -28,7 +45,7 @@ class _MyWidgetState extends State<profile> {
             ),
           ),
           title: Text(
-            "My Profile",
+            "Edit Profile",
             style: headerText,
           ),
         ),
@@ -44,15 +61,49 @@ class _MyWidgetState extends State<profile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        minRadius: 60.0,
-                        child: CircleAvatar(
-                          radius: 90.0,
-                          backgroundImage: NetworkImage(
-                              'https://serving.photos.photobox.com/853892988c364763c7aad97da7e68041ca985eb1b1ba353fdbb4d95a917073bf11ccdaf4.jpg'),
+                      Stack(children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          minRadius: 60.0,
+                          child: CircleAvatar(
+                            radius: 90.0,
+                            backgroundImage: _image != null
+                                ? FileImage(_image!)
+                                : NetworkImage(
+                                        'https://serving.photos.photobox.com/853892988c364763c7aad97da7e68041ca985eb1b1ba353fdbb4d95a917073bf11ccdaf4.jpg')
+                                    as ImageProvider<Object>,
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          bottom: 1,
+                          right: 1,
+                          child: Container(
+                            // ignore: sort_child_properties_last
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: InkWell(
+                                onTap: () {
+                                  getImage(ImageSource.gallery);
+                                },
+                                child: Icon(Icons.add_a_photo,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 3,
+                                color: Colors.white,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  50,
+                                ),
+                              ),
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ]),
                     ],
                   ),
                   SizedBox(
@@ -81,7 +132,10 @@ class _MyWidgetState extends State<profile> {
                       children: <Widget>[
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("Ponthep Ah ha!!!", style: TextDisplay),
+                          child: TextField(
+                              decoration: InputDecoration.collapsed(
+                                  hintText: "Ponthep Ah ha!!!"),
+                              style: TextDisplay),
                         )
                       ])),
             ),
@@ -108,7 +162,10 @@ class _MyWidgetState extends State<profile> {
                       children: <Widget>[
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("PengLnwMoo", style: TextDisplay),
+                          child: TextField(
+                              decoration: InputDecoration.collapsed(
+                                  hintText: "PengLnwMoo"),
+                              style: TextDisplay),
                         )
                       ])),
             ),
@@ -135,7 +192,10 @@ class _MyWidgetState extends State<profile> {
                       children: <Widget>[
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("0932596161", style: TextDisplay),
+                          child: TextField(
+                              decoration: InputDecoration.collapsed(
+                                  hintText: "0932596161"),
+                              style: TextDisplay),
                         )
                       ])),
             ),
@@ -162,8 +222,11 @@ class _MyWidgetState extends State<profile> {
                       children: <Widget>[
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text("PengLnwMoo555@gmail.com",
-                              style: TextDisplay),
+                          child: TextField(
+                            decoration: InputDecoration.collapsed(
+                                hintText: "PengLnwMoo555@gmail.com"),
+                            style: TextDisplay,
+                          ),
                         )
                       ])),
             ),
@@ -184,11 +247,11 @@ class _MyWidgetState extends State<profile> {
                       children: <Widget>[
                         TextButton(
                           child: Text(
-                            "Edit Profile",
+                            "Save",
                             style: TextStyle(
                                 color: Color.fromRGBO(255, 255, 255, 1),
                                 fontWeight: FontWeight.w500,
-                                fontFamily: "Montserrat",
+                                fontFamily: "Roboto",
                                 fontStyle: FontStyle.normal,
                                 fontSize: 21.0),
                           ),
@@ -196,7 +259,7 @@ class _MyWidgetState extends State<profile> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => editprofile()));
+                                    builder: (context) => profile()));
                           },
                         )
                       ])),
