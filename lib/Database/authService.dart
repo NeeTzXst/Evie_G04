@@ -127,6 +127,7 @@ class authService {
 
   //Sign out
   Future<void> signOut(BuildContext context) async {
+    log('logout');
     try {
       await FirebaseAuth.instance
           .signOut()
