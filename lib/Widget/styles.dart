@@ -13,6 +13,11 @@ final headerNormalText = GoogleFonts.montserrat(
   fontWeight: FontWeight.normal,
   color: Colors.black,
 );
+final TextDisplay = GoogleFonts.montserrat(
+  fontSize: 20,
+  fontWeight: FontWeight.normal,
+  color: Colors.black,
+);
 
 final hintText = GoogleFonts.montserrat(
   fontSize: 16,
