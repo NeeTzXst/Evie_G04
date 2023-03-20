@@ -17,6 +17,11 @@ class _MyWidgetState extends State<editprofile> {
   File? _image;
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
   Future<void> getImage(ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
@@ -30,16 +35,60 @@ class _MyWidgetState extends State<editprofile> {
     }
   }
 
-  DocumentReference get userDocument {
-    return FirebaseFirestore.instance
+  Future<DocumentSnapshot> getUserData() async {
+    final userUid = FirebaseAuth.instance.currentUser!.uid;
+    final userDocument = FirebaseFirestore.instance
         .collection('app')
         .doc('member')
         .collection('ID')
-        .doc(userUID);
+        .doc(userUid);
+
+    return await userDocument.get();
   }
 
-  Future<DocumentSnapshot> getUserData() async {
-    return await userDocument.get();
+  void _updateUserData() {
+    final userUid = FirebaseAuth.instance.currentUser!.uid;
+    final userDocument = FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userUid);
+
+    userDocument.update(
+      {
+        'Fullname': _fullNameController.text.trim(),
+        'Nickname': _nicknameController.text.trim(),
+        'PhoneNumber': _phoneNumberController.text.trim(),
+        'Email': _emailController.text.trim(),
+      },
+    ).then(
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Profile updated successfully.'),
+          ),
+        );
+      },
+    ).catchError(
+      (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update profile.'),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData().then((userData) {
+      _fullNameController.text = userData['Fullname'] ?? '';
+      _nicknameController.text = userData['Nickname'] ?? '';
+      _phoneNumberController.text = userData['PhoneNumber'] ?? '';
+      _emailController.text = userData['Email'] ?? '';
+    });
   }
 
   @override
@@ -165,8 +214,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
-                            // controller: TextEditingController(
-                            //     text: userData['Fullname']),
+                            controller: _fullNameController,
                             decoration: InputDecoration(
                               hintText: userData['Fullname'],
                               border: InputBorder.none,
@@ -202,6 +250,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                              controller: _nicknameController,
                               decoration: InputDecoration(
                                 hintText: userData['Nickname'],
                                 border: InputBorder.none,
@@ -236,6 +285,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                              controller: _phoneNumberController,
                               decoration: InputDecoration(
                                 hintText: userData['Phone'],
                                 border: InputBorder.none,
@@ -270,6 +320,7 @@ class _MyWidgetState extends State<editprofile> {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
+                            controller: _emailController,
                             decoration: InputDecoration(
                               hintText: userData['Email'],
                               border: InputBorder.none,
@@ -299,6 +350,7 @@ class _MyWidgetState extends State<editprofile> {
                         TextButton(
                           child: Text("Save", style: itemWhiteDrawerText),
                           onPressed: () {
+                            _updateUserData();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
