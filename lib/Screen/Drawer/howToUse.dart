@@ -131,10 +131,9 @@ class _howToUseState extends State<howToUse> {
                   onLastPage
                       ? GestureDetector(
                           onTap: () {
-                            print("Pop to map");
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: ((context) => homePage())));
+                                    builder: ((context) => LetyouIn())));
                           },
                           child: Container(
                             child: CircleAvatar(
