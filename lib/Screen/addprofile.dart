@@ -65,7 +65,6 @@ class ProfileScreenState extends State<ProfileScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: BackButton(color: Color.fromRGBO(26, 116, 226, 1)),
-        // ignore: prefer_const_constructors
         title: Text(
           "Create your profile",
           style: TextStyle(
@@ -270,19 +269,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                           fontStyle: FontStyle.normal,
                           fontSize: 20.0),
                     ),
-                    onPressed: () async {
-                      await authService()
-                          .addProfile(_fullname.text, _nickname.text,
-                              _number.text, _email.text)
-                          .then(
-                            (value) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddVehicle(),
-                              ),
-                            ),
-                          );
-                      ;
+                    onPressed: () {
+                      authService().addProfile(_fullname.text, _nickname.text,
+                          _number.text, _email.text, context);
                     },
                   )
                 ],

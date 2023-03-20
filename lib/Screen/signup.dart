@@ -202,17 +202,8 @@ class _SignupScreenState extends State<SignupScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 1.0),
             child: TextButton(
               onPressed: () {
-                authService()
-                    .signUp(_emailController.text, _passwordController.text)
-                    .then(
-                  (value) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ProfileScreen(),
-                      ),
-                    );
-                  },
-                );
+                authService().signUp(
+                    _emailController.text, _passwordController.text, context);
               },
               child: Text(
                 "Register",

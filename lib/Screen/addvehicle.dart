@@ -247,10 +247,10 @@ class AddVehicleState extends State<AddVehicle> {
                               fontStyle: FontStyle.normal,
                               fontSize: 21.0),
                         ),
-                        onPressed: () async {
-                          await authService()
+                        onPressed: () {
+                          authService()
                               .addVehicle(_selectedBrand!, _selectedType!,
-                                  _LicenseNum.text)
+                                  _LicenseNum.text, context)
                               .then(
                                 (value) => Navigator.push(
                                   context,

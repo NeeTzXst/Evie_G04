@@ -1,4 +1,6 @@
 // ignore_for_file: unnecessary_import, avoid_print,, prefer_const_constructors, duplicate_ignore
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -205,7 +207,7 @@ class _LetyouInState extends State<LetyouIn> {
                   alignment: const AlignmentDirectional(0, 0),
                   child: FFButtonWidget(
                     onPressed: () {
-                      print('Signin pressed ...');
+                      log('Signin pressed ...');
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => LoginScreen()),
                       );
@@ -235,7 +237,8 @@ class _LetyouInState extends State<LetyouIn> {
                   alignment: AlignmentDirectional(0, 0),
                   child: GestureDetector(
                     onTap: () {
-                      authService().signInAnonymous().then((value) {
+                      log('signInAnonymous');
+                      authService().signInAnonymous(context).then((value) {
                         Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => homePage()),
                         );

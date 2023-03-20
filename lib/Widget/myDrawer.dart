@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +95,7 @@ class _MyWidgetState extends State<myDrawer> {
                         Container(
                           width: 175,
                           child: Text(
-                            userData['Fullname'],
+                            userData['Fullname']!,
                             style: ProfileDrawerText,
                             overflow: TextOverflow.clip,
                           ),
