@@ -13,7 +13,6 @@ class authService {
           .createUserWithEmailAndPassword(email: email, password: password);
       log('Email : $email');
       log('Password : $password');
-      log('Create');
       await FirebaseFirestore.instance
           .collection('app')
           .doc('member')
