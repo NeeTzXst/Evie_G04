@@ -56,53 +56,62 @@ class _selectVehicleState extends State<selectVehicle> {
             return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  elevation: 4,
-                  child: Container(
-                    height: 120,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: 10,
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    elevation: 10,
+                    child: Container(
+                      height: 130,
+                      child: Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 175,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "${snapshot.data!.docs[index].get('Brand')}",
+                                  style: TextDisplay,
+                                ),
+                                Image.asset(
+                                  'assets/EVIE.png',
+                                  width: 80,
+                                  height: 80,
+                                ),
+                              ],
                             ),
-                            Text(
-                              "${snapshot.data!.docs[index].get('Brand')}",
+                          ),
+                          VerticalDivider(
+                            thickness: 0.1,
+                            color: Colors.black,
+                          ),
+                          Container(
+                            width: 170,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Charger type : ${snapshot.data!.docs[index].get('Charger type')}",
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "License Number : ${snapshot.data!.docs[index].get('License Number')}",
+                                ),
+                              ],
                             ),
-                            Image.asset(
-                              'assets/EVIE.png',
-                              width: 80,
-                              height: 80,
-                            ),
-                          ],
-                        ),
-                        VerticalDivider(
-                          thickness: 0.1,
-                          color: Colors.black,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${snapshot.data!.docs[index].get('Charger type')}",
-                              style: itemDrawerText,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "${snapshot.data!.docs[index].get('License Number')}",
-                              style: itemDrawerText,
-                            ),
-                          ],
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -118,3 +127,8 @@ class _selectVehicleState extends State<selectVehicle> {
   }
 }
 // "${snapshot.data!.docs[index].get('Brand')}"
+
+//                           VerticalDivider(
+//                             thickness: 0.1,
+//                             color: Colors.black,
+//                           ),
