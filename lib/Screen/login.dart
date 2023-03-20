@@ -253,18 +253,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   TextButton(
                     onPressed: () {
-                      authService()
-                          .signIn(
-                              _emailController.text, _passwordController.text)
-                          .then(
-                        (value) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => homePage(),
-                            ),
-                          );
-                        },
-                      );
+                      authService().signIn(_emailController.text,
+                          _passwordController.text, context);
                     },
                     child: Text(
                       "Sign in",

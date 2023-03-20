@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Widget/styles.dart';
 
-class myCar extends StatefulWidget {
-  const myCar({super.key});
+class selectVehicle extends StatefulWidget {
+  const selectVehicle({super.key});
 
   @override
-  State<myCar> createState() => _myCarState();
+  State<selectVehicle> createState() => _selectVehicleState();
 }
 
-class _myCarState extends State<myCar> {
+class _selectVehicleState extends State<selectVehicle> {
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -31,7 +31,7 @@ class _myCarState extends State<myCar> {
           ),
         ),
         title: Text(
-          "My vehicles",
+          "Select your vehicle",
           style: headerText,
         ),
       ),

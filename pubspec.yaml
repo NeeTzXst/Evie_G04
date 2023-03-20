@@ -55,12 +55,14 @@ dependencies:
   cloud_firestore: ^4.4.4
   firebase_core: ^2.7.1
   firebase_auth: ^4.2.10
+  firebase_storage: ^11.0.16
   font_awesome_flutter: ^10.4.0
   shared_preferences: ^2.0.18
   timeago: ^3.3.0
   json_path: ^0.4.2
   auto_size_text: ^3.0.0
   google_sign_in: ^6.0.2
+  image_picker: ^0.8.7
 
 dev_dependencies:
   flutter_test:

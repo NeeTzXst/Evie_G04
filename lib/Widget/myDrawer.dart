@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -97,7 +95,7 @@ class _MyWidgetState extends State<myDrawer> {
                         Container(
                           width: 175,
                           child: Text(
-                            userData['Fullname'],
+                            userData['Fullname']!,
                             style: ProfileDrawerText,
                             overflow: TextOverflow.clip,
                           ),
@@ -224,7 +222,7 @@ class _MyWidgetState extends State<myDrawer> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 55),
+            padding: const EdgeInsets.only(top: 55),
             child: ListTile(
               title: Center(
                 child: Text(
@@ -361,17 +359,15 @@ class _MyWidgetState extends State<myDrawer> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              currentUser == null || currentUser!.isAnonymous
-                  ? guestHeader(context)
-                  : memberHeader(context),
-              currentUser == null || currentUser!.isAnonymous
-                  ? guestMenu(context)
-                  : memberMenu(context),
-            ],
-          ),
+        child: Column(
+          children: [
+            currentUser == null || currentUser!.isAnonymous
+                ? guestHeader(context)
+                : memberHeader(context),
+            currentUser == null || currentUser!.isAnonymous
+                ? guestMenu(context)
+                : memberMenu(context),
+          ],
         ),
       ),
     );
