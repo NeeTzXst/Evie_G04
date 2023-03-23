@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const primaryColor = Color.fromRGBO(26, 116, 226, 1);
+const secondColor = Color.fromRGBO(107, 207, 255, 1);
+const redColor = Color.fromRGBO(255, 107, 107, 1);
 
 final headerText = GoogleFonts.montserrat(
   fontSize: 24,
@@ -53,4 +55,10 @@ final ProfileDrawerText = GoogleFonts.montserrat(
   fontSize: 25,
   fontWeight: FontWeight.bold,
   color: primaryColor,
+);
+
+final Qrcodes = GoogleFonts.montserrat(
+  fontSize: 17,
+  fontWeight: FontWeight.bold,
+  color: Colors.white,
 );
