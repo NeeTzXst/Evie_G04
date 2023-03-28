@@ -17,12 +17,14 @@ class _MyWidgetState extends State<splash> {
 
   _navigatetohome() async {
     await Future.delayed(Duration(milliseconds: 2000), () {});
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => howToUse(),
-      ),
-    );
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => howToUse(),
+        ),
+      );
+    }
   }
 
   @override

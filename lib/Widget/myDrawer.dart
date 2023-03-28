@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,14 +29,22 @@ class _MyWidgetState extends State<myDrawer> {
   User? currentUser;
   List<Widget>? drawerItem;
 
-  String get userUID => FirebaseAuth.instance.currentUser!.uid;
+  String get userUID {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return 'No user';
+    } else {
+      return user.uid;
+    }
+  }
 
   DocumentReference get userDocument {
-    return FirebaseFirestore.instance
+    final docRef = FirebaseFirestore.instance
         .collection('app')
         .doc('member')
         .collection('ID')
         .doc(userUID);
+    return docRef;
   }
 
   Future<DocumentSnapshot> getUserData() async {
@@ -51,11 +61,10 @@ class _MyWidgetState extends State<myDrawer> {
     return FutureBuilder<DocumentSnapshot>(
       future: getUserData(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show a loading indicator while waiting for the data.
-        } else if (snapshot.hasError) {
+        if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        } else {
+        }
+        if (snapshot.hasData && snapshot.data!.exists) {
           final userData = snapshot.data!;
           return Padding(
             padding: const EdgeInsets.only(left: 10, top: 10),
@@ -95,7 +104,7 @@ class _MyWidgetState extends State<myDrawer> {
                         Container(
                           width: 175,
                           child: Text(
-                            userData['Fullname']!,
+                            userData['Fullname'],
                             style: ProfileDrawerText,
                             overflow: TextOverflow.clip,
                           ),
@@ -106,6 +115,10 @@ class _MyWidgetState extends State<myDrawer> {
                 )
               ],
             ),
+          );
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
           );
         }
       },

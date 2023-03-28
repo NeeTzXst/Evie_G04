@@ -11,9 +11,11 @@ class currentLocation {
 
   Map<String, dynamic> toJson() {
     return {
-      'description': description,
-      'latitude': latitude,
-      'longitude': longitude,
+      "Current_Location": {
+        'description': description,
+        'current_latitude': latitude,
+        'current_longitude': longitude,
+      }
     };
   }
 
