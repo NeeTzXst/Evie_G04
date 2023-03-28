@@ -2,18 +2,20 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Database/saveState.dart';
 import 'package:myapp/Screen/addprofile.dart';
 import 'package:myapp/Screen/addvehicle.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/letyouin.dart';
 import 'package:myapp/Widget/alertBox.dart';
 
-class authService {
+class authService extends ChangeNotifier {
   // Sign up
   Future<void> signUp(
       String email, String password, BuildContext context) async {
     log('signUp ');
     try {
+      await saveState.saveUserEmail(email);
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       log('Email : $email');
@@ -78,7 +80,7 @@ class authService {
           );
         },
       );
-      ; // Set any data you want to store for the anonymous user
+      ;
 
       return anonymous;
     } catch (error) {
@@ -129,9 +131,11 @@ class authService {
   Future<void> signOut(BuildContext context) async {
     log('logout');
     try {
+      await saveState.saveUserLoggedInStatus(false);
+      log(await saveState.getUserLoggedInStatus().toString());
       await FirebaseAuth.instance
           .signOut()
-          .then((value) => Navigator.of(context).push(
+          .then((value) => Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => LetyouIn(),
                 ),
@@ -153,6 +157,12 @@ class authService {
     log('email : $email ');
     final userId = FirebaseAuth.instance.currentUser!.uid;
     try {
+      await saveState.saveFullname(fullname);
+      await saveState.saveNickname(nickname);
+      await saveState.savePhone(number);
+      log(await saveState.saveFullname(fullname).toString());
+      log(await saveState.saveNickname(nickname).toString());
+      log(await saveState.savePhone(number).toString());
       await FirebaseFirestore.instance
           .collection('app')
           .doc('member')
@@ -182,6 +192,8 @@ class authService {
     log('AddVehicle');
     final userId = FirebaseAuth.instance.currentUser!.uid;
     try {
+      await saveState.saveUserLoggedInStatus(true);
+      log(await saveState.getUserLoggedInStatus().toString());
       await FirebaseFirestore.instance
           .collection('app')
           .doc('member')

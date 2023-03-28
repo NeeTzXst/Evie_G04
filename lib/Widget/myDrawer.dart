@@ -104,7 +104,7 @@ class _MyWidgetState extends State<myDrawer> {
                         Container(
                           width: 175,
                           child: Text(
-                            userData['Fullname']!,
+                            userData['Fullname'],
                             style: ProfileDrawerText,
                             overflow: TextOverflow.clip,
                           ),
