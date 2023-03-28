@@ -8,7 +8,7 @@ Evie is an ev car application platform that will help you to book car park and c
 - Thanakom Worathanyathorn<br/>
 
 <b>Application Dev</b><br/>
-- Pattima Sommai<<br/>
+- Pattima Sommai<br/>
 - Wipop kornpitak<br/>
 - Wiyada Kanjanadee<br/>
 - Aueangkoon Klatithong
