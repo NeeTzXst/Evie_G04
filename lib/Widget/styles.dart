@@ -10,6 +10,12 @@ final headerText = GoogleFonts.montserrat(
   fontWeight: FontWeight.bold,
   color: primaryColor,
 );
+
+final StationFull = GoogleFonts.montserrat(
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);
 final headerNormalText = GoogleFonts.montserrat(
   fontSize: 24,
   fontWeight: FontWeight.normal,

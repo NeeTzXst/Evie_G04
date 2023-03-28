@@ -65,7 +65,7 @@ class _selectVehicleState extends State<selectVehicle> {
                     ),
                     elevation: 10,
                     child: Container(
-                      height: 130,
+                      height: 120,
                       child: Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

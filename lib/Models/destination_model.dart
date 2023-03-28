@@ -11,17 +11,19 @@ class destination {
 
   Map<String, dynamic> toJson() {
     return {
-      'description': description,
-      'latitude': latitude,
-      'longitude': longitude
+      "Destination": {
+        'description': description,
+        'destination_latitude': latitude,
+        'destination_longitude': longitude,
+      }
     };
   }
 
   factory destination.fromJson(Map<String, dynamic> json) {
     return destination(
       description: json['description'] as String?,
-      latitude: json['latitude'] as double?,
-      longitude: json['longitude'] as double?,
+      latitude: json['destination_latitude'] as double?,
+      longitude: json['destination_longitude'] as double?,
     );
   }
 
