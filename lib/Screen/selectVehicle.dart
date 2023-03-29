@@ -99,7 +99,7 @@ class _selectVehicleState extends State<selectVehicle> {
                                 ),
                                 Text(
                                   "${snapshot.data!.docs[index].get('Brand')}",
-                                  style: TextDisplay,
+                                  style: hintTextBlack,
                                 ),
                                 Image.asset(
                                   'assets/Audi Car.png',

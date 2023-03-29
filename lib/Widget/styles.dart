@@ -45,6 +45,12 @@ final hintText = GoogleFonts.montserrat(
   color: primaryColor,
 );
 
+final hintTextBlack = GoogleFonts.montserrat(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: Colors.black,
+);
+
 final itemDrawerText = GoogleFonts.montserrat(
   fontSize: 22,
   fontWeight: FontWeight.bold,

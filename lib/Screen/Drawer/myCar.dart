@@ -17,6 +17,23 @@ class _myCarState extends State<myCar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: SizedBox(
+        width: 350,
+        height: 60,
+        child: FloatingActionButton.extended(
+          backgroundColor: primaryColor,
+          label: Text(
+            "Add New Vehicle",
+            style: itemWhiteDrawerText,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         elevation: 0,
@@ -57,64 +74,73 @@ class _myCarState extends State<myCar> {
             return ListView.builder(
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  elevation: 3,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        // decoration:
-                        //     BoxDecoration(border: Border.all(width: 1)),
-                        height: 120,
-                        width: 210,
-                        child: Column(
-                          children: [
-                            Text(
-                              "${snapshot.data!.docs[index].get('Brand')}",
-                              style: TextDisplay,
-                            ),
-                            Image.asset(
-                              'assets/Audi Car.png',
-                              width: 115,
-                              height: 80,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      side: BorderSide(color: Colors.black, width: 0.01),
+                    ),
+                    elevation: 7,
+                    child: Container(
+                      height: 120,
+                      child: Row(
                         children: [
                           Container(
-                            height: 120,
-                            width: 160,
-                            decoration: BoxDecoration(
-                                border: Border(left: BorderSide(width: 0.2))),
+                            width: 175,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  "${snapshot.data!.docs[index].get('Charger type')}",
-                                  style: TextDisplay,
-                                  textAlign: TextAlign.center,
-                                ),
                                 SizedBox(
                                   height: 10,
                                 ),
                                 Text(
-                                  "${snapshot.data!.docs[index].get('License Number')}",
-                                  style: TextDisplay,
-                                  textAlign: TextAlign.center,
+                                  "${snapshot.data!.docs[index].get('Brand')}",
+                                  style: hintTextBlack,
+                                ),
+                                Image.asset(
+                                  'assets/Audi Car.png',
+                                  width: 120,
+                                  height: 80,
                                 ),
                               ],
                             ),
                           ),
+                          VerticalDivider(
+                            thickness: 0.2,
+                            color: Colors.black,
+                          ),
+                          Container(
+                            width: 160,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 145,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Charger type : ${snapshot.data!.docs[index].get('Charger type')}",
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "License Number : ${snapshot.data!.docs[index].get('License Number')}",
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
-                      )
-                    ],
+                      ),
+                    ),
                   ),
                 );
               },
@@ -123,18 +149,6 @@ class _myCarState extends State<myCar> {
           return Center(
             child: CircularProgressIndicator(),
           );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: const Color.fromRGBO(107, 207, 255, 1),
-        label: Text(
-          "Add Vehicle",
-          style: itemDrawerText,
-        ),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddVehicle()));
         },
       ),
     );
