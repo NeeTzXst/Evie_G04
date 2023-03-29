@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_constructors, duplicate_import, file_names, duplicate_ignore, prefer_const_literals_to_create_immutables
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Database/authService.dart';
+import 'package:myapp/Screen/Drawer/myCar.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
 
@@ -242,17 +245,14 @@ class AddVehicleState extends State<AddVehicle> {
                       TextButton(
                         child: Text("Confirm", style: itemDrawerText),
                         onPressed: () {
+                          log('message');
                           authService()
                               .addVehicle(_selectedBrand!, _selectedType!,
                                   _LicenseNum.text, context)
-                              .then(
-                                (value) => Navigator.push(
+                              .then((value) => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => homePage(),
-                                  ),
-                                ),
-                              );
+                                      builder: (context) => myCar())));
                         },
                       )
                     ])),
