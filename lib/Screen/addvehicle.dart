@@ -47,9 +47,18 @@ class AddVehicleState extends State<AddVehicle> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        leading: BackButton(color: Color.fromRGBO(26, 116, 226, 1)),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back,
+            size: 40,
+            color: Color.fromRGBO(26, 116, 226, 1),
+          ),
+        ),
         // ignore: prefer_const_constructors
-        title: Text("Add YourVehicle", style: headerText),
+        title: Text("Add Your Vehicle", style: headerText),
       ),
       body: ListView(
         children: <Widget>[
@@ -58,7 +67,7 @@ class AddVehicleState extends State<AddVehicle> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 23),
-            child: Text("Brand", style: Mytextstyle.blue15),
+            child: Text("Brand", style: hintText),
           ),
           Align(
               alignment: Alignment.center,
@@ -81,8 +90,7 @@ class AddVehicleState extends State<AddVehicle> {
                         hint: Container(
                             child: Text(
                           'Select your car brand',
-                          style: TextStyle(
-                              color: Color.fromRGBO(107, 207, 255, 1)),
+                          style: hintTextlight,
                           textAlign: TextAlign.left,
                         )),
                         // set the color of the dropdown menu
@@ -112,7 +120,7 @@ class AddVehicleState extends State<AddVehicle> {
                                     children: <Widget>[
                                       Text(e,
                                           textAlign: TextAlign.left,
-                                          style: Mytextstyle.blue19),
+                                          style: BlueDisplay),
                                     ]))
                             .toList(),
                       )))),
@@ -128,7 +136,7 @@ class AddVehicleState extends State<AddVehicle> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 23),
-            child: Text("Charger type", style: Mytextstyle.blue15),
+            child: Text("Charger type", style: hintText),
           ),
           Align(
               alignment: Alignment.center,
@@ -151,8 +159,7 @@ class AddVehicleState extends State<AddVehicle> {
                         hint: Container(
                             child: Text(
                           'Select your charger type',
-                          style: TextStyle(
-                              color: Color.fromRGBO(107, 207, 255, 1)),
+                          style: hintTextlight,
                           textAlign: TextAlign.left,
                         )),
                         // set the color of the dropdown menu
@@ -182,7 +189,7 @@ class AddVehicleState extends State<AddVehicle> {
                                     children: <Widget>[
                                       Text(d,
                                           textAlign: TextAlign.left,
-                                          style: Mytextstyle.blue19),
+                                          style: BlueDisplay),
                                     ]))
                             .toList(),
                       )))),
@@ -191,7 +198,7 @@ class AddVehicleState extends State<AddVehicle> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 23),
-            child: Text("License Number", style: Mytextstyle.blue15),
+            child: Text("License Number", style: hintText),
           ),
           Align(
             alignment: Alignment.center,
@@ -210,19 +217,13 @@ class AddVehicleState extends State<AddVehicle> {
                       Align(
                           alignment: Alignment.centerLeft,
                           child: TextField(
-                            controller: _LicenseNum,
-                            decoration: InputDecoration(
-                                hintText: "Enter your License number",
-                                hintStyle: TextStyle(
-                                  color: Color.fromRGBO(107, 207, 255, 1),
-                                )),
-                            style: TextStyle(
-                                color: Color.fromRGBO(26, 116, 226, 1),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: "Montserrat",
-                                fontStyle: FontStyle.normal,
-                                fontSize: 19.0),
-                          ))
+                              controller: _LicenseNum,
+                              decoration: InputDecoration(
+                                  hintText: "Enter your License number",
+                                  hintStyle: TextStyle(
+                                    color: Color.fromRGBO(107, 207, 255, 1),
+                                  )),
+                              style: hintTextlight))
                     ])),
           ),
           SizedBox(
@@ -241,15 +242,7 @@ class AddVehicleState extends State<AddVehicle> {
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       TextButton(
-                        child: Text(
-                          "Confirm",
-                          style: TextStyle(
-                              color: Color.fromRGBO(26, 116, 226, 1),
-                              fontWeight: FontWeight.w500,
-                              fontFamily: "Montserrat",
-                              fontStyle: FontStyle.normal,
-                              fontSize: 21.0),
-                        ),
+                        child: Text("Confirm", style: itemDrawerText),
                         onPressed: () {
                           authService()
                               .addVehicle(_selectedBrand!, _selectedType!,
@@ -275,27 +268,4 @@ class AddVehicleState extends State<AddVehicle> {
       ),
     );
   }
-}
-
-class Mytextstyle {
-  static const TextStyle black21 = TextStyle(
-      color: Color.fromRGBO(0, 0, 0, 1),
-      fontWeight: FontWeight.w500,
-      fontFamily: "Montserrat",
-      fontStyle: FontStyle.normal,
-      fontSize: 21.0);
-
-  static const TextStyle blue19 = TextStyle(
-      color: Color.fromRGBO(26, 116, 226, 1),
-      fontWeight: FontWeight.w400,
-      fontFamily: "Montserrat",
-      fontStyle: FontStyle.normal,
-      fontSize: 19.0);
-
-  static const TextStyle blue15 = TextStyle(
-      color: Color.fromRGBO(26, 116, 226, 1),
-      fontWeight: FontWeight.bold,
-      fontFamily: "Montserrat",
-      fontStyle: FontStyle.normal,
-      fontSize: 15.0);
 }

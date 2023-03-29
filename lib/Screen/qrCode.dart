@@ -14,11 +14,6 @@ class qrCode extends StatefulWidget {
 class _qrCodeState extends State<qrCode> {
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQueryData = MediaQuery.of(context);
-
-    // Get screen width and height
-    double screenWidth = mediaQueryData.size.width;
-    double screenHeight = mediaQueryData.size.height;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
@@ -40,52 +35,171 @@ class _qrCodeState extends State<qrCode> {
           style: headerText,
         ),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 330,
-                  height: 270,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                    color: primaryColor,
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 320,
+              height: 280,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(63, 160, 239, 1),
+                borderRadius: BorderRadius.all(Radius.circular(35.0)),
+              ),
+              child: Column(
+                // ignore: prefer_const_literals_to_create_immutables
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
                   ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "02 Parking Spot",
+                      style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 1),
+                          fontWeight: FontWeight.w400,
+                          fontFamily: "Montserrat",
+                          fontStyle: FontStyle.normal,
+                          fontSize: 24.0),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                      width: 200,
+                      height: 200,
+                      child: Image.network(
+                          "https://www.investopedia.com/thmb/LCLGYbEdJwzFQbTsFSDiM-hx42U=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/qr-code-bc94057f452f4806af70fd34540f72ad.png"))
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 320,
+              height: 280,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(107, 207, 255, 0.8),
+                borderRadius: BorderRadius.all(Radius.circular(35.0)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // ignore: prefer_const_literals_to_create_immutables
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 22,
+                          left: 20,
+                        ),
+                        child: Text("Name", style: TextDisplay),
                       ),
-                      Center(
-                        child: Text(
-                          "04 Charging Spot",
-                          style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 22,
+                          left: 10,
                         ),
+                        child: Text("ToonMaiRu", style: BlueDisplayBold),
                       ),
-                      Container(
-                        width: 210,
-                        height: 210,
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: QrImage(
-                          version: QrVersions.auto,
-                          data: "data",
-                          padding: EdgeInsets.all(25),
-                          foregroundColor: Colors.white,
-                        ),
-                      )
                     ],
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 20,
+                        ),
+                        child: Text("Area", style: TextDisplay),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 10,
+                        ),
+                        child:
+                            Text("KU Charging Station", style: BlueDisplayBold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 20,
+                        ),
+                        child: Text("Duration", style: TextDisplay),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 10,
+                        ),
+                        child: Text("1 hours", style: BlueDisplayBold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 20,
+                        ),
+                        child: Text("Time", style: TextDisplay),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 10,
+                        ),
+                        child: Text("09am - 10am", style: BlueDisplayBold),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 20,
+                        ),
+                        child: Text("Vehicle", style: TextDisplay),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 10,
+                        ),
+                        child: Text("Ford", style: BlueDisplayBold),
+                      ),
+                    ],
+                  ),
+                  child: Text('data'),
                 )
               ],
             ),
@@ -99,66 +213,120 @@ class _qrCodeState extends State<qrCode> {
                     borderRadius: BorderRadius.circular(35),
                     color: secondColor,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Name'),
-                        Text('Area'),
-                        Text('Duration'),
-                        Text('Time'),
-                        Text('Vehicle'),
-                        Text('Date'),
-                        Text('Phone'),
-                      ],
-                    ),
-                  ),
+                  child: Text('data'),
                 )
               ],
             ),
             SizedBox(
               height: 30,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    width: 140,
-                    height: 60,
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Align(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Padding(
+                //   padding: const EdgeInsets.only(
+                //     left: 10,
+                //   ),
+                // ),
+                Container(
+                    width: 120,
+                    height: 52,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: secondColor,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      color: Color.fromRGBO(107, 207, 255, 0.6),
                     ),
-                    child: Center(
-                        child: Text(
-                      'Back',
-                      style: BlueDisplay,
-                    )),
-                  ),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: <Widget>[
+                          TextButton(
+                            child: Text("Back", style: BlueDisplayBold),
+                            onPressed: () {},
+                          ),
+                        ])),
+                SizedBox(
+                  width: 20,
                 ),
                 Container(
-                  width: 140,
-                  height: 60,
+                  width: 120,
+                  height: 52,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: redColor,
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    color: Color.fromRGBO(255, 107, 107, 0.6),
                   ),
-                  child: Center(
-                      child: Text(
-                    'Cencel',
-                    style: TextDisplay,
-                  )),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      TextButton(
+                          child: Text("Cancel", style: TextDisplay),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 243, 100, 112),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25)),
+                                  title: Center(
+                                    child: Text('Are you sure ?',
+                                        style: TextDisplay),
+                                  ),
+                                  content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      // ignore: prefer_const_literals_to_create_immutables
+                                      children: [
+                                        Text(
+                                          "If you cancel your booking, your ",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        Text(
+                                          " payment will not be refunded.",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ]),
+                                  actions: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        width: 200,
+                                        height: 52,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0)),
+                                            color: Color.fromRGBO(
+                                                255, 255, 255, 1)),
+                                        child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            // ignore: prefer_const_literals_to_create_immutables
+                                            children: <Widget>[
+                                              TextButton(
+                                                child: Text("Confirm",
+                                                    style: TextDisplay),
+                                                onPressed: () {},
+                                              )
+                                            ]),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          })
+                    ],
+                  ),
                 ),
               ],
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

@@ -23,13 +23,19 @@ final headerNormalText = GoogleFonts.montserrat(
 );
 final TextDisplay = GoogleFonts.montserrat(
   fontSize: 20,
-  fontWeight: FontWeight.normal,
+  fontWeight: FontWeight.w500,
   color: Colors.black,
 );
 
 final BlueDisplay = GoogleFonts.montserrat(
   fontSize: 20,
   fontWeight: FontWeight.normal,
+  color: primaryColor,
+);
+
+final BlueDisplayBold = GoogleFonts.montserrat(
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
   color: primaryColor,
 );
 
@@ -67,4 +73,16 @@ final Qrcodes = GoogleFonts.montserrat(
   fontSize: 17,
   fontWeight: FontWeight.bold,
   color: Colors.white,
+);
+
+final VehicleName = GoogleFonts.montserrat(
+  fontSize: 19,
+  fontWeight: FontWeight.bold,
+  color: Color.fromARGB(255, 0, 0, 0),
+);
+
+final VehicleDetail = GoogleFonts.montserrat(
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+  color: Color.fromARGB(255, 0, 0, 0),
 );
