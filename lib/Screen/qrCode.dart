@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class qrCode extends StatefulWidget {
   const qrCode({super.key});
@@ -51,7 +53,39 @@ class _qrCodeState extends State<qrCode> {
                     borderRadius: BorderRadius.circular(35),
                     color: primaryColor,
                   ),
-                  child: Text('data'),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Center(
+                        child: Text(
+                          "04 Charging Spot",
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 210,
+                        height: 210,
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: QrImage(
+                          version: QrVersions.auto,
+                          data: "data",
+                          padding: EdgeInsets.all(25),
+                          foregroundColor: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
@@ -65,7 +99,22 @@ class _qrCodeState extends State<qrCode> {
                     borderRadius: BorderRadius.circular(35),
                     color: secondColor,
                   ),
-                  child: Text('data'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Name'),
+                        Text('Area'),
+                        Text('Duration'),
+                        Text('Time'),
+                        Text('Vehicle'),
+                        Text('Date'),
+                        Text('Phone'),
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),

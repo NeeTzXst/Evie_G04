@@ -68,15 +68,3 @@ final Qrcodes = GoogleFonts.montserrat(
   fontWeight: FontWeight.bold,
   color: Colors.white,
 );
-
-final VehicleName = GoogleFonts.montserrat(
-  fontSize: 19,
-  fontWeight: FontWeight.bold,
-  color: Color.fromARGB(255, 0, 0, 0),
-);
-
-final VehicleDetail = GoogleFonts.montserrat(
-  fontSize: 22,
-  fontWeight: FontWeight.bold,
-  color: Color.fromARGB(255, 0, 0, 0),
-);

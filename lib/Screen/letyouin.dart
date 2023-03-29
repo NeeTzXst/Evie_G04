@@ -13,6 +13,7 @@ import 'package:myapp/Database/saveState.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/login.dart';
 import 'package:myapp/Screen/signup.dart';
+import 'package:myapp/Widget/styles.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -56,7 +57,7 @@ class _LetyouInState extends State<LetyouIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
@@ -75,8 +76,8 @@ class _LetyouInState extends State<LetyouIn> {
                     style: FlutterFlowTheme.of(context).bodyText1.override(
                           fontFamily: 'Montserrat',
                           color: const Color(0xFF1A74E2),
-                          fontSize: 50,
-                          lineHeight: 5.5,
+                          fontSize: 60,
+                          lineHeight: 3.5,
                         ),
                   ),
                 ),
@@ -95,17 +96,13 @@ class _LetyouInState extends State<LetyouIn> {
                         color: Color(0xFFB92C2C),
                       ),
                       options: FFButtonOptions(
-                        width: 251,
-                        height: 47,
+                        width: 300,
+                        height: 50,
                         decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0))),
                         color: const Color(0xFF6BCFFF),
-                        textStyle:
-                            FlutterFlowTheme.of(context).subtitle2.override(
-                                  fontFamily: 'Montserrat',
-                                  color: const Color(0xFF101010),
-                                ),
+                        textStyle: TextDisplay,
                         borderSide: const BorderSide(
                           color: Colors.transparent,
                         ),
@@ -127,17 +124,13 @@ class _LetyouInState extends State<LetyouIn> {
                         color: Color(0xFF184E77),
                       ),
                       options: FFButtonOptions(
-                        width: 251,
-                        height: 47,
+                        width: 300,
+                        height: 50,
                         decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0))),
                         color: const Color(0xFF6BCFFF),
-                        textStyle:
-                            FlutterFlowTheme.of(context).subtitle2.override(
-                                  fontFamily: 'Montserrat',
-                                  color: const Color(0xFF101010),
-                                ),
+                        textStyle: TextDisplay,
                         borderSide: const BorderSide(
                           color: Colors.transparent,
                         ),
@@ -157,22 +150,21 @@ class _LetyouInState extends State<LetyouIn> {
                       color: Color(0xFF26A826),
                     ),
                     options: FFButtonOptions(
-                      width: 251,
-                      height: 47,
+                      width: 300,
+                      height: 50,
                       decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.all(Radius.circular(10.0))),
                       color: const Color(0xFF6BCFFF),
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Montserrat',
-                                color: const Color(0xFF101010),
-                              ),
+                      textStyle: TextDisplay,
                       borderSide: const BorderSide(
                         color: Colors.transparent,
                       ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  height: 30,
                 ),
                 Row(
                   // ignore: prefer_const_literals_to_create_immutables
@@ -180,14 +172,14 @@ class _LetyouInState extends State<LetyouIn> {
                     Expanded(
                       child: Divider(
                         color: Color(0xff1A74E2),
-                        height: 36,
                         thickness: 3,
+                        indent: 50,
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
-                        'Or',
+                        'OR',
                         style: TextStyle(
                           fontSize: 16,
                           fontFamily: 'Montserrat',
@@ -198,11 +190,14 @@ class _LetyouInState extends State<LetyouIn> {
                     Expanded(
                       child: Divider(
                         color: Color(0xff1A74E2),
-                        height: 36,
                         thickness: 3,
+                        endIndent: 50,
                       ),
                     ),
                   ],
+                ),
+                SizedBox(
+                  height: 30,
                 ),
                 Align(
                   alignment: const AlignmentDirectional(0, 0),
@@ -215,17 +210,14 @@ class _LetyouInState extends State<LetyouIn> {
                     },
                     text: 'Sign in with password',
                     options: FFButtonOptions(
-                      width: 282,
-                      height: 47,
+                      width: 300,
+                      height: 50,
                       decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.all(Radius.circular(10.0))),
                       color: const Color(0xFF1A74E2),
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Montserrat',
-                                color: Colors.white,
-                              ),
+                      textStyle: TextDisplay,
+
                       // ignore: prefer_const_constructors
                       borderSide: BorderSide(
                         color: Colors.transparent,
@@ -254,7 +246,7 @@ class _LetyouInState extends State<LetyouIn> {
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                               fontFamily: 'Montserrat',
                             ),
                           ),
@@ -264,7 +256,7 @@ class _LetyouInState extends State<LetyouIn> {
                               color: Color(0xff1A74E2),
                               fontSize: 18,
                               fontFamily: 'Montserrat',
-                              height: 3,
+                              height: 2,
                               //fontWeight: FontWeight.bold
                               // height: 10,
                             ),

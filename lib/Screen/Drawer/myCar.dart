@@ -74,7 +74,7 @@ class _myCarState extends State<myCar> {
                           children: [
                             Text(
                               "${snapshot.data!.docs[index].get('Brand')}",
-                              style: VehicleName,
+                              style: TextDisplay,
                             ),
                             Image.asset(
                               'assets/Audi Car.png',
@@ -98,7 +98,7 @@ class _myCarState extends State<myCar> {
                               children: [
                                 Text(
                                   "${snapshot.data!.docs[index].get('Charger type')}",
-                                  style: VehicleDetail,
+                                  style: TextDisplay,
                                   textAlign: TextAlign.center,
                                 ),
                                 SizedBox(
@@ -106,7 +106,7 @@ class _myCarState extends State<myCar> {
                                 ),
                                 Text(
                                   "${snapshot.data!.docs[index].get('License Number')}",
-                                  style: VehicleDetail,
+                                  style: TextDisplay,
                                   textAlign: TextAlign.center,
                                 ),
                               ],

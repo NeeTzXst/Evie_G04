@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class selectVehicle extends StatefulWidget {
@@ -13,9 +16,27 @@ class selectVehicle extends StatefulWidget {
 class _selectVehicleState extends State<selectVehicle> {
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
+  int? _selectedVehicleIndex;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: SizedBox(
+        width: 350,
+        height: 60,
+        child: FloatingActionButton.extended(
+          backgroundColor: primaryColor,
+          label: Text(
+            "Continue",
+            style: itemWhiteDrawerText,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          ),
+          onPressed: () {},
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         elevation: 0,
@@ -62,15 +83,15 @@ class _selectVehicleState extends State<selectVehicle> {
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25.0),
+                      side: BorderSide(color: Colors.black, width: 0.01),
                     ),
-                    elevation: 10,
+                    elevation: 7,
                     child: Container(
                       height: 120,
                       child: Row(
-                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                            width: 175,
+                            width: 150,
                             child: Column(
                               children: [
                                 SizedBox(
@@ -93,19 +114,58 @@ class _selectVehicleState extends State<selectVehicle> {
                             color: Colors.black,
                           ),
                           Container(
-                            width: 170,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            width: 195,
+                            child: Row(
                               children: [
-                                Text(
-                                  "Charger type : ${snapshot.data!.docs[index].get('Charger type')}",
+                                Container(
+                                  width: 145,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Charger type : ${snapshot.data!.docs[index].get('Charger type')}",
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "License Number : ${snapshot.data!.docs[index].get('License Number')}",
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "License Number : ${snapshot.data!.docs[index].get('License Number')}",
+                                Container(
+                                  width: 50,
+                                  child: Radio(
+                                    activeColor: primaryColor,
+                                    value: index,
+                                    groupValue: _selectedVehicleIndex,
+                                    fillColor: MaterialStateProperty
+                                        .resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.selected)) {
+                                          return Colors
+                                              .blue; // color when selected
+                                        } else {
+                                          return Colors
+                                              .blue; // color when not selected
+                                        }
+                                      },
+                                    ),
+                                    onChanged: ((value) {
+                                      setState(
+                                        () {
+                                          _selectedVehicleIndex = value;
+                                          log(_selectedVehicleIndex.toString());
+                                        },
+                                      );
+                                    }),
+                                  ),
                                 ),
                               ],
                             ),
@@ -126,9 +186,3 @@ class _selectVehicleState extends State<selectVehicle> {
     );
   }
 }
-// "${snapshot.data!.docs[index].get('Brand')}"
-
-//                           VerticalDivider(
-//                             thickness: 0.1,
-//                             color: Colors.black,
-//                           ),
