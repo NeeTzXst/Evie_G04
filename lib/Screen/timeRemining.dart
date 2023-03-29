@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myapp/Screen/chackout.dart';
+import 'package:myapp/Screen/checkout.dart';
 import 'package:myapp/Widget/styles.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 

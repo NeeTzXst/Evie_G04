@@ -262,13 +262,14 @@ class _qrCodeState extends State<qrCode> {
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       color: Color.fromRGBO(107, 207, 255, 0.6),
                     ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center,
                         // ignore: prefer_const_literals_to_create_immutables
                         children: <Widget>[
                           TextButton(
                             child: Text("Back", style: BlueDisplayBold),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
                           ),
                         ])),
                 SizedBox(

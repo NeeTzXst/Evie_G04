@@ -1,9 +1,7 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class selectVehicle extends StatefulWidget {
@@ -33,7 +31,9 @@ class _selectVehicleState extends State<selectVehicle> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -102,8 +102,8 @@ class _selectVehicleState extends State<selectVehicle> {
                                   style: TextDisplay,
                                 ),
                                 Image.asset(
-                                  'assets/EVIE.png',
-                                  width: 80,
+                                  'assets/Audi Car.png',
+                                  width: 120,
                                   height: 80,
                                 ),
                               ],

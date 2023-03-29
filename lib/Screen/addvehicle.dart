@@ -90,7 +90,7 @@ class AddVehicleState extends State<AddVehicle> {
                         hint: Container(
                             child: Text(
                           'Select your car brand',
-                          style: hintTextlight,
+                          //style: hintTextlight,
                           textAlign: TextAlign.left,
                         )),
                         // set the color of the dropdown menu
@@ -159,7 +159,7 @@ class AddVehicleState extends State<AddVehicle> {
                         hint: Container(
                             child: Text(
                           'Select your charger type',
-                          style: hintTextlight,
+                          //style: hintTextlight,
                           textAlign: TextAlign.left,
                         )),
                         // set the color of the dropdown menu
@@ -210,8 +210,7 @@ class AddVehicleState extends State<AddVehicle> {
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
                 padding: const EdgeInsets.only(left: 13),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       Align(
@@ -223,7 +222,7 @@ class AddVehicleState extends State<AddVehicle> {
                                   hintStyle: TextStyle(
                                     color: Color.fromRGBO(107, 207, 255, 1),
                                   )),
-                              style: hintTextlight))
+                              style: TextDisplay))
                     ])),
           ),
           SizedBox(
@@ -237,8 +236,7 @@ class AddVehicleState extends State<AddVehicle> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     color: Color.fromRGBO(142, 219, 255, 0.543)),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       TextButton(
