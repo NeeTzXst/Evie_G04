@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/addvehicle.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class myCar extends StatefulWidget {
@@ -60,50 +61,60 @@ class _myCarState extends State<myCar> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25.0),
                   ),
-                  elevation: 4,
-                  child: Container(
-                    height: 120,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
+                  elevation: 3,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        // decoration:
+                        //     BoxDecoration(border: Border.all(width: 1)),
+                        height: 120,
+                        width: 210,
+                        child: Column(
                           children: [
-                            SizedBox(
-                              height: 10,
-                            ),
                             Text(
                               "${snapshot.data!.docs[index].get('Brand')}",
+                              style: VehicleName,
                             ),
                             Image.asset(
-                              'assets/EVIE.png',
-                              width: 80,
+                              'assets/Audi Car.png',
+                              width: 115,
                               height: 80,
                             ),
                           ],
                         ),
-                        VerticalDivider(
-                          thickness: 0.1,
-                          color: Colors.black,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${snapshot.data!.docs[index].get('Charger type')}",
-                              style: itemDrawerText,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            height: 120,
+                            width: 160,
+                            decoration: BoxDecoration(
+                                border: Border(left: BorderSide(width: 0.2))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${snapshot.data!.docs[index].get('Charger type')}",
+                                  style: VehicleDetail,
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "${snapshot.data!.docs[index].get('License Number')}",
+                                  style: VehicleDetail,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "${snapshot.data!.docs[index].get('License Number')}",
-                              style: itemDrawerText,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 );
               },
@@ -114,7 +125,18 @@ class _myCarState extends State<myCar> {
           );
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: const Color.fromRGBO(107, 207, 255, 1),
+        label: Text(
+          "Add Vehicle",
+          style: itemDrawerText,
+        ),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddVehicle()));
+        },
+      ),
     );
   }
 }
-// "${snapshot.data!.docs[index].get('Brand')}"
