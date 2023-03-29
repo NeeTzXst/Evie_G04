@@ -30,7 +30,8 @@ class _myCarState extends State<myCar> {
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AddVehicle()));
           },
         ),
       ),
