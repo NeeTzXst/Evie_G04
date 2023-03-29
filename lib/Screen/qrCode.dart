@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class qrCode extends StatefulWidget {
   const qrCode({super.key});
@@ -199,26 +197,50 @@ class _qrCodeState extends State<qrCode> {
                       ),
                     ],
                   ),
-                  child: Text('data'),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 330,
-                  height: 270,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                    color: secondColor,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 20,
+                        ),
+                        child: Text("Date", style: TextDisplay),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 10,
+                        ),
+                        child: Text("16 Dec 2099", style: BlueDisplayBold),
+                      ),
+                    ],
                   ),
-                  child: Text('data'),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 30,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 20,
+                        ),
+                        child: Text("Phone", style: TextDisplay),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          left: 10,
+                        ),
+                        child: Text("012-345-6789", style: BlueDisplayBold),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           SizedBox(

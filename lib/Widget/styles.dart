@@ -86,3 +86,9 @@ final VehicleDetail = GoogleFonts.montserrat(
   fontWeight: FontWeight.bold,
   color: Color.fromARGB(255, 0, 0, 0),
 );
+
+final hintTextlight = GoogleFonts.montserrat(
+  fontSize: 22,
+  fontWeight: FontWeight.w500,
+  color: Color.fromRGBO(107, 207, 255, 1),
+);
