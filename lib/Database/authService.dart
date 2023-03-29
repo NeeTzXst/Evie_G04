@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Database/saveState.dart';
+import 'package:myapp/Screen/addFirstvehicle.dart';
 import 'package:myapp/Screen/addprofile.dart';
 import 'package:myapp/Screen/addvehicle.dart';
 import 'package:myapp/Screen/homePage.dart';
@@ -176,7 +177,7 @@ class authService extends ChangeNotifier {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AddVehicle(),
+            builder: (context) => AddFirstVehicle(),
           ),
         );
       });
