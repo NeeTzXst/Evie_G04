@@ -31,7 +31,7 @@ class _timeReminingState extends State<timeRemining> {
           ),
         ),
         title: Text(
-          "Time Remining",
+          "Time Reminings",
           style: headerText,
         ),
       ),
