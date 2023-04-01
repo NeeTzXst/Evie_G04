@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -269,10 +270,8 @@ class _getDirectionState extends State<getDirection> {
                                 longitude: locations.last.longitude,
                               );
 
-                              print(
-                                  "${_placesList[index]['description']} latitude : ${locations.last.latitude}");
-                              print(
-                                  "${_placesList[index]['description']} longitude : ${locations.last.longitude}");
+                              log("${_placesList[index]['description']} latitude : ${locations.last.latitude}");
+                              log("${_placesList[index]['description']} longitude : ${locations.last.longitude}");
 
                               // Save Destination on Firebase
                               await dataBaseManager().saveLocation(Des);

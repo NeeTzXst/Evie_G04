@@ -13,6 +13,7 @@ import 'package:myapp/Models/currentLocation_model.dart';
 import 'package:myapp/Models/destination_model.dart';
 import 'package:myapp/Screen/qrCode.dart';
 import 'package:myapp/Screen/selectVehicle.dart';
+import 'package:myapp/Screen/station.screen.dart';
 import 'package:myapp/Screen/test.dart';
 import 'package:myapp/Screen/timeRemining.dart';
 import 'package:myapp/Widget/IconButton.dart';
@@ -89,7 +90,7 @@ class _homePageState extends State<homePage> {
         polylineId: id,
         color: Colors.blueAccent,
         points: _coordinates,
-        width: 4,
+        width: 5,
         onTap: () {});
 
     setState(() {
@@ -211,6 +212,7 @@ class _homePageState extends State<homePage> {
       setState(
         () {
           for (int i = 0; i < locations.length; i++) {
+            String docId = locations[i].id;
             String availableStr = locations[i]['avaliable'];
             bool isAvailable = availableStr == "true";
             Uint8List iconData = isAvailable ? greenIcon : redIcon;
@@ -224,10 +226,13 @@ class _homePageState extends State<homePage> {
                 icon: BitmapDescriptor.fromBytes(iconData),
                 onTap: () {
                   if (isAvailable) {
+                    log('Select pump');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => test(),
+                        builder: (context) => test(
+                          id: docId,
+                        ),
                       ),
                     );
                   } else {

@@ -60,6 +60,24 @@ class dataBaseManager {
     throw Exception('Document does not exist on the database');
   }
 
+  Future<Map<String, dynamic>?> fetchChargingType(String id) async {
+    DocumentReference<Map<String, dynamic>> locationDoc = FirebaseFirestore
+        .instance
+        .collection('web')
+        .doc('owner')
+        .collection('charging_station')
+        .doc(id);
+
+    DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+        await locationDoc.get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      Map<String, dynamic>? currentLocation = data?['Destination'];
+      return currentLocation;
+    }
+    throw Exception('Document does not exist on the database');
+  }
+
   //Get Destination Location
   Future<destination> getDestinationLocation() async {
     final snapshot = await location.doc('Destination').get();
