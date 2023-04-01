@@ -18,7 +18,8 @@ class _StationScreenState extends State<StationScreen> {
       body: Column(
         children: [
           Image.asset(
-            './assets/images/KU.png',
+            'assets/EVIE.png',
+            height: 280,
             fit: BoxFit.fill,
           ),
           Padding(

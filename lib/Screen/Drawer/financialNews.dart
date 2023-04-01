@@ -31,6 +31,43 @@ class _financialNewsState extends State<financialNews> {
           style: headerText,
         ),
       ),
+      body: ListView(
+        children: [
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+              child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(color: Colors.black, width: 0.01),
+                  ),
+                  elevation: 7,
+                  child: Container(
+                    height: 120,
+                    child: Row(children: [
+                      Container(
+                        width: 350,
+                        height: 110,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Brand",
+                              style: hintTextBlack,
+                            ),
+                            Image.asset(
+                              'assets/Audi Car.png',
+                              width: 120,
+                              height: 80,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                  )))
+        ],
+      ),
     );
   }
 }

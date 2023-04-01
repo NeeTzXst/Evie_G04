@@ -79,7 +79,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
               Align(
                 alignment: AlignmentDirectional(-1, 0),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 0),
+                  padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                   child: FlutterFlowRadioButton(
                     options: ['Credit Card', 'Debit Card'].toList(),
                     onChanged: (val) => setState(() => radioButtonValue = val),
@@ -266,6 +266,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                   },
                   onChanged: (value) {
                     // do something when the text is changed
+
                     print(value);
                   },
                   style: TextStyle(
@@ -508,7 +509,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
                           child: TextFormField(
                             textCapitalization: TextCapitalization.none,
-                            obscureText: false,
+                            obscureText: true,
                             decoration: InputDecoration(
                               hintText: 'CVV',
                               hintStyle: TextStyle(
@@ -658,7 +659,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0, 110, 0, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(0, 130, 0, 0),
                 // padding: EdgeInsetsDirectional.fromSTEB(0, 150, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () {
@@ -681,6 +682,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                       width: 1,
                     ),
                     borderRadius: 10,
+                    elevation: 0,
                     decoration: BoxDecoration(),
                   ),
                 ),
