@@ -61,13 +61,13 @@ class _ParkingScreenState extends State<ParkingScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Expanded(
-                                    flex: 85,
-                                    child: Image.asset(
-                                      './assets/images/blackcar.png',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 85,
+                                  //   child: Image.asset(
+                                  //     './assets/images/blackcar.png',
+                                  //     fit: BoxFit.fill,
+                                  //   ),
+                                  // ),
                                   const Expanded(flex: 15, child: Text('01')),
                                 ],
                               ),
@@ -190,13 +190,13 @@ class _ParkingScreenState extends State<ParkingScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   const Expanded(flex: 15, child: Text('05')),
-                                  Expanded(
-                                    flex: 85,
-                                    child: Image.asset(
-                                      './assets/images/greencar.png',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 85,
+                                  //   child: Image.asset(
+                                  //     './assets/images/greencar.png',
+                                  //     fit: BoxFit.fill,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -276,13 +276,13 @@ class _ParkingScreenState extends State<ParkingScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   const Expanded(flex: 15, child: Text('06')),
-                                  Expanded(
-                                    flex: 85,
-                                    child: Image.asset(
-                                      './assets/images/blue-car.png',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 85,
+                                  //   child: Image.asset(
+                                  //     './assets/images/blue-car.png',
+                                  //     fit: BoxFit.fill,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

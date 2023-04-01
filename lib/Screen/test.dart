@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/parking.screen.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class test extends StatefulWidget {
@@ -65,11 +66,7 @@ class _testState extends State<test> {
             return SafeArea(
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/EVIE.png',
-                    height: 280,
-                    fit: BoxFit.fill,
-                  ),
+                  Image.network(info['charging_image']),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Row(
@@ -165,9 +162,9 @@ class _testState extends State<test> {
                           flex: 9,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
-                                '199 Moo 6, Sukhumvit Road, Thung Sukla Subdistrict Sriracha District, Chonburi 30330',
+                                info['charging_detail'],
                               ),
                               Text('Made in Kasetsart University')
                             ],
@@ -184,7 +181,10 @@ class _testState extends State<test> {
                         Expanded(
                           flex: 5,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ParkingScreen()));
+                            },
                             style: ButtonStyle(
                               backgroundColor:
                                   const MaterialStatePropertyAll<Color>(
