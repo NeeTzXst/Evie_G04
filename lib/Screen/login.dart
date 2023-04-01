@@ -31,7 +31,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool isRememberMe = false;
   bool isObscure = true;
-  bool _isSignedIn = false;
+
+  Future<void> signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => homePage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,8 +266,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   TextButton(
                     onPressed: () {
-                      authService().signIn(_emailController.text,
-                          _passwordController.text, context);
+                      signIn();
+                      print(
+                          '${_emailController.text} , ${_passwordController.text}');
                     },
                     child: Text(
                       "Sign in",
