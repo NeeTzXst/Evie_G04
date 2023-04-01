@@ -126,17 +126,6 @@ class myPaymentState extends State<myPayment> {
                               ),
                             ),
                           ),
-                          // child: TextField(
-                          //   decoration: InputDecoration(
-                          //     prefixIcon: Icon(Icons.payment),
-                          //     border: InputBorder.none,
-                          //     hintText: 'Card',
-                          //     hintStyle: TextStyle(
-                          //       color: Colors.black,
-                          //       fontFamily: 'Montserrat',
-                          //     ),
-                          //   ),
-                          // ),
                         ),
                       ],
                     ),
