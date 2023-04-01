@@ -63,11 +63,17 @@ class _homePageState extends State<homePage> {
   dataBaseManager dbManager = dataBaseManager();
   Uint8List? locationIcon;
 
-  Stream<QuerySnapshot> _locationsStream = FirebaseFirestore.instance
+  // Stream<QuerySnapshot> _locationsStream = FirebaseFirestore.instance
+  //     .collection("web")
+  //     .doc('owner')
+  //     .collection('charging Station')
+  //     .snapshots();
+
+  Future<QuerySnapshot> _locationsFuture = FirebaseFirestore.instance
       .collection("web")
       .doc('owner')
       .collection('charging Station')
-      .snapshots();
+      .get();
 
   void _onMapCreated(GoogleMapController controller) {
     if (!_controller.isCompleted) {
@@ -321,8 +327,8 @@ class _homePageState extends State<homePage> {
           child: myDrawer(),
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-          stream: _locationsStream,
+      body: FutureBuilder<QuerySnapshot>(
+          future: _locationsFuture,
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
               return Center(
