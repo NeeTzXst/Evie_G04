@@ -13,6 +13,7 @@ import 'package:myapp/Models/currentLocation_model.dart';
 import 'package:myapp/Models/destination_model.dart';
 import 'package:myapp/Screen/qrCode.dart';
 import 'package:myapp/Screen/selectVehicle.dart';
+import 'package:myapp/Screen/station.screen.dart';
 import 'package:myapp/Screen/test.dart';
 import 'package:myapp/Screen/timeRemining.dart';
 import 'package:myapp/Widget/IconButton.dart';
@@ -53,7 +54,20 @@ class _homePageState extends State<homePage> {
   // List of Marker
   List<Marker> _markers = <Marker>[];
 
+  double current_latitude = 0;
+  double current_longitude = 0;
+  String current_description = '';
+  double destination_latitude = 0;
+  double destination_longitude = 0;
+  String destination_description = '';
   dataBaseManager dbManager = dataBaseManager();
+  Uint8List? locationIcon;
+
+  Stream<QuerySnapshot> _locationsStream = FirebaseFirestore.instance
+      .collection("web")
+      .doc('owner')
+      .collection('charging Station')
+      .snapshots();
 
   void _onMapCreated(GoogleMapController controller) {
     if (!_controller.isCompleted) {
@@ -76,7 +90,7 @@ class _homePageState extends State<homePage> {
         polylineId: id,
         color: Colors.blueAccent,
         points: _coordinates,
-        width: 4,
+        width: 5,
         onTap: () {});
 
     setState(() {
@@ -86,35 +100,26 @@ class _homePageState extends State<homePage> {
 
   Future<void> _getPolylinesWithLocation() async {
     log(" _getPolylinesWithLocation");
-    log('destination : $destinations');
-    log('currentLocations : $currentLocations');
-    if (currentLocations.isNotEmpty &&
-        currentLocations[0].latitude != null &&
-        currentLocations[0].longitude != null &&
-        destinations.isNotEmpty &&
-        destinations[0].latitude != null &&
-        destinations[0].longitude != null) {
-      log("not empty ");
-      List<LatLng>? _coordinates =
-          await _googleMapPolyline.getCoordinatesWithLocation(
-        origin: LatLng(
-          currentLocations[0].latitude!,
-          currentLocations[0].longitude!,
-        ),
-        destination: LatLng(
-          destinations[0].latitude!,
-          destinations[0].longitude!,
-        ),
-        mode: RouteMode.driving,
-      );
 
-      setState(() {
-        _polylines.clear();
-      });
+    List<LatLng>? _coordinates =
+        await _googleMapPolyline.getCoordinatesWithLocation(
+      origin: LatLng(
+        current_latitude,
+        current_longitude,
+      ),
+      destination: LatLng(
+        destination_latitude,
+        destination_longitude,
+      ),
+      mode: RouteMode.driving,
+    );
 
-      if (_coordinates != null && _coordinates.isNotEmpty) {
-        await _addPolyline(_coordinates);
-      }
+    setState(() {
+      _polylines.clear();
+    });
+
+    if (_coordinates != null && _coordinates.isNotEmpty) {
+      await _addPolyline(_coordinates);
     }
   }
 
@@ -140,80 +145,50 @@ class _homePageState extends State<homePage> {
         latitude: position.latitude,
         longitude: position.longitude,
       );
-      log('Currenta location description: $description');
       await dbManager.saveCurrentLocation(userLocation);
-
-      await fetchCurrentLocation();
     } catch (error) {
       log('Error getting description: $error');
     }
     return position;
   }
 
-  // Fetch Usr current latitude longitude from Firebase
-  Future<void> fetchCurrentLocation() async {
-    log("Fetching Current location...");
-    CollectionReference location =
-        FirebaseFirestore.instance.collection('Test');
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await location
-        .doc('CurrentLocation')
-        .get() as DocumentSnapshot<Map<String, dynamic>>;
-    currentLocation current = currentLocation.fromJson(snapshot.data()!);
-    currentLocations = [current];
-    log("currentLocation : ${currentLocations}");
-  }
-
-  // Fetch Destination Location, latitude ,longitude from Firebase
-  Future<void> fetchDestinationtLocation() async {
-    log("Fetching Destination location...");
-    CollectionReference location =
-        FirebaseFirestore.instance.collection('Test');
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await location
-        .doc('Destination')
-        .get() as DocumentSnapshot<Map<String, dynamic>>;
-    destination destinationLocation = destination.fromJson(snapshot.data()!);
-    destinations = [destinationLocation];
-    log('destination : ${destinations}');
-  }
-
   //Set Destination Maker
   Future<void> markDestination() async {
-    if (destinations.isNotEmpty &&
-        destinations[0].latitude != null &&
-        destinations[0].longitude != null) {
-      log("destination is not empty");
-      Marker destinationMarker = await Marker(
-        markerId: MarkerId("2"),
-        position: LatLng(
-          destinations[0].latitude!,
-          destinations[0].longitude!,
-        ),
-        infoWindow:
-            InfoWindow(title: destinations[0].description ?? "Destination"),
-      );
-      setState(
-        () {
-          // Add the destination marker
-          log("Add the destination marker");
-          _markers.add(destinationMarker);
-        },
-      );
-    } else {
-      log("Destibation is null");
+    log('markDestination');
+    Map<String, dynamic>? destinationLocation =
+        await dbManager.fetchDestinationLocation();
+    if (destinationLocation != null) {
+      log('fetchCurrentLocation complete ');
+      destination_latitude = destinationLocation['destination_latitude'];
+      destination_longitude = destinationLocation['destination_longitude'];
+      destination_description = destinationLocation['description'];
+      log('mark Destination_Latitude: $destination_latitude, Destination_Longitude: $destination_longitude, Destination_escription: $destination_description');
     }
+
+    Marker destinationMarker = await Marker(
+      markerId: MarkerId("2"),
+      position: LatLng(
+        destination_latitude,
+        destination_longitude,
+      ),
+      infoWindow: InfoWindow(title: destination_description),
+    );
+    setState(
+      () {
+        // Add the destination marker
+        _markers.add(destinationMarker);
+      },
+    );
   }
 
   Future<void> marker() async {
-    log("Marker");
+    //log("Marker");
 
     try {
-      await fetchDestinationtLocation();
-      ;
-      log("destination $destinations");
       await markDestination();
       await _getPolylinesWithLocation();
     } catch (error) {
-      log('Error in marker: $error');
+      //log('Error in marker: $error');
     }
   }
 
@@ -227,14 +202,6 @@ class _homePageState extends State<homePage> {
         .asUint8List();
   }
 
-  Stream<QuerySnapshot> _locationsStream = FirebaseFirestore.instance
-      .collection("web")
-      .doc('owner')
-      .collection('charging Station')
-      .snapshots();
-
-  Uint8List? locationIcon;
-
   Future<List<QueryDocumentSnapshot<Object?>>> _locationMarkers(
       List<QueryDocumentSnapshot> locations) async {
     final Uint8List redIcon =
@@ -245,6 +212,7 @@ class _homePageState extends State<homePage> {
       setState(
         () {
           for (int i = 0; i < locations.length; i++) {
+            String docId = locations[i].id;
             String availableStr = locations[i]['avaliable'];
             bool isAvailable = availableStr == "true";
             Uint8List iconData = isAvailable ? greenIcon : redIcon;
@@ -258,10 +226,13 @@ class _homePageState extends State<homePage> {
                 icon: BitmapDescriptor.fromBytes(iconData),
                 onTap: () {
                   if (isAvailable) {
+                    log('Select pump');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => test(),
+                        builder: (context) => test(
+                          id: docId,
+                        ),
                       ),
                     );
                   } else {
@@ -284,15 +255,24 @@ class _homePageState extends State<homePage> {
     getUserCurrentLocation().then(
       (value) async {
         // Mark User current location
+        Map<String, dynamic>? currentLocation =
+            await dbManager.fetchCurrentLocation();
+        if (currentLocation != null) {
+          current_latitude = currentLocation['current_latitude'];
+          current_longitude = currentLocation['current_longitude'];
+          current_description = currentLocation['description'];
+
+          log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+        }
 
         _markers.add(
           await Marker(
             markerId: MarkerId("1"),
             position: LatLng(
-              currentLocations[0].latitude!,
-              currentLocations[0].longitude!,
+              current_latitude,
+              current_longitude,
             ),
-            infoWindow: InfoWindow(title: "My current location"),
+            infoWindow: InfoWindow(title: current_description),
           ),
         );
 
@@ -300,11 +280,10 @@ class _homePageState extends State<homePage> {
         CameraPosition cameraPosition = CameraPosition(
           zoom: 18,
           target: LatLng(
-            currentLocations[0].latitude!,
-            currentLocations[0].longitude!,
+            current_latitude,
+            current_longitude,
           ),
         );
-
         // move camera to new position
         _controller.future.then((controller) {
           controller
@@ -454,7 +433,8 @@ class _homePageState extends State<homePage> {
                                 horizontal: 15, vertical: 15),
                             child: GestureDetector(
                               onTap: () {
-                                loadData();
+                                //loadData();
+                                dbManager.fetchDestinationLocation();
                               },
                               child: iconButton(
                                 width: 45,
