@@ -1,6 +1,26 @@
+// ignore_for_file: prefer_const_constructors, camel_case_types, sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/homePage.dart';
+import 'package:qr/qr.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:myapp/Widget/styles.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      home: qrCode(),
+    );
+  }
+}
 
 class qrCode extends StatefulWidget {
   const qrCode({super.key});
@@ -65,14 +85,16 @@ class _qrCodeState extends State<qrCode> {
                           fontSize: 24.0),
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
                   Container(
-                      width: 200,
-                      height: 200,
-                      child: Image.network(
-                          "https://www.investopedia.com/thmb/LCLGYbEdJwzFQbTsFSDiM-hx42U=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/qr-code-bc94057f452f4806af70fd34540f72ad.png"))
+                    width: 230,
+                    height: 230,
+                    child: QrImage(
+                      version: QrVersions.auto,
+                      data: "1234567890",
+                      padding: EdgeInsets.all(25),
+                      foregroundColor: Colors.white,
+                    ),
+                  )
                 ],
               ),
             ),
@@ -262,7 +284,8 @@ class _qrCodeState extends State<qrCode> {
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       color: Color.fromRGBO(107, 207, 255, 0.6),
                     ),
-                    child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         // ignore: prefer_const_literals_to_create_immutables
                         children: <Widget>[
                           TextButton(
