@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/Widget/styles.dart';
 
 class ChargingScreen extends StatefulWidget {
   const ChargingScreen({super.key});
@@ -15,11 +16,23 @@ class _ChargingScreenState extends State<ChargingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        title: const Text('Charging'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+        elevation: 0,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Icon(
+            Icons.arrow_back,
+            size: 40,
+            color: Color.fromRGBO(26, 116, 226, 1),
+          ),
+        ),
+        title: Text(
+          "charging",
+          style: headerText,
         ),
       ),
       body: Container(
@@ -62,13 +75,13 @@ class _ChargingScreenState extends State<ChargingScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Expanded(
-                                    flex: 85,
-                                    child: Image.asset(
-                                      './assets/images/blackcar.png',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 85,
+                                  //   child: Image.asset(
+                                  //     './assets/images/blackcar.png',
+                                  //     fit: BoxFit.fill,
+                                  //   ),
+                                  // ),
                                   const Expanded(flex: 15, child: Text('01')),
                                 ],
                               ),
@@ -186,13 +199,13 @@ class _ChargingScreenState extends State<ChargingScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   const Expanded(flex: 15, child: Text('05')),
-                                  Expanded(
-                                    flex: 85,
-                                    child: Image.asset(
-                                      './assets/images/greencar.png',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 85,
+                                  //   child: Image.asset(
+                                  //     './assets/images/greencar.png',
+                                  //     fit: BoxFit.fill,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -299,13 +312,13 @@ class _ChargingScreenState extends State<ChargingScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   const Expanded(flex: 15, child: Text('06')),
-                                  Expanded(
-                                    flex: 85,
-                                    child: Image.asset(
-                                      './assets/images/blue-car.png',
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 85,
+                                  //   child: Image.asset(
+                                  //     './assets/images/blue-car.png',
+                                  //     fit: BoxFit.fill,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

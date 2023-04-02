@@ -21,6 +21,7 @@ class dataBaseManager {
 
   // Save Destination
   Future<void> saveLocation(destination des) async {
+    log('saveLocation');
     await appMember.update(des.toJson());
   }
 

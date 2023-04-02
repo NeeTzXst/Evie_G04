@@ -2,18 +2,19 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/charging.screen.dart';
 import 'package:myapp/Screen/parking.screen.dart';
 import 'package:myapp/Widget/styles.dart';
 
-class test extends StatefulWidget {
+class parkOrcharging extends StatefulWidget {
   final id;
-  const test({super.key, required this.id});
+  const parkOrcharging({super.key, required this.id});
 
   @override
-  State<test> createState() => _testState();
+  State<parkOrcharging> createState() => _parkOrchargingState();
 }
 
-class _testState extends State<test> {
+class _parkOrchargingState extends State<parkOrcharging> {
   late Stream<DocumentSnapshot> infoLocation;
 
   @override
@@ -63,6 +64,9 @@ class _testState extends State<test> {
           }
           if (snapshot.hasData) {
             final info = snapshot.data!;
+            List<dynamic> types = info['charging_type'];
+            log(types.toString());
+            log(info.data().toString());
             return SafeArea(
               child: Column(
                 children: [
@@ -82,68 +86,31 @@ class _testState extends State<test> {
                                 info['charging_station'],
                                 style: TextDisplay,
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Text('5.0'),
-                                  SizedBox(width: 10),
-                                  Icon(Icons.star, color: Colors.blue),
-                                  Icon(Icons.star, color: Colors.blue),
-                                  Icon(Icons.star, color: Colors.blue),
-                                  Icon(Icons.star, color: Colors.blue),
-                                  Icon(Icons.star, color: Colors.blue),
-                                  SizedBox(width: 10),
-                                  Text('4 review'),
-                                ],
-                              ),
-                              const Text('Charging Station'),
                             ],
                           ),
                         ),
-                        Expanded(
-                          flex: 2,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                shape: const CircleBorder()),
-                            child: const Icon(Icons.directions),
-                          ),
-                        ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          flex: 10,
-                          child: Icon(
-                            Icons.ev_station_outlined,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Expanded(flex: 40, child: Text('CHAdeMO')),
-                        Expanded(flex: 40, child: Text('50 kW')),
-                        Expanded(flex: 10, child: Text('1/1')),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          flex: 10,
-                          child: Icon(
-                            Icons.ev_station_outlined,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Expanded(flex: 40, child: Text('CCS')),
-                        Expanded(flex: 40, child: Text('50 kW')),
-                        Expanded(flex: 10, child: Text('1/1')),
-                      ],
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: types.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          children: [
+                            Icon(
+                              Icons.ev_station_outlined,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(types[index]['type']),
+                          ],
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -166,7 +133,6 @@ class _testState extends State<test> {
                               Text(
                                 info['charging_detail'],
                               ),
-                              Text('Made in Kasetsart University')
                             ],
                           ),
                         )
@@ -183,7 +149,9 @@ class _testState extends State<test> {
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ParkingScreen()));
+                                  builder: (context) => ParkingScreen(
+                                        id: widget.id,
+                                      )));
                             },
                             style: ButtonStyle(
                               backgroundColor:
@@ -221,7 +189,10 @@ class _testState extends State<test> {
                         Expanded(
                           flex: 5,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ChargingScreen()));
+                            },
                             style: ButtonStyle(
                               backgroundColor:
                                   const MaterialStatePropertyAll<Color>(

@@ -14,7 +14,7 @@ import 'package:myapp/Models/destination_model.dart';
 import 'package:myapp/Screen/qrCode.dart';
 import 'package:myapp/Screen/selectVehicle.dart';
 import 'package:myapp/Screen/station.screen.dart';
-import 'package:myapp/Screen/test.dart';
+import 'package:myapp/Screen/ParkorCharg.dart';
 import 'package:myapp/Screen/timeRemining.dart';
 import 'package:myapp/Widget/IconButton.dart';
 import 'package:myapp/Widget/alertBox.dart';
@@ -164,11 +164,14 @@ class _homePageState extends State<homePage> {
     Map<String, dynamic>? destinationLocation =
         await dbManager.fetchDestinationLocation();
     if (destinationLocation != null) {
-      log('fetchCurrentLocation complete ');
-      destination_latitude = destinationLocation['destination_latitude'];
-      destination_longitude = destinationLocation['destination_longitude'];
-      destination_description = destinationLocation['description'];
+      log('fetchDestinationLocation complete ');
+      destination_latitude = destinationLocation['destination_latitude'] ?? 0.0;
+      destination_longitude =
+          destinationLocation['destination_longitude'] ?? 0.0;
+      destination_description = destinationLocation['description'] ?? '';
       log('mark Destination_Latitude: $destination_latitude, Destination_Longitude: $destination_longitude, Destination_escription: $destination_description');
+    } else {
+      log('Destination location is null');
     }
 
     Marker destinationMarker = await Marker(
@@ -188,13 +191,13 @@ class _homePageState extends State<homePage> {
   }
 
   Future<void> marker() async {
-    //log("Marker");
+    log("Marker");
 
     try {
       await markDestination();
-      await _getPolylinesWithLocation();
+      //await _getPolylinesWithLocation();
     } catch (error) {
-      //log('Error in marker: $error');
+      log('Error in marker: $error');
     }
   }
 
@@ -226,17 +229,17 @@ class _homePageState extends State<homePage> {
               Marker(
                 markerId: MarkerId(locations[i]['charging_station']),
                 position: LatLng(
-                  locations[i]['latitude'],
-                  locations[i]['longitude'],
+                  locations[i]['latitude'].toDouble(),
+                  locations[i]['longitude'].toDouble(),
                 ),
                 icon: BitmapDescriptor.fromBytes(iconData),
                 onTap: () {
                   if (isAvailable) {
-                    log('Select pump');
+                    log('Select pump ${docId}');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => test(
+                        builder: (context) => parkOrcharging(
                           id: docId,
                         ),
                       ),
@@ -264,11 +267,14 @@ class _homePageState extends State<homePage> {
         Map<String, dynamic>? currentLocation =
             await dbManager.fetchCurrentLocation();
         if (currentLocation != null) {
+          log('fetchCurrentLocation complete ');
           current_latitude = currentLocation['current_latitude'];
           current_longitude = currentLocation['current_longitude'];
           current_description = currentLocation['description'];
 
           log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+        } else {
+          log('Current location is null');
         }
 
         _markers.add(
@@ -328,20 +334,19 @@ class _homePageState extends State<homePage> {
         ),
       ),
       body: FutureBuilder<QuerySnapshot>(
-          future: _locationsFuture,
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasError) {
-              log(snapshot.hasError.toString());
-            }
-            if (snapshot.hasData) {
-              final locations = snapshot.data!.docs;
-              _locationMarkers(locations);
-            }
+        future: _locationsFuture,
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            log(snapshot.hasError.toString());
+          }
+          if (snapshot.hasData) {
+            final locations = snapshot.data!.docs;
+            _locationMarkers(locations);
             return Stack(
               children: [
                 GoogleMap(
@@ -439,8 +444,7 @@ class _homePageState extends State<homePage> {
                                 horizontal: 15, vertical: 15),
                             child: GestureDetector(
                               onTap: () {
-                                //loadData();
-                                dbManager.fetchDestinationLocation();
+                                loadData();
                               },
                               child: iconButton(
                                 width: 45,
@@ -511,7 +515,10 @@ class _homePageState extends State<homePage> {
                 )
               ],
             );
-          }),
+          }
+          return Text('Error have not control');
+        },
+      ),
     );
   }
 }

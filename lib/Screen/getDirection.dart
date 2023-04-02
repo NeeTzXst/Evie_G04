@@ -274,6 +274,7 @@ class _getDirectionState extends State<getDirection> {
                               log("${_placesList[index]['description']} longitude : ${locations.last.longitude}");
 
                               // Save Destination on Firebase
+
                               await dataBaseManager().saveLocation(Des);
 
                               setState(
