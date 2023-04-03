@@ -2,11 +2,12 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/BookTimes.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class ParkingScreen extends StatefulWidget {
   final id;
-  const ParkingScreen({super.key, required this.id});
+  ParkingScreen({super.key, this.id});
   static const routeName = '/parking';
 
   @override
@@ -409,14 +410,20 @@ class _ParkingScreenState extends State<ParkingScreen> {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (BuildContext context, int index) {
+                // widget.id = pump id
+                // docid = spot id
                 DocumentSnapshot chargingSpot = snapshot.data!.docs[index];
                 bool isAvailable = chargingSpot['status'] == 'true';
-                String docId = chargingSpot.id;
+                String spotId = chargingSpot.id;
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: () {
-                      log('docId : ' + docId);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => BookingTimeScreen(
+                                stationid: widget.id,
+                                spotid: spotId,
+                              )));
                     },
                     child: Container(
                       color: Colors.amber,

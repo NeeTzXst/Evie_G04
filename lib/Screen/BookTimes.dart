@@ -1,17 +1,19 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/Screen/makePayment.dart';
 
 class BookingTimeScreen extends StatefulWidget {
   var stationid;
   var spotid;
   var uid;
 
-  BookingTimeScreen({this.stationid, this.spotid, this.uid});
+  BookingTimeScreen({super.key, this.stationid, this.spotid, this.uid});
 
   @override
   State<BookingTimeScreen> createState() => _BookingTimeScreenState();
@@ -21,26 +23,53 @@ var charging;
 var userid;
 var spot;
 
-Future<void> storeBooking(
-    BuildContext context, DateTime timeStart, DateTime timeEnd) async {
+String get userUID {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    return 'No user';
+  } else {
+    return user.uid;
+  }
+}
+
+//'/web/owner/charging Station/$charging/charging Spot/$spot/booking'
+
+Future<void> storeBooking(BuildContext context, DateTime timeStart,
+    DateTime timeEnd, String userid) async {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String startTimeString = DateFormat('yyyy-MM-dd HH:mm:ss').format(timeStart);
   String endTimeString = DateFormat('yyyy-MM-dd HH:mm:ss').format(timeEnd);
 
-  CollectionReference bookingsRef = _firestore.collection('bookings');
-  print(startTimeString);
-  print(endTimeString);
+  DateTime startTime = DateTime.parse(startTimeString);
+  DateTime endTime = DateTime.parse(endTimeString);
+
+  int duration = endTime.difference(startTime).inMinutes;
+
+  CollectionReference bookingsRef = _firestore.collection(
+      '/web/owner/charging Station/$charging/charging Spot/$spot/booking');
+  log(startTimeString);
+  log(endTimeString);
 
   // Query to check for overlapping bookings
-  QuerySnapshot overlappingBookings = await bookingsRef.get();
+  QuerySnapshot overlappingBookings =
+      await bookingsRef.where('startTime', isLessThan: endTimeString).get();
 
   QuerySnapshot overlappingBookings1 =
       await bookingsRef.where('endTime', isGreaterThan: startTimeString).get();
 
+  // Query to check for overlapping bookings
+  QuerySnapshot overlappingBookings2 =
+      await bookingsRef.where('startTime', isEqualTo: startTimeString).get();
+
+  QuerySnapshot overlappingBookings3 =
+      await bookingsRef.where('endTime', isEqualTo: endTimeString).get();
+
   // If there are any overlapping bookings, display an AlertDialog and return
-  if (overlappingBookings.docs.isNotEmpty ||
-      overlappingBookings1.docs.isNotEmpty) {
+  if ((overlappingBookings.docs.isNotEmpty &&
+          overlappingBookings1.docs.isNotEmpty) ||
+      (overlappingBookings2.docs.isNotEmpty &&
+          overlappingBookings3.docs.isNotEmpty)) {
     AlertDialog alert = AlertDialog(
       title: Text('Booking Status'),
       content: Text('Booking failed. There is an overlapping booking.'),
@@ -63,29 +92,77 @@ Future<void> storeBooking(
   }
 
   // Otherwise, store the new booking and display an AlertDialog
-  bookingsRef.add({
+  DocumentReference docRef = await bookingsRef.add({
     'startTime': startTimeString,
     'endTime': endTimeString,
     'uid': userid,
     'charging_station': charging,
-    'charging_pot': spot
+    'charging_spot': spot,
+    'duration': duration,
   });
-  AlertDialog alert = AlertDialog(
-    title: Text('Booking Status'),
-    content: Text('Booking successful!'),
-    actions: [
-      TextButton(
-        child: Text('OK'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
-    ],
-  );
+
+  String bookId = docRef.id;
+  log('Document ID: $bookId');
+
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return alert;
+      return AlertDialog(
+        backgroundColor: Color.fromARGB(255, 255, 207, 85),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        title: Center(
+          child: Text('Warning !!', style: StationFull),
+        ),
+        content: Column(
+            mainAxisSize: MainAxisSize.min,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              RichText(
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: 'If you are over ', style: PopupTextBlack),
+                    TextSpan(text: '30 minutes ', style: PopupTextRed),
+                    TextSpan(
+                        text:
+                            'late, your booking will be canceled. If you park for longer than your booked time, you will be fined.',
+                        style: PopupTextBlack),
+                  ],
+                ),
+              ),
+            ]),
+        actions: [
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Container(
+                width: 200,
+                height: 52,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    color: Color.fromRGBO(255, 255, 255, 1)),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      TextButton(
+                        child: Text("Accept", style: hintText),
+                        onPressed: () {
+                          log('booking Id : ' + bookId);
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => makePaymentWidget(
+                                    bookingId: bookId,
+                                    duration: duration,
+                                    stationID: charging,
+                                  )));
+                        },
+                      )
+                    ]),
+              ),
+            ),
+          )
+        ],
+      );
     },
   );
 }
@@ -97,6 +174,13 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
       DateTime.now().day, DateTime.now().hour, DateTime.now().minute + 1);
 
   String date = DateFormat('dd MMMM, EEEE').format(DateTime.now());
+
+  @override
+  void initState() {
+    super.initState();
+    log('station : ' + widget.stationid);
+    log('spot : ' + widget.spotid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +197,7 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
         title: Text("Booking Time", style: Mytextstyle.blue24),
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -350,18 +434,19 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
                       // ignore: prefer_const_literals_to_create_immutables
                       children: <Widget>[
                         TextButton(
-                          child: Text(
-                            "Continue",
-                            style: TextStyle(
-                                color: Color.fromRGBO(26, 116, 226, 1),
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Montserrat",
-                                fontStyle: FontStyle.normal,
-                                fontSize: 21.0),
-                          ),
-                          onPressed: () =>
-                              storeBooking(context, timeStart, timeEnd),
-                        )
+                            child: Text(
+                              "Continue",
+                              style: TextStyle(
+                                  color: Color.fromRGBO(26, 116, 226, 1),
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: "Montserrat",
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 21.0),
+                            ),
+                            onPressed: () => {
+                                  storeBooking(
+                                      context, timeStart, timeEnd, userUID),
+                                })
                       ])),
             ),
           ],
@@ -407,3 +492,25 @@ class Mytextstyle {
       fontStyle: FontStyle.normal,
       fontSize: 15.0);
 }
+
+const primaryColor = Color.fromRGBO(26, 116, 226, 1);
+final PopupTextBlack = GoogleFonts.montserrat(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: Colors.black,
+);
+
+final PopupTextRed = GoogleFonts.montserrat(
+    fontSize: 16, fontWeight: FontWeight.w600, color: Colors.red);
+
+final hintText = GoogleFonts.montserrat(
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
+  color: primaryColor,
+);
+
+final StationFull = GoogleFonts.montserrat(
+  fontSize: 22,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+);

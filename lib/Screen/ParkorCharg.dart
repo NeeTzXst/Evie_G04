@@ -107,7 +107,7 @@ class _parkOrchargingState extends State<parkOrcharging> {
                             SizedBox(
                               width: 10,
                             ),
-                            Text(types[index]['type']),
+                            Text(types[index]),
                           ],
                         );
                       },

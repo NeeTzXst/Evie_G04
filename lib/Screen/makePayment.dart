@@ -1,29 +1,23 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/BookTimes.dart';
+import 'package:myapp/Screen/qrCode.dart';
 
 import '../flutter_flow/flutter_flow_drop_down.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home: makePaymentWidget(),
-    );
-  }
-}
-
 class makePaymentWidget extends StatefulWidget {
+  final bookingId;
+  final duration;
+  final stationID;
+  makePaymentWidget({super.key, this.bookingId, this.duration, this.stationID});
   @override
   _MakePaymentWidgetState createState() => _MakePaymentWidgetState();
 }
+
+var station;
 
 class _MakePaymentWidgetState extends State<makePaymentWidget> {
   final _unfocusNode = FocusNode();
@@ -32,9 +26,46 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
     "25% off Charging prices",
     "50% off Charging prices"
   ];
+
+  CollectionReference bookingsRef = FirebaseFirestore.instance.collection(
+      '/web/owner/charging Station/$charging/charging Spot/$spot/booking');
+
+  DocumentReference stationRef = FirebaseFirestore.instance
+      .collection('/web/owner/charging Station')
+      .doc(station);
+
+  Future<String?> getData() async {
+    final db = FirebaseFirestore.instance;
+    var docRef = db.collection('/web/owner/charging Station').doc(station);
+
+    try {
+      log('try');
+      var doc = await docRef.get();
+      if (doc.exists) {
+        var data = doc.data()!;
+        int price = data['charging_price'];
+        log(price.toString());
+        return price.toString();
+      } else {
+        print("Document does not exist");
+        return null;
+      }
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+  Future<void> deleteBooking() async {
+    log(widget.bookingId);
+    bookingsRef.doc(widget.bookingId).delete();
+    log("deleteBooking");
+  }
+
   String? _selectedCoupon;
   @override
   Widget build(BuildContext context) {
+    log(stationRef.toString());
     return Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,
@@ -45,9 +76,9 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
             child: InkWell(
               onTap: () async {
-                print('wate for another page');
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => homePage()));
+                deleteBooking().then((value) {
+                  Navigator.pop(context);
+                });
               },
               child: Icon(
                 Icons.arrow_back,
@@ -105,7 +136,7 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
                         child: Text(
-                          '5,000',
+                          '5000',
                           style: FlutterFlowTheme.of(context).title1.override(
                               fontFamily: 'Montserrat',
                               color: Colors.white,
@@ -303,13 +334,37 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                               content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      "Your payment is successful!",
-                                      style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          color: Color(0xFF1A74E2),
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                    // Text(
+                                    //   "Your payment is successful!",
+                                    //   style: TextStyle(
+                                    //       fontFamily: 'Montserrat',
+                                    //       color: Color(0xFF1A74E2),
+                                    //       fontWeight: FontWeight.bold),
+                                    // ),
+                                    RichText(
+                                        text: TextSpan(children: <TextSpan>[
+                                      TextSpan(
+                                        text: 'Your payment is',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(
+                                        text: ' successful',
+                                        style: TextStyle(
+                                            color: Color(0xFF1A74E2),
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextSpan(
+                                        text: '!',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ]))
                                   ]),
                               actions: [
                                 Padding(
@@ -319,7 +374,9 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                                     onPressed: () {
                                       print('Continue pressed ...');
                                       print('wait for another page');
-                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) => qrCode()));
                                     },
                                     text: 'Continue',
                                     options: FFButtonOptions(

@@ -291,7 +291,9 @@ class _qrCodeState extends State<qrCode> {
                           TextButton(
                             child: Text("Back", style: BlueDisplayBold),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => homePage()));
                             },
                           ),
                         ])),

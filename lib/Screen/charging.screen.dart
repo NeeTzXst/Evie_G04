@@ -75,13 +75,6 @@ class _ChargingScreenState extends State<ChargingScreen> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  // Expanded(
-                                  //   flex: 85,
-                                  //   child: Image.asset(
-                                  //     './assets/images/blackcar.png',
-                                  //     fit: BoxFit.fill,
-                                  //   ),
-                                  // ),
                                   const Expanded(flex: 15, child: Text('01')),
                                 ],
                               ),
