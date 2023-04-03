@@ -7,6 +7,22 @@ import 'package:myapp/Screen/qrCode.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      home: makePaymentWidget(),
+    );
+  }
+}
+
 class makePaymentWidget extends StatefulWidget {
   final bookingId;
   final duration;
