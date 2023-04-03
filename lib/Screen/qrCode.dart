@@ -10,16 +10,21 @@ class qrCode extends StatefulWidget {
   final bookingId;
   final duration;
   final stationID;
-  const qrCode({super.key, this.bookingId, this.duration, this.stationID});
+  var type;
+  var spotSlot;
+  var StationName;
+  qrCode(
+      {super.key,
+      this.bookingId,
+      this.duration,
+      this.stationID,
+      this.type,
+      this.spotSlot,
+      this.StationName});
 
   @override
   State<qrCode> createState() => _qrCodeState();
 }
-
-// CollectionReference bookingsRef =
-//     FirebaseFirestore.instance.collection('/app/member/ID/$userUID');
-
-// Stream<QuerySnapshot<Object?>> userInfo = bookingsRef.snapshots();
 
 String get userUID {
   final user = FirebaseAuth.instance.currentUser;
@@ -31,14 +36,41 @@ String get userUID {
 }
 
 class _qrCodeState extends State<qrCode> {
+  Future<String?> getname() async {
+    final db = FirebaseFirestore.instance;
+    var docRef = db.collection('/app/member/ID').doc(userUID);
+    log('User ID : ' + userUID);
+    try {
+      log('try');
+      var doc = await docRef.get();
+      if (doc.exists) {
+        log('if');
+        var data = doc.data()!;
+        String name = data['Fullname'];
+        return name;
+      } else {
+        print("Document does not exist");
+        return null;
+      }
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    log('userUID : ' + userUID);
+    log('UserUID : ' + userUID);
+    log('Type : ' + widget.type);
+    log('bookingId : ' + widget.bookingId.toString());
+    log('stationID : ' + widget.stationID.toString());
+    log('spotSlot : ' + widget.spotSlot.toString());
   }
 
   @override
   Widget build(BuildContext context) {
+    num totalDuration = widget.duration / 60;
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
@@ -46,7 +78,7 @@ class _qrCodeState extends State<qrCode> {
         elevation: 0,
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         title: Text(
-          "Park booking",
+          widget.type + ' Booking',
           style: headerText,
         ),
       ),
@@ -73,7 +105,11 @@ class _qrCodeState extends State<qrCode> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "02 Parking Spot",
+                      '0' +
+                          widget.spotSlot.toString() +
+                          ' ' +
+                          widget.type +
+                          ' Spot',
                       style: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 1),
                           fontWeight: FontWeight.w400,
@@ -122,13 +158,27 @@ class _qrCodeState extends State<qrCode> {
                         ),
                         child: Text("Name", style: TextDisplay),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 22,
-                          left: 10,
-                        ),
-                        child: Text("ToonMaiRu", style: BlueDisplayBold),
-                      ),
+                      FutureBuilder<String?>(
+                          future: getname(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (snapshot.hasData) {
+                              String names = snapshot.data!;
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 22,
+                                  left: 20,
+                                ),
+                                child: Text(names, style: BlueDisplayBold),
+                              );
+                            } else {
+                              return Text('No data');
+                            }
+                          }),
                     ],
                   ),
                   Row(
@@ -145,11 +195,10 @@ class _qrCodeState extends State<qrCode> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          top: 13,
+                          top: 10,
                           left: 10,
                         ),
-                        child:
-                            Text("KU Charging Station", style: BlueDisplayBold),
+                        child: Text(widget.StationName, style: BlueDisplayBold),
                       ),
                     ],
                   ),
@@ -163,14 +212,17 @@ class _qrCodeState extends State<qrCode> {
                           top: 13,
                           left: 20,
                         ),
-                        child: Text("Duration", style: TextDisplay),
+                        child: Text('Duration', style: TextDisplay),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 13,
                           left: 10,
                         ),
-                        child: Text("1 hours", style: BlueDisplayBold),
+                        child: Text(
+                            (totalDuration.toStringAsFixed(2)).toString() +
+                                ' hours',
+                            style: BlueDisplayBold),
                       ),
                     ],
                   ),

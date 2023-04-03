@@ -11,7 +11,18 @@ class makePaymentWidget extends StatefulWidget {
   final bookingId;
   final duration;
   var stationID;
-  makePaymentWidget({super.key, this.bookingId, this.duration, this.stationID});
+  var type;
+  var spotSlot;
+  var StationName;
+  makePaymentWidget({
+    super.key,
+    this.bookingId,
+    this.duration,
+    this.stationID,
+    this.type,
+    this.spotSlot,
+    this.StationName,
+  });
   @override
   _MakePaymentWidgetState createState() => _MakePaymentWidgetState();
 }
@@ -38,14 +49,18 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
     final db = FirebaseFirestore.instance;
     var docRef =
         db.collection('/web/owner/charging Station').doc(widget.stationID);
-    log('Station ID' + widget.stationID);
+    log('Station ID : ' + widget.stationID);
     try {
       log('try');
       var doc = await docRef.get();
       if (doc.exists) {
         log('if');
         var data = doc.data()!;
-        price = data['parking_price'];
+        if (widget.type == 'Parking') {
+          price = data['parking_price'];
+        } else {
+          price = data['charging_price'];
+        }
         log('Price : ' + price.toString());
         return price;
       } else {
@@ -68,6 +83,8 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
   void initState() {
     super.initState();
     log('make Station ID : ' + widget.stationID);
+    log('Type : ' + widget.type);
+    log('Spotslot' + widget.spotSlot.toString());
   }
 
   String? _selectedCoupon;
@@ -154,13 +171,13 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                           } else if (snapshot.hasData) {
                             num totalPrice =
                                 (snapshot.data! * widget.duration) / 60;
-                            log('widget.duration');
+                            log('Duration : ' + widget.duration.toString());
                             log('Total price : ' + totalPrice.toString());
                             return Padding(
                               padding:
                                   EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
                               child: Text(
-                                totalPrice.toString(),
+                                totalPrice.toStringAsFixed(2),
                                 style: FlutterFlowTheme.of(context)
                                     .title1
                                     .override(
@@ -405,9 +422,15 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                                     onPressed: () {
                                       print('Continue pressed ...');
                                       print('wait for another page');
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (context) => qrCode()));
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                              builder: (context) => qrCode(
+                                                    spotSlot: spotSlot,
+                                                    type: types,
+                                                    duration: widget.duration,
+                                                    StationName:
+                                                        widget.StationName,
+                                                  )));
                                     },
                                     text: 'Continue',
                                     options: FFButtonOptions(

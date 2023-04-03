@@ -151,6 +151,7 @@ class _parkOrchargingState extends State<parkOrcharging> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => ParkingScreen(
                                         id: widget.id,
+                                        Stationname: info['charging_station'],
                                       )));
                             },
                             style: ButtonStyle(
@@ -193,6 +194,7 @@ class _parkOrchargingState extends State<parkOrcharging> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => ChargingScreen(
                                         id: widget.id,
+                                        Stationname: info['charging_station'],
                                       )));
                             },
                             style: ButtonStyle(

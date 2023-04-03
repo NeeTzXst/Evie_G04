@@ -7,7 +7,8 @@ import 'package:myapp/Widget/styles.dart';
 
 class ChargingScreen extends StatefulWidget {
   final id;
-  ChargingScreen({super.key, this.id});
+  var Stationname;
+  ChargingScreen({super.key, this.id, this.Stationname});
   static const routeName = '/charging';
 
   @override
@@ -422,6 +423,8 @@ class _ChargingScreenState extends State<ChargingScreen> {
                           builder: (context) => BookingTimeScreen(
                             stationid: widget.id,
                             spotid: spotId,
+                            type: 'Charging',
+                            StationName: widget.Stationname,
                           ),
                         ),
                       );

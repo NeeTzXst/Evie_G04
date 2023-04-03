@@ -12,8 +12,15 @@ class BookingTimeScreen extends StatefulWidget {
   var stationid;
   var spotid;
   var uid;
-
-  BookingTimeScreen({super.key, this.stationid, this.spotid, this.uid});
+  var type;
+  var StationName;
+  BookingTimeScreen(
+      {super.key,
+      this.stationid,
+      this.spotid,
+      this.uid,
+      this.type,
+      this.StationName});
 
   @override
   State<BookingTimeScreen> createState() => _BookingTimeScreenState();
@@ -22,6 +29,8 @@ class BookingTimeScreen extends StatefulWidget {
 var charging;
 var userid;
 var spot;
+var spotSlot;
+var types;
 
 String get userUID {
   final user = FirebaseAuth.instance.currentUser;
@@ -34,142 +43,6 @@ String get userUID {
 
 //'/web/owner/charging Station/$charging/charging Spot/$spot/booking'
 
-Future<void> storeBooking(BuildContext context, DateTime timeStart,
-    DateTime timeEnd, String userid) async {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  String startTimeString = DateFormat('yyyy-MM-dd HH:mm:ss').format(timeStart);
-  String endTimeString = DateFormat('yyyy-MM-dd HH:mm:ss').format(timeEnd);
-
-  DateTime startTime = DateTime.parse(startTimeString);
-  DateTime endTime = DateTime.parse(endTimeString);
-
-  int duration = endTime.difference(startTime).inMinutes;
-
-  CollectionReference bookingsRef = _firestore.collection(
-      '/web/owner/charging Station/$charging/charging Spot/$spot/booking');
-  log(startTimeString);
-  log(endTimeString);
-
-  // Query to check for overlapping bookings
-  QuerySnapshot overlappingBookings =
-      await bookingsRef.where('startTime', isLessThan: endTimeString).get();
-
-  QuerySnapshot overlappingBookings1 =
-      await bookingsRef.where('endTime', isGreaterThan: startTimeString).get();
-
-  // Query to check for overlapping bookings
-  QuerySnapshot overlappingBookings2 =
-      await bookingsRef.where('startTime', isEqualTo: startTimeString).get();
-
-  QuerySnapshot overlappingBookings3 =
-      await bookingsRef.where('endTime', isEqualTo: endTimeString).get();
-
-  // If there are any overlapping bookings, display an AlertDialog and return
-  if ((overlappingBookings.docs.isNotEmpty &&
-          overlappingBookings1.docs.isNotEmpty) ||
-      (overlappingBookings2.docs.isNotEmpty &&
-          overlappingBookings3.docs.isNotEmpty)) {
-    AlertDialog alert = AlertDialog(
-      title: Text('Booking Status'),
-      content: Text('Booking failed. There is an overlapping booking.'),
-      actions: [
-        TextButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-    return;
-  }
-
-  // Otherwise, store the new booking and display an AlertDialog
-  DocumentReference docRef = await bookingsRef.add({
-    'startTime': startTimeString,
-    'endTime': endTimeString,
-    'uid': userid,
-    'charging_station': charging,
-    'charging_spot': spot,
-    'duration': duration,
-  });
-
-  String bookId = docRef.id;
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: Color.fromARGB(255, 255, 207, 85),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        title: Center(
-          child: Text('Warning !!', style: StationFull),
-        ),
-        content: Column(
-            mainAxisSize: MainAxisSize.min,
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              RichText(
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(text: 'If you are over ', style: PopupTextBlack),
-                    TextSpan(text: '30 minutes ', style: PopupTextRed),
-                    TextSpan(
-                        text:
-                            'late, your booking will be canceled. If you park for longer than your booked time, you will be fined.',
-                        style: PopupTextBlack),
-                  ],
-                ),
-              ),
-            ]),
-        actions: [
-          Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Container(
-                width: 200,
-                height: 52,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    color: Color.fromRGBO(255, 255, 255, 1)),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: <Widget>[
-                      TextButton(
-                        child: Text("Accept", style: hintText),
-                        onPressed: () {
-                          log('Booking Id : ' + bookId);
-                          log('Station Id : ' + charging);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => makePaymentWidget(
-                                bookingId: bookId,
-                                duration: duration,
-                                stationID: charging,
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    ]),
-              ),
-            ),
-          )
-        ],
-      );
-    },
-  );
-}
-
 class _BookingTimeScreenState extends State<BookingTimeScreen> {
   DateTime timeStart = DateTime(DateTime.now().year, DateTime.now().month,
       DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
@@ -178,11 +51,179 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
 
   String date = DateFormat('dd MMMM, EEEE').format(DateTime.now());
 
+  Future<int?> getData() async {
+    final db = FirebaseFirestore.instance;
+    var docRef = db
+        .collection(
+            '/web/owner/charging Station/${widget.stationid}/charging Spot')
+        .doc(widget.spotid);
+    try {
+      log('try');
+      var doc = await docRef.get();
+      if (doc.exists) {
+        log('if');
+        var data = doc.data()!;
+        spotSlot = data['charging_spot'];
+        log('Slot : ' + spotSlot.toString());
+        return spotSlot;
+      } else {
+        print("Document does not exist");
+        return null;
+      }
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+  Future<void> storeBooking(BuildContext context, DateTime timeStart,
+      DateTime timeEnd, String userid) async {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    String startTimeString =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(timeStart);
+    String endTimeString = DateFormat('yyyy-MM-dd HH:mm:ss').format(timeEnd);
+
+    DateTime startTime = DateTime.parse(startTimeString);
+    DateTime endTime = DateTime.parse(endTimeString);
+
+    int duration = endTime.difference(startTime).inMinutes;
+
+    CollectionReference bookingsRef = _firestore.collection(
+        '/web/owner/charging Station/$charging/charging Spot/$spot/booking');
+    log(startTimeString);
+    log(endTimeString);
+
+    // Query to check for overlapping bookings
+    QuerySnapshot overlappingBookings =
+        await bookingsRef.where('startTime', isLessThan: endTimeString).get();
+
+    QuerySnapshot overlappingBookings1 = await bookingsRef
+        .where('endTime', isGreaterThan: startTimeString)
+        .get();
+
+    // Query to check for overlapping bookings
+    QuerySnapshot overlappingBookings2 =
+        await bookingsRef.where('startTime', isEqualTo: startTimeString).get();
+
+    QuerySnapshot overlappingBookings3 =
+        await bookingsRef.where('endTime', isEqualTo: endTimeString).get();
+
+    // If there are any overlapping bookings, display an AlertDialog and return
+    if ((overlappingBookings.docs.isNotEmpty &&
+            overlappingBookings1.docs.isNotEmpty) ||
+        (overlappingBookings2.docs.isNotEmpty &&
+            overlappingBookings3.docs.isNotEmpty)) {
+      AlertDialog alert = AlertDialog(
+        title: Text('Booking Status'),
+        content: Text('Booking failed. There is an overlapping booking.'),
+        actions: [
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+      return;
+    }
+
+    // Otherwise, store the new booking and display an AlertDialog
+    DocumentReference docRef = await bookingsRef.add({
+      'startTime': startTimeString,
+      'endTime': endTimeString,
+      'uid': userid,
+      'charging_station': charging,
+      'charging_spot': spot,
+      'duration': duration,
+    });
+
+    String bookId = docRef.id;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 255, 207, 85),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          title: Center(
+            child: Text('Warning !!', style: StationFull),
+          ),
+          content: Column(
+              mainAxisSize: MainAxisSize.min,
+              // ignore: prefer_const_literals_to_create_immutables
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: 'If you are over ', style: PopupTextBlack),
+                      TextSpan(text: '30 minutes ', style: PopupTextRed),
+                      TextSpan(
+                          text:
+                              'late, your booking will be canceled. If you park for longer than your booked time, you will be fined.',
+                          style: PopupTextBlack),
+                    ],
+                  ),
+                ),
+              ]),
+          actions: [
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Container(
+                  width: 200,
+                  height: 52,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      color: Color.fromRGBO(255, 255, 255, 1)),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: <Widget>[
+                        TextButton(
+                          child: Text("Accept", style: hintText),
+                          onPressed: () {
+                            log('Booking Id : ' + bookId);
+                            log('Station Id : ' + charging);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => makePaymentWidget(
+                                  bookingId: bookId,
+                                  duration: duration,
+                                  stationID: charging,
+                                  type: types,
+                                  spotSlot: spotSlot,
+                                  StationName: widget.StationName,
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      ]),
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     log('Charging Spot ID : ' + widget.spotid);
     log('Staiont ID : ' + widget.stationid);
+    getData();
   }
 
   @override
@@ -190,6 +231,7 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
     spot = widget.spotid;
     userid = widget.uid;
     charging = widget.stationid;
+    types = widget.type;
 
     return Scaffold(
       appBar: AppBar(
@@ -207,7 +249,7 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Parking area',
+              widget.type.toString() + ' Area',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(26, 116, 226, 1),
@@ -215,7 +257,7 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
               ),
             ),
             Text(
-              'KU Charging Station',
+              widget.StationName,
               style: TextStyle(
                 color: Color.fromRGBO(107, 207, 255, 1),
                 fontSize: 24,
@@ -234,28 +276,32 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
                         color: Color.fromRGBO(26, 116, 226, 1),
                         size: 40,
                       ),
-                      Text(
-                        '04 Parking Spot',
-                        style: TextStyle(
-                          color: Color.fromRGBO(26, 116, 226, 1),
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      const Icon(
-                        Icons.location_pin,
-                        color: Color.fromRGBO(26, 116, 226, 1),
-                        size: 40,
+                      FutureBuilder<int?>(
+                        future: getData(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            num spotSlot = snapshot.data!;
+                            return Text(
+                              '0' +
+                                  spotSlot.toString() +
+                                  ' ' +
+                                  widget.type +
+                                  ' Spot',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromRGBO(26, 116, 226, 1),
+                              ),
+                            );
+                          } else {
+                            return Text('No data');
+                          }
+                        },
                       ),
-                      Text(
-                        '20 km away',
-                        style: TextStyle(
-                          color: Color.fromRGBO(26, 116, 226, 1),
-                        ),
-                      )
                     ],
                   ),
                 ],
