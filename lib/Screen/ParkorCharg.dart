@@ -191,7 +191,9 @@ class _parkOrchargingState extends State<parkOrcharging> {
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ChargingScreen()));
+                                  builder: (context) => ChargingScreen(
+                                        id: widget.id,
+                                      )));
                             },
                             style: ButtonStyle(
                               backgroundColor:
