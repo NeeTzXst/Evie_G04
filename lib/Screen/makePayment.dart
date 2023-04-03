@@ -10,13 +10,14 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 class makePaymentWidget extends StatefulWidget {
   final bookingId;
   final duration;
-  final stationID;
+  var stationID;
   makePaymentWidget({super.key, this.bookingId, this.duration, this.stationID});
   @override
   _MakePaymentWidgetState createState() => _MakePaymentWidgetState();
 }
 
 var station;
+var price;
 
 class _MakePaymentWidgetState extends State<makePaymentWidget> {
   final _unfocusNode = FocusNode();
@@ -33,18 +34,20 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
       .collection('/web/owner/charging Station')
       .doc(station);
 
-  Future<String?> getData() async {
+  Future<int?> getData() async {
     final db = FirebaseFirestore.instance;
-    var docRef = db.collection('/web/owner/charging Station').doc(station);
-
+    var docRef =
+        db.collection('/web/owner/charging Station').doc(widget.stationID);
+    log('Station ID' + widget.stationID);
     try {
       log('try');
       var doc = await docRef.get();
       if (doc.exists) {
+        log('if');
         var data = doc.data()!;
-        int price = data['charging_price'];
-        log(price.toString());
-        return price.toString();
+        price = data['parking_price'];
+        log('Price : ' + price.toString());
+        return price;
       } else {
         print("Document does not exist");
         return null;
@@ -56,15 +59,21 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
   }
 
   Future<void> deleteBooking() async {
-    log(widget.bookingId);
+    log('Delete Book ID : ' + widget.bookingId);
     bookingsRef.doc(widget.bookingId).delete();
-    log("deleteBooking");
+    log('Delete complete');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    log('make Station ID : ' + widget.stationID);
   }
 
   String? _selectedCoupon;
   @override
   Widget build(BuildContext context) {
-    log(stationRef.toString());
+    station = widget.stationID;
     return Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,
@@ -75,9 +84,11 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
             padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
             child: InkWell(
               onTap: () async {
-                deleteBooking().then((value) {
-                  Navigator.pop(context);
-                });
+                deleteBooking().then(
+                  (value) {
+                    Navigator.pop(context);
+                  },
+                );
               },
               child: Icon(
                 Icons.arrow_back,
@@ -132,16 +143,37 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                                   fontWeight: FontWeight.normal),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
-                        child: Text(
-                          '5000',
-                          style: FlutterFlowTheme.of(context).title1.override(
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                              fontSize: 50,
-                              fontWeight: FontWeight.normal),
-                        ),
+                      FutureBuilder<int?>(
+                        future: getData(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            num totalPrice =
+                                (snapshot.data! * widget.duration) / 60;
+                            log('widget.duration');
+                            log('Total price : ' + totalPrice.toString());
+                            return Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 15, 0, 0),
+                              child: Text(
+                                totalPrice.toString(),
+                                style: FlutterFlowTheme.of(context)
+                                    .title1
+                                    .override(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.white,
+                                        fontSize: 50,
+                                        fontWeight: FontWeight.normal),
+                              ),
+                            );
+                          } else {
+                            return Text('No data');
+                          }
+                        },
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),

@@ -20,7 +20,7 @@ class _ParkingScreenState extends State<ParkingScreen> {
   @override
   void initState() {
     super.initState();
-    log(widget.id);
+    log('Station ID : ' + widget.id);
   }
 
   @override
@@ -410,8 +410,6 @@ class _ParkingScreenState extends State<ParkingScreen> {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (BuildContext context, int index) {
-                // widget.id = pump id
-                // docid = spot id
                 DocumentSnapshot chargingSpot = snapshot.data!.docs[index];
                 bool isAvailable = chargingSpot['status'] == 'true';
                 String spotId = chargingSpot.id;
@@ -419,11 +417,14 @@ class _ParkingScreenState extends State<ParkingScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
                           builder: (context) => BookingTimeScreen(
-                                stationid: widget.id,
-                                spotid: spotId,
-                              )));
+                            stationid: widget.id,
+                            spotid: spotId,
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       color: Colors.amber,
@@ -459,10 +460,3 @@ class _ParkingScreenState extends State<ParkingScreen> {
         ));
   }
 }
-// Column(
-//                   children: [
-//                     Text(chargingSpot['charging_spot'].toString()),
-//                     Text(chargingSpot['charging_type'].toString()),
-//                     Text(chargingSpot['status'].toString())
-//                   ],
-//                 );

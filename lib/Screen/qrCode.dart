@@ -1,35 +1,42 @@
-// ignore_for_file: prefer_const_constructors, camel_case_types, sized_box_for_whitespace
-
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/homePage.dart';
-import 'package:qr/qr.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:myapp/Widget/styles.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: qrCode(),
-    );
-  }
-}
-
 class qrCode extends StatefulWidget {
-  const qrCode({super.key});
+  final bookingId;
+  final duration;
+  final stationID;
+  const qrCode({super.key, this.bookingId, this.duration, this.stationID});
 
   @override
   State<qrCode> createState() => _qrCodeState();
 }
 
+// CollectionReference bookingsRef =
+//     FirebaseFirestore.instance.collection('/app/member/ID/$userUID');
+
+// Stream<QuerySnapshot<Object?>> userInfo = bookingsRef.snapshots();
+
+String get userUID {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
+    return 'No user';
+  } else {
+    return user.uid;
+  }
+}
+
 class _qrCodeState extends State<qrCode> {
+  @override
+  void initState() {
+    super.initState();
+    log('userUID : ' + userUID);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,16 +45,6 @@ class _qrCodeState extends State<qrCode> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        // leading: GestureDetector(
-        //   onTap: () {
-        //     Navigator.of(context).pop();
-        //   },
-        //   child: Icon(
-        //     Icons.arrow_back,
-        //     size: 40,
-        //     color: Color.fromRGBO(26, 116, 226, 1),
-        //   ),
-        // ),
         title: Text(
           "Park booking",
           style: headerText,

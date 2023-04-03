@@ -102,7 +102,6 @@ Future<void> storeBooking(BuildContext context, DateTime timeStart,
   });
 
   String bookId = docRef.id;
-  log('Document ID: $bookId');
 
   showDialog(
     context: context,
@@ -148,13 +147,17 @@ Future<void> storeBooking(BuildContext context, DateTime timeStart,
                       TextButton(
                         child: Text("Accept", style: hintText),
                         onPressed: () {
-                          log('booking Id : ' + bookId);
-                          Navigator.of(context).push(MaterialPageRoute(
+                          log('Booking Id : ' + bookId);
+                          log('Station Id : ' + charging);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
                               builder: (context) => makePaymentWidget(
-                                    bookingId: bookId,
-                                    duration: duration,
-                                    stationID: charging,
-                                  )));
+                                bookingId: bookId,
+                                duration: duration,
+                                stationID: charging,
+                              ),
+                            ),
+                          );
                         },
                       )
                     ]),
@@ -178,8 +181,8 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
   @override
   void initState() {
     super.initState();
-    log('station : ' + widget.stationid);
-    log('spot : ' + widget.spotid);
+    log('Charging Spot ID : ' + widget.spotid);
+    log('Staiont ID : ' + widget.stationid);
   }
 
   @override
