@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:myapp/Screen/BookTimes.dart';
 import 'package:myapp/Screen/qrCode.dart';
 
-import '../flutter_flow/flutter_flow_drop_down.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 
