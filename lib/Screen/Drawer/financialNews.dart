@@ -40,9 +40,10 @@ class _financialNewsState extends State<financialNews> {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
               child: Card(
+                  color: Color.fromRGBO(196, 236, 255, 0.839),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    side: BorderSide(color: Colors.black, width: 0.4),
+                    side: BorderSide(color: Colors.black, width: 0.1),
                   ),
                   elevation: 7,
                   child: Container(
@@ -65,7 +66,7 @@ class _financialNewsState extends State<financialNews> {
                                         borderRadius:
                                             BorderRadius.circular(10.0),
                                         child: Image.network(
-                                          'https://cdn.discordapp.com/attachments/1056191443657572372/1091666354072985680/news.png',
+                                          'https://cdn.discordapp.com/attachments/1056191443657572372/1092757742785151006/news_03.jpg',
                                           width: double.infinity,
                                           fit: BoxFit.cover,
                                         ),
@@ -81,6 +82,7 @@ class _financialNewsState extends State<financialNews> {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
               child: Card(
+                  color: Color.fromRGBO(196, 236, 255, 0.839),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     side: BorderSide(color: Colors.black, width: 0.4),
@@ -122,6 +124,7 @@ class _financialNewsState extends State<financialNews> {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
               child: Card(
+                  color: Color.fromRGBO(196, 236, 255, 0.839),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     side: BorderSide(color: Colors.black, width: 0.4),
@@ -163,6 +166,7 @@ class _financialNewsState extends State<financialNews> {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
               child: Card(
+                  color: Color.fromRGBO(196, 236, 255, 0.839),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     side: BorderSide(color: Colors.black, width: 0.4),

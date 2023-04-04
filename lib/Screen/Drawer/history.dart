@@ -13,6 +13,7 @@ class history extends StatefulWidget {
 
 class _historyState extends State<history> {
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +91,7 @@ class _historyState extends State<history> {
                       ),
                       elevation: 7,
                       child: TextField(
+                        controller: searchController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Search',
@@ -97,12 +99,24 @@ class _historyState extends State<history> {
                           prefixIcon: Icon(Icons.search,
                               color: Color.fromRGBO(26, 116, 226, 1)),
                         ),
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                       ),
                     )),
                 Expanded(
                     child: ListView.builder(
                         itemCount: snapshot.data?.docs.length,
                         itemBuilder: (context, index) {
+                          if (searchController.text.isNotEmpty) {
+                            if (!snapshot.data!.docs[index]
+                                .get('Station')
+                                .toLowerCase()
+                                .contains(
+                                    searchController.text.toLowerCase())) {
+                              return SizedBox.shrink();
+                            }
+                          }
                           return Column(
                             children: [
                               Padding(
@@ -135,7 +149,7 @@ class _historyState extends State<history> {
                                                       BorderRadius.circular(
                                                           100),
                                                   child: Image.network(
-                                                    'https://cdiz-84c1.kxcdn.com/rent-space/uploads/post/130665-2.jpg',
+                                                    'https://cdn.discordapp.com/attachments/1056191443657572372/1092753236580126770/image.png',
                                                     width: 110,
                                                     height: 75,
                                                   ),
