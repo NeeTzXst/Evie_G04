@@ -52,7 +52,7 @@ class _howToUseState extends State<howToUse> {
                 howToUsePage(
                   color: Colors.white,
                   urlImg: 'assets/Nearby.jpg',
-                  title: 'Nerby charging station',
+                  title: 'Nearby charging station',
                   subtitle: "Explore charging spot and parking lots around you",
                   context: context,
                   name: LetyouIn(),
