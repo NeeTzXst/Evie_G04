@@ -459,13 +459,6 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                               content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    // Text(
-                                    //   "Your payment is successful!",
-                                    //   style: TextStyle(
-                                    //       fontFamily: 'Montserrat',
-                                    //       color: Color(0xFF1A74E2),
-                                    //       fontWeight: FontWeight.bold),
-                                    // ),
                                     RichText(
                                         text: TextSpan(children: <TextSpan>[
                                       TextSpan(
