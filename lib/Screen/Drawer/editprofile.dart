@@ -202,7 +202,8 @@ class _MyWidgetState extends State<editprofile> {
                                           radius: 90.0,
                                           backgroundImage: _image != null
                                               ? FileImage(_image!)
-                                              : NetworkImage(imageUrl)
+                                              : NetworkImage(
+                                                      'https://cdn.discordapp.com/attachments/1056191443657572372/1092811373366493234/vippng.com-person-icon-png-2026524.png')
                                                   as ImageProvider<Object>,
                                         ),
                                       ),
