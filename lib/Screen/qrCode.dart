@@ -13,6 +13,11 @@ class qrCode extends StatefulWidget {
   var type;
   var spotSlot;
   var StationName;
+  var date;
+  var start;
+  var end;
+  var spotID;
+  var userBookID;
   qrCode(
       {super.key,
       this.bookingId,
@@ -20,23 +25,28 @@ class qrCode extends StatefulWidget {
       this.stationID,
       this.type,
       this.spotSlot,
-      this.StationName});
+      this.StationName,
+      this.date,
+      this.start,
+      this.end,
+      this.spotID,
+      this.userBookID});
 
   @override
   State<qrCode> createState() => _qrCodeState();
 }
 
-String get userUID {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    return 'No user';
-  } else {
-    return user.uid;
-  }
-}
-
 class _qrCodeState extends State<qrCode> {
-  Future<String?> getname() async {
+  String get userUID {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return 'No user';
+    } else {
+      return user.uid;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getname() async {
     final db = FirebaseFirestore.instance;
     var docRef = db.collection('/app/member/ID').doc(userUID);
     log('User ID : ' + userUID);
@@ -46,8 +56,7 @@ class _qrCodeState extends State<qrCode> {
       if (doc.exists) {
         log('if');
         var data = doc.data()!;
-        String name = data['Fullname'];
-        return name;
+        return data;
       } else {
         print("Document does not exist");
         return null;
@@ -58,6 +67,20 @@ class _qrCodeState extends State<qrCode> {
     }
   }
 
+  Future<void> deleteBooking() async {
+    log('WAIT TO DELETE ALL BOOKING');
+    CollectionReference webBookingsRef = FirebaseFirestore.instance.collection(
+        '/web/owner/charging Station/${widget.stationID}/charging Spot/${widget.spotID}/booking');
+
+    CollectionReference userBookingsRef = FirebaseFirestore.instance
+        .collection('/app/member/ID/$userUID/Booking');
+
+    webBookingsRef.doc(widget.bookingId).delete();
+    log('DELETE WEB BOOKING');
+    userBookingsRef.doc(widget.userBookID).delete();
+    log('DELETE USER BOOKING');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +89,7 @@ class _qrCodeState extends State<qrCode> {
     log('bookingId : ' + widget.bookingId.toString());
     log('stationID : ' + widget.stationID.toString());
     log('spotSlot : ' + widget.spotSlot.toString());
+    log('userBook ID: ' + widget.userBookID);
   }
 
   @override
@@ -158,27 +182,29 @@ class _qrCodeState extends State<qrCode> {
                         ),
                         child: Text("Name", style: TextDisplay),
                       ),
-                      FutureBuilder<String?>(
-                          future: getname(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else if (snapshot.hasData) {
-                              String names = snapshot.data!;
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 22,
-                                  left: 20,
-                                ),
-                                child: Text(names, style: BlueDisplayBold),
-                              );
-                            } else {
-                              return Text('No data');
-                            }
-                          }),
+                      FutureBuilder<Map<String, dynamic>?>(
+                        future: getname(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            Map<String, dynamic> names = snapshot.data!;
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 22,
+                                left: 13,
+                              ),
+                              child: Text(names['Fullname'],
+                                  style: BlueDisplayBold),
+                            );
+                          } else {
+                            return Text('No data');
+                          }
+                        },
+                      ),
                     ],
                   ),
                   Row(
@@ -243,7 +269,8 @@ class _qrCodeState extends State<qrCode> {
                           top: 13,
                           left: 10,
                         ),
-                        child: Text("09am - 10am", style: BlueDisplayBold),
+                        child: Text("${widget.start} - ${widget.end}",
+                            style: BlueDisplayBold),
                       ),
                     ],
                   ),
@@ -285,7 +312,7 @@ class _qrCodeState extends State<qrCode> {
                           top: 13,
                           left: 10,
                         ),
-                        child: Text("16 Dec 2099", style: BlueDisplayBold),
+                        child: Text(widget.date, style: BlueDisplayBold),
                       ),
                     ],
                   ),
@@ -301,12 +328,28 @@ class _qrCodeState extends State<qrCode> {
                         ),
                         child: Text("Phone", style: TextDisplay),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 13,
-                          left: 10,
-                        ),
-                        child: Text("012-345-6789", style: BlueDisplayBold),
+                      FutureBuilder<Map<String, dynamic>?>(
+                        future: getname(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            Map<String, dynamic> names = snapshot.data!;
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                top: 13,
+                                left: 12,
+                              ),
+                              child:
+                                  Text(names['Phone'], style: BlueDisplayBold),
+                            );
+                          } else {
+                            return Text('No data');
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -407,7 +450,20 @@ class _qrCodeState extends State<qrCode> {
                                               TextButton(
                                                 child: Text("Confirm",
                                                     style: TextDisplay),
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  deleteBooking().whenComplete(
+                                                    () => {
+                                                      log('DELETE ALL BOOKING'),
+                                                      Navigator.of(context)
+                                                          .pushReplacement(
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              homePage(),
+                                                        ),
+                                                      )
+                                                    },
+                                                  );
+                                                },
                                               )
                                             ]),
                                       ),

@@ -14,13 +14,14 @@ class BookingTimeScreen extends StatefulWidget {
   var uid;
   var type;
   var StationName;
-  BookingTimeScreen(
-      {super.key,
-      this.stationid,
-      this.spotid,
-      this.uid,
-      this.type,
-      this.StationName});
+  BookingTimeScreen({
+    super.key,
+    this.stationid,
+    this.spotid,
+    this.uid,
+    this.type,
+    this.StationName,
+  });
 
   @override
   State<BookingTimeScreen> createState() => _BookingTimeScreenState();
@@ -80,20 +81,20 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
       DateTime timeEnd, String userid) async {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-    String startTimeString =
-        DateFormat('yyyy-MM-dd HH:mm:ss').format(timeStart);
-    String endTimeString = DateFormat('yyyy-MM-dd HH:mm:ss').format(timeEnd);
+    String startTimeString = DateFormat('hh:mm a').format(timeStart);
+    String endTimeString = DateFormat('hh:mm a').format(timeEnd);
 
-    DateTime startTime = DateTime.parse(startTimeString);
-    DateTime endTime = DateTime.parse(endTimeString);
+    DateTime startTime = DateFormat('hh:mm a').parse(startTimeString);
+    DateTime endTime = DateFormat('hh:mm a').parse(endTimeString);
 
     int duration = endTime.difference(startTime).inMinutes;
 
+    log('startTime : ' + startTimeString);
+    log("endTime : " + endTimeString);
+    log("Daration : " + duration.toString());
+
     CollectionReference bookingsRef = _firestore.collection(
         '/web/owner/charging Station/$charging/charging Spot/$spot/booking');
-    log(startTimeString);
-    log(endTimeString);
-
     // Query to check for overlapping bookings
     QuerySnapshot overlappingBookings =
         await bookingsRef.where('startTime', isLessThan: endTimeString).get();
@@ -203,6 +204,10 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
                                   type: types,
                                   spotSlot: spotSlot,
                                   StationName: widget.StationName,
+                                  date: date,
+                                  start: startTimeString,
+                                  end: endTimeString,
+                                  spotID: spot,
                                 ),
                               ),
                             );

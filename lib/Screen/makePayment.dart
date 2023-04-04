@@ -30,15 +30,22 @@ class makePaymentWidget extends StatefulWidget {
   var type;
   var spotSlot;
   var StationName;
-  makePaymentWidget({
-    super.key,
-    this.bookingId,
-    this.duration,
-    this.stationID,
-    this.type,
-    this.spotSlot,
-    this.StationName,
-  });
+  var date;
+  var start;
+  var end;
+  var spotID;
+  makePaymentWidget(
+      {super.key,
+      this.bookingId,
+      this.duration,
+      this.stationID,
+      this.type,
+      this.spotSlot,
+      this.StationName,
+      this.date,
+      this.start,
+      this.end,
+      this.spotID});
   @override
   _MakePaymentWidgetState createState() => _MakePaymentWidgetState();
 }
@@ -60,6 +67,52 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
   DocumentReference stationRef = FirebaseFirestore.instance
       .collection('/web/owner/charging Station')
       .doc(station);
+
+  Future<void> addBookinfo(
+      String station,
+      String booking,
+      String type,
+      num duration,
+      int spotslot,
+      String date,
+      String start,
+      String end,
+      String StationName) async {
+    log('ADD BOOKING INFO');
+    final userRef = await FirebaseFirestore.instance
+        .collection('/app/member/ID/$userUID/Booking');
+    DocumentReference docRef = await userRef.add({
+      'Station ID': station,
+      'Booking ID': booking,
+      'Station Name': StationName,
+      'Type': type,
+      'Duration': duration,
+      'Spotslot': spotslot,
+      'Date': date,
+      'Start': start,
+      'end': end
+    });
+    String userBookingID = docRef.id;
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => qrCode(
+          bookingId: widget.bookingId,
+          stationID: widget.stationID,
+          spotSlot: spotSlot,
+          type: types,
+          duration: widget.duration,
+          StationName: widget.StationName,
+          date: widget.date,
+          start: widget.start,
+          end: widget.end,
+          spotID: spot,
+          userBookID: userBookingID,
+        ),
+      ),
+    );
+    log('ADD BOOKING INFO COMPLETE');
+  }
 
   Future<int?> getData() async {
     final db = FirebaseFirestore.instance;
@@ -101,6 +154,7 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
     log('make Station ID : ' + widget.stationID);
     log('Type : ' + widget.type);
     log('Spotslot' + widget.spotSlot.toString());
+    log('Spot ID ' + widget.spotID);
   }
 
   String? _selectedCoupon;
@@ -438,15 +492,17 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                                     onPressed: () {
                                       print('Continue pressed ...');
                                       print('wait for another page');
-                                      Navigator.of(context)
-                                          .pushReplacement(MaterialPageRoute(
-                                              builder: (context) => qrCode(
-                                                    spotSlot: spotSlot,
-                                                    type: types,
-                                                    duration: widget.duration,
-                                                    StationName:
-                                                        widget.StationName,
-                                                  )));
+                                      addBookinfo(
+                                        widget.stationID,
+                                        widget.bookingId,
+                                        widget.type,
+                                        widget.duration,
+                                        widget.spotSlot,
+                                        widget.date,
+                                        widget.start,
+                                        widget.end,
+                                        widget.StationName,
+                                      );
                                     },
                                     text: 'Continue',
                                     options: FFButtonOptions(

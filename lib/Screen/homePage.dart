@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart';
 import 'package:myapp/Database/dataBaseManager.dart';
 import 'package:myapp/Models/currentLocation_model.dart';
 import 'package:myapp/Models/destination_model.dart';
@@ -63,6 +65,15 @@ class _homePageState extends State<homePage> {
   dataBaseManager dbManager = dataBaseManager();
   Uint8List? locationIcon;
 
+  String get userUID {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return 'No user';
+    } else {
+      return user.uid;
+    }
+  }
+
   // Stream<QuerySnapshot> _locationsStream = FirebaseFirestore.instance
   //     .collection("web")
   //     .doc('owner')
@@ -74,6 +85,63 @@ class _homePageState extends State<homePage> {
       .doc('owner')
       .collection('charging Station')
       .get();
+
+  Future<void> getUserBookinfo(BuildContext context) async {
+    log('user ID :' + userUID);
+    log('GET USER BOOKING INFO');
+    final userRef = FirebaseFirestore.instance
+        .collection('/app/member/ID/$userUID/Booking');
+    final userBookings = await userRef.get();
+    if (userBookings.docs.isEmpty) {
+      // Show Dialog
+      log('YOU ARE NOT BOOKING');
+    } else {
+      log('YOU BOOKING');
+      for (var booking in userBookings.docs) {
+        log('YOUR BOOKING ID : ' + booking.id);
+        // Get the data of the document as a Map
+        final bookingData = booking.data();
+        // Access specific fields in the booking data
+        if (bookingData.isNotEmpty) {
+          log('Booking is not emtpy');
+          final bookingID = bookingData['Booking ID'];
+          final bookingStation = bookingData['Station ID'];
+          final bookingStationName = bookingData['Station Name'];
+          final bookingDuration = bookingData['Duration'];
+          final bookingSpotslot = bookingData['Spotslot'];
+          final bookingTpye = bookingData['Type'];
+          final bookingDate = bookingData['Date'];
+          final bookingStartTime = bookingData['Start'];
+          final bookingEndTime = bookingData['end'];
+          // Do something with the booking data
+          log('Booking BookingID: $bookingID');
+          log('Booking Station: $bookingStation');
+          log('Booking Station Name: $bookingStationName');
+          log('Booking Duration: $bookingDuration');
+          log('Booking Spot slot: $bookingSpotslot');
+          log('Booking Tpye: $bookingTpye');
+          log('Booking Date: $bookingDate');
+          log('Booking Start Time: $bookingStartTime');
+          log('Booking End time: $bookingEndTime');
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => qrCode(
+              bookingId: bookingID,
+              duration: bookingDuration,
+              stationID: bookingStation,
+              type: bookingTpye,
+              spotSlot: bookingSpotslot,
+              StationName: bookingStationName,
+              date: bookingDate,
+              start: bookingStartTime,
+              end: bookingEndTime,
+              userBookID: booking.id,
+            ),
+          ));
+        }
+      }
+    }
+    // Loop through all documents in the 'Booking' subcollection
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     if (!_controller.isCompleted) {
@@ -464,8 +532,7 @@ class _homePageState extends State<homePage> {
                       // Go to current QRcode
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => qrCode()));
+                          getUserBookinfo(context);
                         },
                         child: Container(
                           width: 330,
