@@ -116,7 +116,11 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
         (overlappingBookings2.docs.isNotEmpty &&
             overlappingBookings3.docs.isNotEmpty)) {
       AlertDialog alert = AlertDialog(
-        title: Text('Booking Status'),
+        title: Text('Booking Status',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            )),
         content: Text('Booking failed. There is an overlapping booking.'),
         actions: [
           TextButton(
@@ -134,93 +138,142 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
         },
       );
       return;
-    }
-
-    // Otherwise, store the new booking and display an AlertDialog
-    DocumentReference docRef = await bookingsRef.add({
-      'startTime': startTimeString,
-      'endTime': endTimeString,
-      'uid': userid,
-      'charging_station': charging,
-      'charging_spot': spot,
-      'duration': duration,
-    });
-
-    String bookId = docRef.id;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 255, 207, 85),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-          title: Center(
-            child: Text('Warning !!', style: StationFull),
+    } else if (endTime.difference(startTime).inMinutes == 0) {
+      AlertDialog alert = AlertDialog(
+        title: Text('Booking Status',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            )),
+        content: Text('Booking failed. Start time and End time is the same.'),
+        actions: [
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          content: Column(
-              mainAxisSize: MainAxisSize.min,
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(text: 'If you are over ', style: PopupTextBlack),
-                      TextSpan(text: '30 minutes ', style: PopupTextRed),
-                      TextSpan(
-                          text:
-                              'late, your booking will be canceled. If you park for longer than your booked time, you will be fined.',
-                          style: PopupTextBlack),
-                    ],
+        ],
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+      return;
+    } else if (endTime.difference(startTime).inMinutes < 0) {
+      AlertDialog alert = AlertDialog(
+        title: Text('Booking Status',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            )),
+        content: Text('Booking failed. There is not daily.'),
+        actions: [
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+      return;
+    } else {
+      // Otherwise, store the new booking and display an AlertDialog
+      DocumentReference docRef = await bookingsRef.add({
+        'startTime': startTimeString,
+        'endTime': endTimeString,
+        'uid': userid,
+        'charging_station': charging,
+        'charging_spot': spot,
+        'duration': duration,
+      });
+
+      String bookId = docRef.id;
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Color.fromARGB(255, 255, 207, 85),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            title: Center(
+              child: Text('Warning !!', style: StationFull),
+            ),
+            content: Column(
+                mainAxisSize: MainAxisSize.min,
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: 'If you are over ', style: PopupTextBlack),
+                        TextSpan(text: '30 minutes ', style: PopupTextRed),
+                        TextSpan(
+                            text:
+                                'late, your booking will be canceled. If you park for longer than your booked time, you will be fined.',
+                            style: PopupTextBlack),
+                      ],
+                    ),
+                  ),
+                ]),
+            actions: [
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Container(
+                    width: 200,
+                    height: 52,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        color: Color.fromRGBO(255, 255, 255, 1)),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: <Widget>[
+                          TextButton(
+                            child: Text("Accept", style: hintText),
+                            onPressed: () {
+                              log('Booking Id : ' + bookId);
+                              log('Station Id : ' + charging);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => makePaymentWidget(
+                                    bookingId: bookId,
+                                    duration: duration,
+                                    stationID: charging,
+                                    type: types,
+                                    spotSlot: spotSlot,
+                                    StationName: widget.StationName,
+                                    date: date,
+                                    start: startTimeString,
+                                    end: endTimeString,
+                                    spotID: spot,
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        ]),
                   ),
                 ),
-              ]),
-          actions: [
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Container(
-                  width: 200,
-                  height: 52,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      color: Color.fromRGBO(255, 255, 255, 1)),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        TextButton(
-                          child: Text("Accept", style: hintText),
-                          onPressed: () {
-                            log('Booking Id : ' + bookId);
-                            log('Station Id : ' + charging);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => makePaymentWidget(
-                                  bookingId: bookId,
-                                  duration: duration,
-                                  stationID: charging,
-                                  type: types,
-                                  spotSlot: spotSlot,
-                                  StationName: widget.StationName,
-                                  date: date,
-                                  start: startTimeString,
-                                  end: endTimeString,
-                                  spotID: spot,
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      ]),
-                ),
-              ),
-            )
-          ],
-        );
-      },
-    );
+              )
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -228,7 +281,6 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
     super.initState();
     log('Charging Spot ID : ' + widget.spotid);
     log('Staiont ID : ' + widget.stationid);
-    getData();
   }
 
   @override

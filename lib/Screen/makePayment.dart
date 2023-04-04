@@ -69,15 +69,16 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
   //     .doc(station);
 
   Future<void> addBookinfo(
-      String station,
-      String booking,
-      String type,
-      num duration,
-      int spotslot,
-      String date,
-      String start,
-      String end,
-      String StationName) async {
+    String station,
+    String booking,
+    String type,
+    num duration,
+    int spotslot,
+    String date,
+    String start,
+    String end,
+    String StationName,
+  ) async {
     final db = FirebaseFirestore.instance;
     var userRefs = db.collection('/app/member/ID').doc(userUID);
     var user = await userRefs.get();
@@ -96,7 +97,8 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
       'Start': start,
       'end': end,
       'Car': user['Selected Vehicle']['Brand'],
-      'Spot ID': widget.spotID
+      'Spot ID': widget.spotID,
+      'Price': price
     });
     String userBookingID = docRef.id;
 

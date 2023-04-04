@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -79,7 +77,7 @@ class _MyWidgetState extends State<profile> {
                   builder: (context, imageUrlSnapshot) {
                     if (imageUrlSnapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Show a loading indicator while waiting for the image URL.
+                      return CircularProgressIndicator();
                     } else if (imageUrlSnapshot.hasError) {
                       return Text('Error: ${imageUrlSnapshot.error}');
                     } else {
