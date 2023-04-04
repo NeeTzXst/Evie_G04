@@ -68,8 +68,12 @@ class _MyWidgetState extends State<profile> {
               final userUid = FirebaseAuth.instance.currentUser!.uid;
               final image =
                   FirebaseStorage.instance.ref().child('$userUid/profile.jpg');
-              final imageUrlFuture = image.getDownloadURL();
-              // debugPrint(imageUrl);
+              final imageUrlFuture = image.getDownloadURL().catchError((error) {
+                if (error is FirebaseException &&
+                    error.code == 'object-not-found') {
+                  return 'assets/Imageholder.png';
+                }
+              });
               return FutureBuilder(
                   future: imageUrlFuture,
                   builder: (context, imageUrlSnapshot) {
@@ -97,7 +101,12 @@ class _MyWidgetState extends State<profile> {
                                       minRadius: 60.0,
                                       child: CircleAvatar(
                                         radius: 90.0,
-                                        backgroundImage: NetworkImage(imageUrl),
+                                        backgroundImage: imageUrl.isNotEmpty
+                                            ? NetworkImage(imageUrl)
+                                            : AssetImage(
+                                                imageUrlSnapshot.error
+                                                    .toString(),
+                                              ) as ImageProvider<Object>,
                                       ),
                                     ),
                                   ],

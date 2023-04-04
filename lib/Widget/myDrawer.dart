@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Database/authService.dart';
@@ -66,56 +67,79 @@ class _MyWidgetState extends State<myDrawer> {
         }
         if (snapshot.hasData && snapshot.data!.exists) {
           final userData = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.arrow_back,
-                        size: 45,
-                        color: primaryColor,
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 10),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => profile()),
-                      );
-                    },
-                    child: Row(
+          final userUid = FirebaseAuth.instance.currentUser!.uid;
+          final image =
+              FirebaseStorage.instance.ref().child('$userUid/profile.jpg');
+          final imageUrlFuture = image.getDownloadURL().catchError((error) {
+            if (error is FirebaseException &&
+                error.code == 'object-not-found') {
+              return 'assets/Imageholder.png';
+            }
+          });
+          return FutureBuilder(
+              future: imageUrlFuture,
+              builder: (context, imageUrlSnapshot) {
+                if (imageUrlSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Show a loading indicator while waiting for the image URL.
+                } else if (imageUrlSnapshot.hasError) {
+                  return Text('Error: ${imageUrlSnapshot.error}');
+                } else {
+                  final imageUrl = imageUrlSnapshot.data!;
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 10),
+                    child: Column(
                       children: [
-                        CircleAvatar(
-                          radius: 45,
-                          backgroundColor: primaryColor,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.arrow_back,
+                                size: 45,
+                                color: primaryColor,
+                              )
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Container(
-                          width: 175,
-                          child: Text(
-                            userData['Fullname'],
-                            style: ProfileDrawerText,
-                            overflow: TextOverflow.clip,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 10),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => profile()),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 45,
+                                  backgroundColor: primaryColor,
+                                  backgroundImage: NetworkImage(imageUrl),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Container(
+                                  width: 175,
+                                  child: Text(
+                                    userData['Fullname'],
+                                    style: ProfileDrawerText,
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],
                     ),
-                  ),
-                )
-              ],
-            ),
-          );
+                  );
+                }
+              });
         } else {
           return Center(
             child: CircularProgressIndicator(),
