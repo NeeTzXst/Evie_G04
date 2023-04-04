@@ -64,9 +64,9 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
   CollectionReference bookingsRef = FirebaseFirestore.instance.collection(
       '/web/owner/charging Station/$charging/charging Spot/$spot/booking');
 
-  DocumentReference stationRef = FirebaseFirestore.instance
-      .collection('/web/owner/charging Station')
-      .doc(station);
+  // DocumentReference stationRef = FirebaseFirestore.instance
+  //     .collection('/web/owner/charging Station')
+  //     .doc(station);
 
   Future<void> addBookinfo(
       String station,
@@ -78,6 +78,10 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
       String start,
       String end,
       String StationName) async {
+    final db = FirebaseFirestore.instance;
+    var userRefs = db.collection('/app/member/ID').doc(userUID);
+    var user = await userRefs.get();
+    log(user['Selected Vehicle']['Brand']);
     log('ADD BOOKING INFO');
     final userRef = await FirebaseFirestore.instance
         .collection('/app/member/ID/$userUID/Booking');
@@ -90,7 +94,9 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
       'Spotslot': spotslot,
       'Date': date,
       'Start': start,
-      'end': end
+      'end': end,
+      'Car': user['Selected Vehicle']['Brand'],
+      'Spot ID': widget.spotID
     });
     String userBookingID = docRef.id;
 
@@ -108,6 +114,7 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
           end: widget.end,
           spotID: spot,
           userBookID: userBookingID,
+          selectedCar: user['Selected Vehicle']['Brand'],
         ),
       ),
     );

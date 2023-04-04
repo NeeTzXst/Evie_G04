@@ -113,7 +113,8 @@ class _homePageState extends State<homePage> {
           final bookingDate = bookingData['Date'];
           final bookingStartTime = bookingData['Start'];
           final bookingEndTime = bookingData['end'];
-          // Do something with the booking data
+          final bookingCar = bookingData['Car'];
+          final bookingSpotID = bookingData['Spot ID'];
           log('Booking BookingID: $bookingID');
           log('Booking Station: $bookingStation');
           log('Booking Station Name: $bookingStationName');
@@ -123,6 +124,7 @@ class _homePageState extends State<homePage> {
           log('Booking Date: $bookingDate');
           log('Booking Start Time: $bookingStartTime');
           log('Booking End time: $bookingEndTime');
+          log('Booking SpotID: $bookingSpotID');
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => qrCode(
               bookingId: bookingID,
@@ -135,12 +137,13 @@ class _homePageState extends State<homePage> {
               start: bookingStartTime,
               end: bookingEndTime,
               userBookID: booking.id,
+              selectedCar: bookingCar,
+              spotID: bookingSpotID,
             ),
           ));
         }
       }
     }
-    // Loop through all documents in the 'Booking' subcollection
   }
 
   void _onMapCreated(GoogleMapController controller) {

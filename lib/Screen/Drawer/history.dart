@@ -149,7 +149,7 @@ class _historyState extends State<history> {
                                                       BorderRadius.circular(
                                                           100),
                                                   child: Image.network(
-                                                    'https://cdiz-84c1.kxcdn.com/rent-space/uploads/post/130665-2.jpg',
+                                                    'https://cdn.discordapp.com/attachments/1056191443657572372/1092753236580126770/image.png',
                                                     width: 110,
                                                     height: 75,
                                                   ),
