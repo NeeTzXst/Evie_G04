@@ -75,6 +75,7 @@ class _eviePointsState extends State<eviePoints> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                // ************************** Container 1 **************************
                 Container(
                   width: 340,
                   height: 180,
@@ -178,10 +179,10 @@ class _eviePointsState extends State<eviePoints> {
                     ],
                   ),
                 ),
-                // Container 2
+                // ************************** Container 2 **************************
                 Container(
                   width: 460,
-                  height: 510,
+                  height: 1000,
                   decoration: BoxDecoration(
                     color: Color(0x7F6BCFFF),
                   ),
