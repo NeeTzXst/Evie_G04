@@ -14,7 +14,32 @@ class selectVehicle extends StatefulWidget {
 class _selectVehicleState extends State<selectVehicle> {
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
+  String Brand = '';
+  String License = '';
+  String Type = '';
   int? _selectedVehicleIndex;
+
+  Future<void> addSelectVehicle(
+      String Brand, String License, String Type) async {
+    DocumentReference userRef = await FirebaseFirestore.instance
+        .collection('/app')
+        .doc('member')
+        .collection('ID')
+        .doc(userUID);
+    await userRef.update({
+      'Selected Vehicle': {
+        'Brand': Brand,
+        'License Number': License,
+        'Type': Type,
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,6 +187,23 @@ class _selectVehicleState extends State<selectVehicle> {
                                         () {
                                           _selectedVehicleIndex = value;
                                           log(_selectedVehicleIndex.toString());
+                                          log({
+                                            snapshot.data!
+                                                .docs[_selectedVehicleIndex!]
+                                                .data()
+                                          }.toString());
+                                          Brand = snapshot.data!
+                                                  .docs[_selectedVehicleIndex!]
+                                              ['Brand'];
+                                          License = snapshot.data!
+                                                  .docs[_selectedVehicleIndex!]
+                                              ['License Number'];
+                                          Type = snapshot.data!
+                                                  .docs[_selectedVehicleIndex!]
+                                              ['Charger type'];
+
+                                          addSelectVehicle(
+                                              Brand, License, Type);
                                         },
                                       );
                                     }),

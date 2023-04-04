@@ -18,6 +18,7 @@ class qrCode extends StatefulWidget {
   var end;
   var spotID;
   var userBookID;
+  var selectedCar;
   qrCode(
       {super.key,
       this.bookingId,
@@ -30,7 +31,8 @@ class qrCode extends StatefulWidget {
       this.start,
       this.end,
       this.spotID,
-      this.userBookID});
+      this.userBookID,
+      this.selectedCar});
 
   @override
   State<qrCode> createState() => _qrCodeState();
@@ -46,7 +48,7 @@ class _qrCodeState extends State<qrCode> {
     }
   }
 
-  Future<Map<String, dynamic>?> getname() async {
+  Future<Map<String, dynamic>?> getUser() async {
     final db = FirebaseFirestore.instance;
     var docRef = db.collection('/app/member/ID').doc(userUID);
     log('User ID : ' + userUID);
@@ -58,11 +60,11 @@ class _qrCodeState extends State<qrCode> {
         var data = doc.data()!;
         return data;
       } else {
-        print("Document does not exist");
+        log("Document does not exist");
         return null;
       }
     } catch (error) {
-      print(error);
+      log(error.toString());
       return null;
     }
   }
@@ -75,21 +77,33 @@ class _qrCodeState extends State<qrCode> {
     CollectionReference userBookingsRef = FirebaseFirestore.instance
         .collection('/app/member/ID/$userUID/Booking');
 
-    webBookingsRef.doc(widget.bookingId).delete();
-    log('DELETE WEB BOOKING');
-    userBookingsRef.doc(widget.userBookID).delete();
-    log('DELETE USER BOOKING');
+    log('bookingId : ' + widget.bookingId);
+    log('userBookID : ' + widget.userBookID);
+    log('stationID : ' + widget.stationID);
+    log('widget.spotID : ' + widget.spotID);
+    try {
+      log('try');
+      log('webBookingsRef : ' + webBookingsRef.toString());
+      await webBookingsRef.doc(widget.bookingId).delete().whenComplete(() {
+        log('DELETE WEB BOOKING');
+      });
+      await userBookingsRef.doc(widget.userBookID).delete().whenComplete(() {
+        log('DELETE USER BOOKING');
+      });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    log('UserUID : ' + userUID);
-    log('Type : ' + widget.type);
-    log('bookingId : ' + widget.bookingId.toString());
-    log('stationID : ' + widget.stationID.toString());
-    log('spotSlot : ' + widget.spotSlot.toString());
-    log('userBook ID: ' + widget.userBookID);
+    // log('UserUID : ' + userUID);
+    // log('Type : ' + widget.type);
+    // log('bookingId : ' + widget.bookingId.toString());
+    // log('stationID : ' + widget.stationID.toString());
+    // log('spotSlot : ' + widget.spotSlot.toString());
+    // log('userBook ID: ' + widget.userBookID);
   }
 
   @override
@@ -183,7 +197,7 @@ class _qrCodeState extends State<qrCode> {
                         child: Text("Name", style: TextDisplay),
                       ),
                       FutureBuilder<Map<String, dynamic>?>(
-                        future: getname(),
+                        future: getUser(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -291,8 +305,8 @@ class _qrCodeState extends State<qrCode> {
                           top: 13,
                           left: 10,
                         ),
-                        child: Text("Ford", style: BlueDisplayBold),
-                      ),
+                        child: Text(widget.selectedCar, style: BlueDisplayBold),
+                      )
                     ],
                   ),
                   Row(
@@ -329,7 +343,7 @@ class _qrCodeState extends State<qrCode> {
                         child: Text("Phone", style: TextDisplay),
                       ),
                       FutureBuilder<Map<String, dynamic>?>(
-                        future: getname(),
+                        future: getUser(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
