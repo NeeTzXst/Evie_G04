@@ -51,7 +51,7 @@ class _howToUseState extends State<howToUse> {
                 ),
                 howToUsePage(
                   color: Colors.white,
-                  urlImg: 'assets/EVIE.png',
+                  urlImg: 'assets/Nearby.jpg',
                   title: 'Nerby charging station',
                   subtitle: "Explore charging spot and parking lots around you",
                   context: context,
@@ -59,7 +59,7 @@ class _howToUseState extends State<howToUse> {
                 ),
                 howToUsePage(
                   color: Colors.white,
-                  urlImg: 'assets/EVIE.png',
+                  urlImg: 'assets/Choose.jpg',
                   title: 'Choose your own spots',
                   subtitle: "Up to you. Charging or Parking?",
                   context: context,
@@ -67,7 +67,7 @@ class _howToUseState extends State<howToUse> {
                 ),
                 howToUsePage(
                   color: Colors.white,
-                  urlImg: 'assets/EVIE.png',
+                  urlImg: 'assets/QR.jpg',
                   title: 'Use QR code',
                   subtitle: "Use this QR Code to access your spots",
                   context: context,
@@ -75,7 +75,7 @@ class _howToUseState extends State<howToUse> {
                 ),
                 howToUsePage(
                   color: Colors.white,
-                  urlImg: 'assets/EVIE.png',
+                  urlImg: 'assets/Member.jpg',
                   title: 'Become a Member',
                   subtitle:
                       "Receive special privileges and great deals from us",
