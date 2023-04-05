@@ -27,20 +27,23 @@ class _getDirectionState extends State<getDirection> {
 
   var uuid = Uuid();
   String _sessionToken = "122344";
-  List<dynamic> _placesList = [];
-  bool _isVisible = true;
+  List<dynamic> _destinationList = [];
+  bool _isDestinationVisible = true;
+  double current_latitude = 0;
+  double current_longitude = 0;
+  String current_description = '';
 
-  void onChange() {
+  void onDestinationChange() {
     if (_sessionToken == null) {
       setState(() {
         _sessionToken = uuid.v4();
       });
     }
 
-    getSuggesion(_destinationText.text);
+    searchDestination(_destinationText.text);
   }
 
-  void getSuggesion(String input) async {
+  void searchDestination(String input) async {
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
@@ -50,22 +53,35 @@ class _getDirectionState extends State<getDirection> {
 
     if (response.statusCode == 200) {
       setState(() {
-        _placesList = jsonDecode(response.body.toString())["predictions"];
+        _destinationList = jsonDecode(response.body.toString())["predictions"];
       });
     } else {
       throw Exception("Fail to load data");
     }
   }
 
+  Future<void> getCurrentLocation() async {
+    Map<String, dynamic>? currentLocation =
+        await dataBaseManager().fetchCurrentLocation();
+    if (currentLocation != null) {
+      log('fetchCurrentLocation complete ');
+      current_latitude = currentLocation['current_latitude'];
+      current_longitude = currentLocation['current_longitude'];
+      current_description = currentLocation['description'];
+
+      log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+    } else {
+      log('Current location is null');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _currenLocationText.addListener(() {
-      onChange();
-    });
     _destinationText.addListener(() {
-      onChange();
+      onDestinationChange();
     });
+    getCurrentLocation();
   }
 
   @override
@@ -97,22 +113,21 @@ class _getDirectionState extends State<getDirection> {
               children: [
                 // Textfield Where are you heading from ?
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  child: TextField(
-                    controller: _currenLocationText,
-                    decoration: InputDecoration(
-                      hintText: "Where are you heading from ?",
-                      hintStyle: hintText,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          width: 0,
-                          style: BorderStyle.none,
-                        ),
-                      ),
-                      filled: true,
-                      fillColor: Color.fromRGBO(107, 207, 255, 0.7),
+                  padding: const EdgeInsets.all(30.0),
+                  child: Container(
+                    height: 60,
+                    width: 400,
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(107, 207, 255, 0.7),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                          child: Text(
+                        current_description,
+                        style: hintText,
+                      )),
                     ),
                   ),
                 ),
@@ -122,7 +137,7 @@ class _getDirectionState extends State<getDirection> {
                   child: TextField(
                     controller: _destinationText,
                     onTap: () {
-                      _isVisible = true;
+                      _isDestinationVisible = true;
                     },
                     decoration: InputDecoration(
                       hintText: "Where are you going to ?",
@@ -139,33 +154,8 @@ class _getDirectionState extends State<getDirection> {
                     ),
                   ),
                 ),
-                // Current Location button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30)
-                      .add(EdgeInsets.only(top: 20, bottom: 10)),
-                  child: GestureDetector(
-                    onTap: () {
-                      print("Current station");
-                    },
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.near_me,
-                            size: 40,
-                            color: Color.fromRGBO(26, 116, 226, 1),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Current station",
-                            style: headerNormalText,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                SizedBox(
+                  height: 25,
                 ),
                 Divider(
                   color: Color.fromARGB(255, 148, 146, 146),
@@ -174,42 +164,17 @@ class _getDirectionState extends State<getDirection> {
                   indent: 30,
                   endIndent: 30,
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                //Choose on map button
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: GestureDetector(
-                    onTap: () {
-                      print("Chose on map");
-                    },
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.map,
-                            size: 40,
-                            color: Color.fromRGBO(26, 116, 226, 1),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "Chose on map",
-                            style: headerNormalText,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // SizedBox(
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   child: GestureDetector(
                     onTap: () {
-                      print("Get Direction");
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: ((context) => homePage()),
+                        ),
+                      );
                     },
                     child: Container(
                       child: Row(
@@ -231,47 +196,37 @@ class _getDirectionState extends State<getDirection> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: ((context) => homePage()),
-                      ),
-                    );
-                  },
-                  child: Text("Get Direction"),
-                ),
               ],
             ),
-            if (_placesList.isNotEmpty)
-              // Show Listview place
+            if (_destinationList.isNotEmpty)
               Visibility(
-                visible: _isVisible,
+                visible: _isDestinationVisible,
                 child: Positioned(
-                  top: 160, // Adjust this to fit your design
+                  top: 180, // Adjust this to fit your design
                   left: 0,
                   right: 0,
                   bottom: 0,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: Container(
                       color: Colors.white,
                       child: ListView.builder(
-                        itemCount: _placesList.length,
+                        itemCount: _destinationList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return ListTile(
                             onTap: () async {
                               List<Location> locations =
                                   await locationFromAddress(
-                                      _placesList[index]['description']);
+                                      _destinationList[index]['description']);
                               final Des = destination(
-                                description: _placesList[index]['description'],
+                                description: _destinationList[index]
+                                    ['description'],
                                 latitude: locations.last.latitude,
                                 longitude: locations.last.longitude,
                               );
 
-                              log("${_placesList[index]['description']} latitude : ${locations.last.latitude}");
-                              log("${_placesList[index]['description']} longitude : ${locations.last.longitude}");
+                              log("${_destinationList[index]['description']} latitude : ${locations.last.latitude}");
+                              log("${_destinationList[index]['description']} longitude : ${locations.last.longitude}");
 
                               // Save Destination on Firebase
 
@@ -280,13 +235,13 @@ class _getDirectionState extends State<getDirection> {
                               setState(
                                 () {
                                   _destinationText.text =
-                                      _placesList[index]['description'];
-                                  _placesList = [];
-                                  _isVisible = false;
+                                      _destinationList[index]['description'];
+                                  _destinationList = [];
+                                  _isDestinationVisible = false;
                                 },
                               );
                             },
-                            title: Text(_placesList[index]['description']),
+                            title: Text(_destinationList[index]['description']),
                           );
                         },
                       ),

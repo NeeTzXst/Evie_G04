@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Screen/Drawer/howToUse.dart';
+import 'package:myapp/Screen/firesthowtouse.dart';
 
 class splash extends StatefulWidget {
   const splash({super.key});
@@ -21,7 +21,7 @@ class _MyWidgetState extends State<splash> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => howToUse(),
+          builder: (context) => firsthowToUse(),
         ),
       );
     }
