@@ -17,14 +17,21 @@ class alertBox extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(title),
+          backgroundColor: primaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          title: Center(child: Text(title)),
           content: Text(body),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );

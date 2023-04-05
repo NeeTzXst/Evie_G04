@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/homePage.dart';
+import 'package:myapp/Screen/timeRemining.dart';
+import 'package:myapp/flutter_flow/flutter_flow_util.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:myapp/Widget/styles.dart';
 
@@ -45,6 +47,119 @@ class _qrCodeState extends State<qrCode> {
       return 'No user';
     } else {
       return user.uid;
+    }
+  }
+
+  Future<void> checkIn() async {
+    log('stationID : ' + widget.stationID.toString());
+    log('spotID : ' + widget.spotID.toString());
+    log("User ID : " + userUID);
+    CollectionReference check = FirebaseFirestore.instance.collection(
+        '/web/owner/charging Station/${widget.stationID}/charging Spot/${widget.spotID}/booking');
+
+    QuerySnapshot checkqr = await check.where('uid', isEqualTo: userUID).get();
+
+    if (checkqr.docs.isNotEmpty) {
+      final bookingDocSnapshot = checkqr.docs.first;
+      final bookingData = bookingDocSnapshot.data();
+      log(bookingData.toString());
+
+      final bookingStartTime = bookingDocSnapshot['startTime'];
+      final bookingEndTime = bookingDocSnapshot['endTime'];
+      final currentTime = DateTime.now();
+      final currentTimeString = DateFormat('hh:mm a').format(currentTime);
+      final currentTimeDateTime =
+          DateFormat('hh:mm a').parse(currentTimeString);
+      final bookingStartDateTime =
+          DateFormat('hh:mm a').parse(bookingStartTime);
+      final bookingEndDateTime = DateFormat('hh:mm a').parse(bookingEndTime);
+
+      if ((currentTimeDateTime.isAfter(bookingStartDateTime) &&
+              currentTimeDateTime.isBefore(bookingEndDateTime) ||
+          currentTimeDateTime == bookingStartDateTime)) {
+        log("มาทัน");
+        FirebaseFirestore.instance
+            .collection(
+                '/web/owner/charging Station/${widget.stationID}/charging Spot/')
+            .doc(widget.spotID)
+            .update({'status': "false"}).then((value) {
+          //Navigator.of(context).pop();
+        }).catchError((error) {
+          print("Failed to update charging spot: $error");
+        });
+        // Show "Welcome to Spot" dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Welcome to Spot',
+                style: TextStyle(
+                    color: Colors.green, fontWeight: FontWeight.bold)),
+            content: Text('Your booking is valid at this time.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => timeRemining(),
+                  ),
+                ),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else if (currentTimeDateTime == bookingEndDateTime) {
+        log("มาสายเกิน");
+        // Show "Sorry" dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Sorry,your can't come to the spot",
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            content: Text('Your booking is late at this time.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        log("ยังไม่ถึงเวลาที่จอง");
+        // Show "Not your time" dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Not your time',
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            content: Text('Your booking is not valid at this time.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      // Show "Didn't find your booking" dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Didn't find your booking"),
+          content: Text('Please check your UID and try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -161,7 +276,7 @@ class _qrCodeState extends State<qrCode> {
                     height: 230,
                     child: QrImage(
                       version: QrVersions.auto,
-                      data: "1234567890",
+                      data: "$userUID",
                       padding: EdgeInsets.all(25),
                       foregroundColor: Colors.white,
                     ),
@@ -376,7 +491,7 @@ class _qrCodeState extends State<qrCode> {
           ),
           Align(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 // Padding(
                 //   padding: const EdgeInsets.only(
@@ -384,30 +499,31 @@ class _qrCodeState extends State<qrCode> {
                 //   ),
                 // ),
                 Container(
-                    width: 120,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromRGBO(107, 207, 255, 0.6),
-                    ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: <Widget>[
-                          TextButton(
-                            child: Text("Back", style: BlueDisplayBold),
-                            onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => homePage()));
-                            },
-                          ),
-                        ])),
-                SizedBox(
-                  width: 20,
+                  width: 100,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    color: Color.fromRGBO(107, 207, 255, 0.6),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      TextButton(
+                        child: Text("Back", style: BlueDisplayBold),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => homePage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
-                  width: 120,
+                  width: 100,
                   height: 52,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -418,75 +534,98 @@ class _qrCodeState extends State<qrCode> {
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       TextButton(
-                          child: Text("Cancel", style: TextDisplay),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  backgroundColor:
-                                      Color.fromARGB(255, 243, 100, 112),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  title: Center(
-                                    child: Text('Are you sure ?',
-                                        style: TextDisplay),
-                                  ),
-                                  content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      // ignore: prefer_const_literals_to_create_immutables
-                                      children: [
-                                        Text(
-                                          "If you cancel your booking, your ",
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                        Text(
-                                          " payment will not be refunded.",
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                      ]),
-                                  actions: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        width: 200,
-                                        height: 52,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8.0)),
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 1)),
-                                        child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: <Widget>[
-                                              TextButton(
-                                                child: Text("Confirm",
-                                                    style: TextDisplay),
-                                                onPressed: () {
-                                                  deleteBooking().whenComplete(
-                                                    () => {
-                                                      log('DELETE ALL BOOKING'),
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              homePage(),
-                                                        ),
-                                                      )
-                                                    },
-                                                  );
-                                                },
-                                              )
-                                            ]),
+                        child: Text("Cancel", style: TextDisplay),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                    Color.fromARGB(255, 243, 100, 112),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25)),
+                                title: Center(
+                                  child: Text('Are you sure ?',
+                                      style: TextDisplay),
+                                ),
+                                content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    // ignore: prefer_const_literals_to_create_immutables
+                                    children: [
+                                      Text(
+                                        "If you cancel your booking, your ",
+                                        style: TextStyle(fontSize: 18),
                                       ),
-                                    )
-                                  ],
-                                );
-                              },
-                            );
-                          })
+                                      Text(
+                                        " payment will not be refunded.",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ]),
+                                actions: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      width: 200,
+                                      height: 52,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0)),
+                                          color:
+                                              Color.fromRGBO(255, 255, 255, 1)),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        // ignore: prefer_const_literals_to_create_immutables
+                                        children: <Widget>[
+                                          TextButton(
+                                            child: Text("Confirm",
+                                                style: TextDisplay),
+                                            onPressed: () {
+                                              deleteBooking().whenComplete(
+                                                () => {
+                                                  log('DELETE ALL BOOKING'),
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          homePage(),
+                                                    ),
+                                                  )
+                                                },
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 100,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    color: Color.fromRGBO(107, 207, 255, 0.6),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      TextButton(
+                        child: Text("Check", style: BlueDisplayBold),
+                        onPressed: () {
+                          log('Check');
+                          checkIn();
+                        },
+                      ),
                     ],
                   ),
                 ),

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:myapp/Database/authService.dart';
+import 'dart:developer';
 
 import '../../flutter_flow/flutter_flow_radio_button.dart';
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 import 'Drawer/myPayment.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +16,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,10 +33,15 @@ class AddCreditCardWidget extends StatefulWidget {
 }
 
 class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
-  String? radioButtonValue;
+  String? typeCard;
 
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _fullname = TextEditingController();
+  final _cardNumber = TextEditingController();
+  final _expirationM = TextEditingController();
+  final _expirationY = TextEditingController();
+  final _cvv = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +92,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                   child: FlutterFlowRadioButton(
                     options: ['Credit Card', 'Debit Card'].toList(),
-                    onChanged: (val) => setState(() => radioButtonValue = val),
+                    onChanged: (val) => setState(() => typeCard = val),
                     optionHeight: 30,
                     textStyle: TextStyle(
                       fontFamily: 'Poppins',
@@ -119,6 +129,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 0),
                 child: TextFormField(
+                  controller: _fullname,
                   textCapitalization: TextCapitalization.none,
                   obscureText: false,
                   decoration: InputDecoration(
@@ -207,6 +218,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(30, 0, 30, 0),
                 child: TextFormField(
+                  controller: _cardNumber,
                   textCapitalization: TextCapitalization.none,
                   obscureText: false,
                   decoration: InputDecoration(
@@ -306,6 +318,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        controller: _expirationM,
                         textCapitalization: TextCapitalization.none,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -400,6 +413,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: _expirationY,
                         textCapitalization: TextCapitalization.none,
                         obscureText: false,
                         decoration: InputDecoration(
@@ -508,6 +522,7 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
                           child: TextFormField(
+                            controller: _cvv,
                             textCapitalization: TextCapitalization.none,
                             obscureText: true,
                             decoration: InputDecoration(
@@ -663,9 +678,18 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                 // padding: EdgeInsetsDirectional.fromSTEB(0, 150, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () {
+                    authService().addCard(
+                        context,
+                        typeCard as String,
+                        _fullname.text,
+                        _cardNumber.text,
+                        _expirationM.text,
+                        _expirationY.text,
+                        _cvv.text);
+                    // print(typeCard);
                     print('Save pressed ...');
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => myPayment()));
+                    // Navigator.push(context,
+                    //     MaterialPageRoute(builder: (context) => myPayment()));
                   },
                   text: 'Save',
                   options: FFButtonOptions(

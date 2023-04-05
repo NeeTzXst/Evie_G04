@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:myapp/Database/dataBaseManager.dart';
 import 'package:myapp/Models/destination_model.dart';
 import 'package:myapp/Screen/homePage.dart';
+import 'package:myapp/Widget/alertBox.dart';
 import 'package:myapp/Widget/styles.dart';
 import 'package:myapp/variables.dart';
 import 'package:uuid/uuid.dart';
@@ -22,8 +23,8 @@ class getDirection extends StatefulWidget {
 }
 
 class _getDirectionState extends State<getDirection> {
+  FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController _destinationText = TextEditingController();
-  TextEditingController _currenLocationText = TextEditingController();
 
   var uuid = Uuid();
   String _sessionToken = "122344";
@@ -61,17 +62,34 @@ class _getDirectionState extends State<getDirection> {
   }
 
   Future<void> getCurrentLocation() async {
-    Map<String, dynamic>? currentLocation =
-        await dataBaseManager().fetchCurrentLocation();
-    if (currentLocation != null) {
-      log('fetchCurrentLocation complete ');
-      current_latitude = currentLocation['current_latitude'];
-      current_longitude = currentLocation['current_longitude'];
-      current_description = currentLocation['description'];
+    if (auth.currentUser != null && auth.currentUser!.isAnonymous) {
+      log('Guest current');
+      Map<String, dynamic>? currentLocation =
+          await dataBaseManager().guestfetchCurrentLocation();
+      if (currentLocation != null) {
+        log('fetchCurrentLocation complete ');
+        current_latitude = currentLocation['current_latitude'];
+        current_longitude = currentLocation['current_longitude'];
+        current_description = currentLocation['description'];
 
-      log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+        log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+      } else {
+        log('Current location is null');
+      }
     } else {
-      log('Current location is null');
+      log('Member current');
+      Map<String, dynamic>? currentLocation =
+          await dataBaseManager().fetchCurrentLocation();
+      if (currentLocation != null) {
+        log('fetchCurrentLocation complete ');
+        current_latitude = currentLocation['current_latitude'];
+        current_longitude = currentLocation['current_longitude'];
+        current_description = currentLocation['description'];
+
+        log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+      } else {
+        log('Current location is null');
+      }
     }
   }
 
@@ -170,11 +188,17 @@ class _getDirectionState extends State<getDirection> {
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: ((context) => homePage()),
-                        ),
-                      );
+                      if (auth.currentUser != null &&
+                          auth.currentUser!.isAnonymous) {
+                        alertBox.showAlertBox(context, "Please login",
+                            "Login to use this function");
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: ((context) => homePage()),
+                          ),
+                        );
+                      }
                     },
                     child: Container(
                       child: Row(
@@ -202,53 +226,64 @@ class _getDirectionState extends State<getDirection> {
               Visibility(
                 visible: _isDestinationVisible,
                 child: Positioned(
-                  top: 180, // Adjust this to fit your design
+                  top: 180,
                   left: 0,
                   right: 0,
                   bottom: 0,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25,
+                    ),
                     child: Container(
                       color: Colors.white,
                       child: ListView.builder(
-                        itemCount: _destinationList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            onTap: () async {
-                              List<Location> locations =
-                                  await locationFromAddress(
-                                      _destinationList[index]['description']);
-                              final Des = destination(
-                                description: _destinationList[index]
-                                    ['description'],
-                                latitude: locations.last.latitude,
-                                longitude: locations.last.longitude,
-                              );
+                          itemCount: _destinationList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              onTap: () async {
+                                try {
+                                  List<Location> locations =
+                                      await locationFromAddress(
+                                          _destinationList[index]
+                                              ['description']);
+                                  final Des = destination(
+                                    description: _destinationList[index]
+                                        ['description'],
+                                    latitude: locations.last.latitude,
+                                    longitude: locations.last.longitude,
+                                  );
+                                  log("${_destinationList[index]['description']} latitude : ${locations.last.latitude}");
+                                  log("${_destinationList[index]['description']} longitude : ${locations.last.longitude}");
+                                  // Save Destination on Firebase
+                                  if (auth.currentUser != null &&
+                                      auth.currentUser!.isAnonymous) {
+                                    await dataBaseManager()
+                                        .gusetsaveLocation(Des);
+                                  } else {
+                                    await dataBaseManager().saveLocation(Des);
+                                  }
 
-                              log("${_destinationList[index]['description']} latitude : ${locations.last.latitude}");
-                              log("${_destinationList[index]['description']} longitude : ${locations.last.longitude}");
-
-                              // Save Destination on Firebase
-
-                              await dataBaseManager().saveLocation(Des);
-
-                              setState(
-                                () {
-                                  _destinationText.text =
-                                      _destinationList[index]['description'];
-                                  _destinationList = [];
-                                  _isDestinationVisible = false;
-                                },
-                              );
-                            },
-                            title: Text(_destinationList[index]['description']),
-                          );
-                        },
-                      ),
+                                  setState(
+                                    () {
+                                      _destinationText.text =
+                                          _destinationList[index]
+                                              ['description'];
+                                      _destinationList = [];
+                                      _isDestinationVisible = false;
+                                    },
+                                  );
+                                } catch (e) {
+                                  log('Error : $e');
+                                }
+                              },
+                              title:
+                                  Text(_destinationList[index]['description']),
+                            );
+                          }),
                     ),
                   ),
                 ),
-              ),
+              )
           ],
         ),
       ),

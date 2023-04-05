@@ -29,7 +29,7 @@ class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
   final _unfocusNode = FocusNode();
 
   @override
-    Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
@@ -119,6 +119,25 @@ class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
                                               ),
                                             ),
                                           ),
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(-1, 0),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(30, 20, 0, 0),
+                                              child: Text(
+                                                "${snapshot.data!.docs[index].get('ans')}",
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyText1
+                                                    .override(
+                                                      fontFamily: 'Montserrat',
+                                                      color: Color(0xFF3FA0EF),
+                                                      fontSize: 16,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -126,16 +145,16 @@ class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
                                 ));
                           })),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 150, 0, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                     child: Image.asset(
                       'assets/help_car.jpg',
-                      width: 400,
+                      width: 420,
                       height: 300,
                       fit: BoxFit.cover,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 80, 0, 20),
                     child: Text(
                       'Contact Us',
                       style: FlutterFlowTheme.of(context).bodyText1.override(
