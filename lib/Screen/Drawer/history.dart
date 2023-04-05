@@ -99,7 +99,7 @@ class _historyState extends State<history> {
                           prefixIcon: Icon(Icons.search,
                               color: Color.fromRGBO(26, 116, 226, 1)),
                         ),
-                        onChanged: (value) {
+                        onSubmitted: (value) {
                           setState(() {});
                         },
                       ),
@@ -110,7 +110,7 @@ class _historyState extends State<history> {
                         itemBuilder: (context, index) {
                           if (searchController.text.isNotEmpty) {
                             if (!snapshot.data!.docs[index]
-                                .get('Station')
+                                .get('Station Name')
                                 .toLowerCase()
                                 .contains(
                                     searchController.text.toLowerCase())) {
@@ -163,7 +163,7 @@ class _historyState extends State<history> {
                                                     padding: EdgeInsets.only(
                                                         left: 6, top: 8),
                                                     child: Text(
-                                                      "${snapshot.data!.docs[index].get('Station')}",
+                                                      "${snapshot.data!.docs[index].get('Station Name')}",
                                                       style: StationFull,
                                                     ),
                                                   ),
@@ -181,7 +181,7 @@ class _historyState extends State<history> {
                                                       left: 6,
                                                     ),
                                                     child: Text(
-                                                      "${snapshot.data!.docs[index].get('License Number')}",
+                                                      "${snapshot.data!.docs[index].get('Car')}",
                                                       style: VehicleName,
                                                     ),
                                                   )
