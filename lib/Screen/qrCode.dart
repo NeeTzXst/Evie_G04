@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/homePage.dart';
+import 'package:myapp/Screen/timeRemining.dart';
+import 'package:myapp/flutter_flow/flutter_flow_util.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:myapp/Widget/styles.dart';
 
@@ -45,6 +47,119 @@ class _qrCodeState extends State<qrCode> {
       return 'No user';
     } else {
       return user.uid;
+    }
+  }
+
+  Future<void> checkIn() async {
+    log('stationID : ' + widget.stationID.toString());
+    log('spotID : ' + widget.spotID.toString());
+    log("User ID : " + userUID);
+    CollectionReference check = FirebaseFirestore.instance.collection(
+        '/web/owner/charging Station/${widget.stationID}/charging Spot/${widget.spotID}/booking');
+
+    QuerySnapshot checkqr = await check.where('uid', isEqualTo: userUID).get();
+
+    if (checkqr.docs.isNotEmpty) {
+      final bookingDocSnapshot = checkqr.docs.first;
+      final bookingData = bookingDocSnapshot.data();
+      log(bookingData.toString());
+
+      final bookingStartTime = bookingDocSnapshot['startTime'];
+      final bookingEndTime = bookingDocSnapshot['endTime'];
+      final currentTime = DateTime.now();
+      final currentTimeString = DateFormat('hh:mm a').format(currentTime);
+      final currentTimeDateTime =
+          DateFormat('hh:mm a').parse(currentTimeString);
+      final bookingStartDateTime =
+          DateFormat('hh:mm a').parse(bookingStartTime);
+      final bookingEndDateTime = DateFormat('hh:mm a').parse(bookingEndTime);
+
+      if ((currentTimeDateTime.isAfter(bookingStartDateTime) &&
+              currentTimeDateTime.isBefore(bookingEndDateTime) ||
+          currentTimeDateTime == bookingStartDateTime)) {
+        log("มาทัน");
+        FirebaseFirestore.instance
+            .collection(
+                '/web/owner/charging Station/${widget.stationID}/charging Spot/')
+            .doc(widget.spotID)
+            .update({'status': "false"}).then((value) {
+          //Navigator.of(context).pop();
+        }).catchError((error) {
+          print("Failed to update charging spot: $error");
+        });
+        // Show "Welcome to Spot" dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Welcome to Spot',
+                style: TextStyle(
+                    color: Colors.green, fontWeight: FontWeight.bold)),
+            content: Text('Your booking is valid at this time.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => timeRemining(),
+                  ),
+                ),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else if (currentTimeDateTime == bookingEndDateTime) {
+        log("มาสายเกิน");
+        // Show "Sorry" dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Sorry,your can't come to the spot",
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            content: Text('Your booking is late at this time.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        log("ยังไม่ถึงเวลาที่จอง");
+        // Show "Not your time" dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Not your time',
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            content: Text('Your booking is not valid at this time.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      // Show "Didn't find your booking" dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Didn't find your booking"),
+          content: Text('Please check your UID and try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -508,6 +623,7 @@ class _qrCodeState extends State<qrCode> {
                         child: Text("Check", style: BlueDisplayBold),
                         onPressed: () {
                           log('Check');
+                          checkIn();
                         },
                       ),
                     ],
