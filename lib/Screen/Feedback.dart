@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:myapp/Database/authService.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
@@ -34,7 +35,7 @@ class FeedbackWidget extends StatefulWidget {
 class _FeedbackWidgetState extends State<FeedbackWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
-
+  final _feedback = TextEditingController();
   @override
   @override
   Widget build(BuildContext context) {
@@ -213,6 +214,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     30, 30, 20, 0),
                                             child: TextFormField(
+                                              controller: _feedback,
                                               maxLines: 10,
                                               textCapitalization:
                                                   TextCapitalization.none,
@@ -263,7 +265,41 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
                                                 AlignmentDirectional(0, 0),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 160, 0, 0),
+                                                  .fromSTEB(0, 20, 0, 0),
+                                              child: FFButtonWidget(
+                                                text: "Send Feedback",
+                                                onPressed: () {
+                                                  authService().sendFeedback(
+                                                      context, _feedback.text);
+                                                  print(
+                                                      'Send Feedback pressed..');
+                                                },
+                                                options: FFButtonOptions(
+                                                    width: 330,
+                                                    height: 55,
+                                                    color: Color(0xFF6BCFFF),
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      color: Color(0xFF1A74E2),
+                                                      fontSize: 20,
+                                                    ),
+                                                    borderSide: BorderSide(
+                                                      color: Colors.transparent,
+                                                      width: 1,
+                                                    ),
+                                                    borderRadius: 10,
+                                                    elevation: 0,
+                                                    decoration:
+                                                        BoxDecoration()),
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0, 0),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0, 100, 0, 0),
                                               child: Text(
                                                 'Contact Us',
                                                 style: FlutterFlowTheme.of(
