@@ -148,7 +148,7 @@ class _GPSandTrackingWidgetState extends State<GPSandTrackingWidget> {
                     padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                     child: Image.asset(
                       'assets/help_car.jpg',
-                      width: 400,
+                      width: 420,
                       height: 300,
                       fit: BoxFit.cover,
                     ),

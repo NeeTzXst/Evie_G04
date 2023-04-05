@@ -30,7 +30,9 @@ class authService extends ChangeNotifier {
           'uid': userCredential.user?.uid,
           'Email': email,
           'password': password,
-          'EviePoints': ''
+          'EviePoints': 0,
+          'reward25': 0,
+          'reward50': 0
         },
       ).then((value) {
         Navigator.of(context).push(
