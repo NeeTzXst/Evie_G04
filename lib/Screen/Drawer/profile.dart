@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
+import 'package:myapp/Widget/alertBox.dart';
 import 'editprofile.dart';
 
 class profile extends StatefulWidget {
@@ -14,7 +17,16 @@ class profile extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<profile> {
+  File? _image;
+  String? _imageUrl;
+  
+  
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
+
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   DocumentReference get userDocument {
     return FirebaseFirestore.instance
@@ -24,8 +36,64 @@ class _MyWidgetState extends State<profile> {
         .doc(userUID);
   }
 
+  Future<void> getImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    } else {
+      print('No image selected.');
+    }
+  }
+
   Future<DocumentSnapshot> getUserData() async {
+    final userUid = FirebaseAuth.instance.currentUser!.uid;
+    final userDocument = FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userUid);
+
     return await userDocument.get();
+  }
+
+  Future<void> _uploadImage() async {
+    if (_image == null) {
+      return;
+    }
+
+    try {
+      final reference =
+          FirebaseStorage.instance.ref().child('$userUID').child('profile.jpg');
+
+      await reference.putFile(_image!);
+      final url = await reference.getDownloadURL();
+      setState(() {
+        _imageUrl = url;
+      });
+      print(url);
+    } on FirebaseException catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to upload image: ${error.message}'),
+        ),
+      );
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData().then((userData) {
+      _fullNameController.text = userData['Fullname'] ?? '';
+      _nicknameController.text = userData['Nickname'] ?? '';
+      _phoneNumberController.text = userData['Phone'] ?? '';
+      _emailController.text = userData['Email'] ?? '';
+    });
   }
 
   @override
@@ -259,6 +327,7 @@ class _MyWidgetState extends State<profile> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   editprofile()));
+                                                  
                                     },
                                   )
                                 ],
