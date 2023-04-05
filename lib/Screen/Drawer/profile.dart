@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,7 +20,7 @@ class profile extends StatefulWidget {
 class _MyWidgetState extends State<profile> {
   File? _image;
   String? _imageUrl;
-  
+
   var alertBox;
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
@@ -59,7 +60,6 @@ class _MyWidgetState extends State<profile> {
         .collection('ID')
         .doc(userUID);
   }
-
 
   Future<void> _uploadImage() async {
     if (_image == null) {
@@ -108,8 +108,7 @@ class _MyWidgetState extends State<profile> {
 
     userDocument.update(dataToUpdate).then(
       (_) {
-        alertBox
-            .then((value) {
+        alertBox.then((value) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -128,7 +127,6 @@ class _MyWidgetState extends State<profile> {
       },
     );
   }
-
 
   @override
   void initState() {
@@ -172,15 +170,12 @@ class _MyWidgetState extends State<profile> {
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-              child: CircularProgressIndicator(),
-            );
-            } 
-            
-            else if (snapshot.hasError) {
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            } 
-            
-            else {
+            } else {
+              log(snapshot.data!.data().toString());
               final userData = snapshot.data!;
               final userUid = FirebaseAuth.instance.currentUser!.uid;
               final image =
@@ -380,7 +375,6 @@ class _MyWidgetState extends State<profile> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   editprofile()));
-                                                  
                                     },
                                   )
                                 ],
