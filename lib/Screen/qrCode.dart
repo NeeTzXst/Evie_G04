@@ -384,27 +384,31 @@ class _qrCodeState extends State<qrCode> {
                 //   ),
                 // ),
                 Container(
-                    width: 120,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromRGBO(107, 207, 255, 0.6),
-                    ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: <Widget>[
-                          TextButton(
-                            child: Text("Back", style: BlueDisplayBold),
-                            onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) => homePage()));
-                            },
-                          ),
-                        ])),
+                  width: 100,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    color: Color.fromRGBO(107, 207, 255, 0.6),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      TextButton(
+                        child: Text("Back", style: BlueDisplayBold),
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => homePage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 Container(
-                  width: 120,
+                  width: 100,
                   height: 52,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -490,21 +494,25 @@ class _qrCodeState extends State<qrCode> {
                   ),
                 ),
                 Container(
-                    width: 100,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromRGBO(107, 207, 255, 0.6),
-                    ),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: <Widget>[
-                          TextButton(
-                            child: Text("Check", style: BlueDisplayBold),
-                            onPressed: () {},
-                          ),
-                        ])),
+                  width: 100,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    color: Color.fromRGBO(107, 207, 255, 0.6),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: <Widget>[
+                      TextButton(
+                        child: Text("Check", style: BlueDisplayBold),
+                        onPressed: () {
+                          log('Check');
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           )

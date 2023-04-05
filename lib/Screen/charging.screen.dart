@@ -418,7 +418,8 @@ class _ChargingScreenState extends State<ChargingScreen> {
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
                   onTap: () {
-                    if (isAvailable == 'true') {
+                    log('isAvailable : ' + isAvailable.toString());
+                    if (isAvailable) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => BookingTimeScreen(
