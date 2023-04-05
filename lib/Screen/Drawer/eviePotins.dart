@@ -48,7 +48,7 @@ class _eviePointsState extends State<eviePoints> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
-
+  var count = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,14 +86,24 @@ class _eviePointsState extends State<eviePoints> {
         elevation: 0,
       ),
       body: StreamBuilder(
+        // stream: FirebaseFirestore.instance
+        //     .collection(
+        //       '/app/member/ID/$userUID/eviePoints',
+        //     )
+        //     .get()
+        //     .then((snapshot) {
+        //       count = (snapshot.docs.length);
+        //       print(count + 1);
+        //     }), // ดึงข้อมูลทั้งหมดมาเป็น json แล้วสร้าง builder เป็นรูปแบบลิสต์
         stream: FirebaseFirestore.instance
             .collection('app')
             .doc('member')
             .collection('ID')
             .doc(userUID)
-            .collection('eviePoint')
-            .snapshots(), // ดึงข้อมูลทั้งหมดมาเป็น json แล้วสร้าง builder เป็นรูปแบบลิสต์
+            .collection('eviePoints')
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          print(userUID);
           if (snapshot.hasError) {
             return Text('Error');
           }
@@ -103,6 +113,7 @@ class _eviePointsState extends State<eviePoints> {
             );
           }
           if (!snapshot.hasData) {
+            print('snapshpt no data');
             return SingleChildScrollView(
               child: GestureDetector(
                 onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
@@ -731,7 +742,9 @@ class _eviePointsState extends State<eviePoints> {
               ),
             );
           }
+          // ******************************* has data *************************************
           if (snapshot.hasData) {
+            print('snapshpt has data');
             return SingleChildScrollView(
               child: GestureDetector(
                 onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
