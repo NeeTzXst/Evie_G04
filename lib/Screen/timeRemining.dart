@@ -1,23 +1,27 @@
 import 'dart:developer';
-
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Screen/checkout.dart';
+import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 import '../flutter_flow/flutter_flow_util.dart';
 
 class timeRemining extends StatefulWidget {
-  const timeRemining({super.key});
+  timeRemining({
+    super.key,
+  });
 
   @override
   State<timeRemining> createState() => _timeReminingState();
 }
 
 class _timeReminingState extends State<timeRemining> {
+  String bookingID = '';
   String get userUID {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -37,9 +41,11 @@ class _timeReminingState extends State<timeRemining> {
       // Show Dialog
       log('YOU ARE NOT BOOKING');
     } else {
-      log('YOU BOOKING');
+      log('YOU ARE BOOKING');
       for (var booking in userBookings.docs) {
         log('YOUR BOOKING ID : ' + booking.id);
+        bookingID = booking.id;
+        log('widget Booking ID : ' + bookingID);
         final bookingData = booking.data();
         if (bookingData.isNotEmpty) {
           log('Booking is not emtpy');
@@ -65,7 +71,8 @@ class _timeReminingState extends State<timeRemining> {
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         leading: GestureDetector(
           onTap: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => homePage()));
           },
           child: Icon(
             Icons.arrow_back,
@@ -90,6 +97,7 @@ class _timeReminingState extends State<timeRemining> {
               Map<String, dynamic> data = snapshot.data!;
               Duration duration =
                   Duration(hours: (data['Duration'] / 60.0).toInt());
+
               var timeRemaining = duration;
               var dateString = DateFormat('yyyy-MM-dd').format(DateTime.now());
               var startTimeString = data['Start'];
@@ -97,6 +105,11 @@ class _timeReminingState extends State<timeRemining> {
               var startTime =
                   DateFormat('yyyy-MM-dd h:mm a').parse(fullDateTimeString);
               var currentTime = DateTime.now();
+              var type = data['Type'];
+              var spotslot = data['Spotslot'];
+              var stationID = data['Station ID'];
+              var spotID = data['Spot ID'];
+              log('2 widget Booking ID : ' + bookingID);
               log('startTime : ' + startTime.toString());
               log('currentTime : ' + currentTime.toString());
               return Column(
@@ -133,8 +146,11 @@ class _timeReminingState extends State<timeRemining> {
                             height: 15,
                           ),
                           currentTime.isBefore(startTime)
-                              ? Text('Not time yet ,Your booking time is ' +
-                                  data['Start'])
+                              ? Center(
+                                  child: Text(
+                                      'Not time yet ,Your booking time is ' +
+                                          data['Start']),
+                                )
                               : Container(
                                   child: Center(
                                     child: SlideCountdown(
@@ -161,40 +177,48 @@ class _timeReminingState extends State<timeRemining> {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: ((context) => checkout()),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 170,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                            child: Text(
-                              "Finished",
-                              style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(0, 0, 0, 1),
+                  currentTime.isBefore(startTime)
+                      ? SizedBox()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: ((context) => checkout(
+                                          type: type,
+                                          spotslolt: spotslot,
+                                          stationID: stationID,
+                                          spotID: spotID,
+                                          userBookId: bookingID,
+                                        )),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 170,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Finished",
+                                    style: GoogleFonts.montserrat(
+                                      textStyle: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color.fromRGBO(0, 0, 0, 1),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
                 ],
               );
             } else {

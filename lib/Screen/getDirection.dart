@@ -235,7 +235,7 @@ class _getDirectionState extends State<getDirection> {
                       horizontal: 25,
                     ),
                     child: Container(
-                      color: Colors.green,
+                      color: Colors.white,
                       child: ListView.builder(
                           itemCount: _destinationList.length,
                           itemBuilder: (BuildContext context, int index) {
