@@ -52,7 +52,7 @@ class _homePageState extends State<homePage> {
 
   // List of Marker
   List<Marker> _markers = <Marker>[];
-
+  FirebaseAuth auth = FirebaseAuth.instance;
   double current_latitude = 0;
   double current_longitude = 0;
   String current_description = '';
@@ -102,7 +102,8 @@ class _homePageState extends State<homePage> {
     final userBookings = await userRef.get();
     if (userBookings.docs.isEmpty) {
       // Show Dialog
-      log('YOU ARE NOT BOOKING');
+      alertBox.showAlertBox(
+          context, "Booking status", "You haven't made a booking yet");
     } else {
       log('YOU BOOKING');
       for (var booking in userBookings.docs) {
@@ -133,22 +134,24 @@ class _homePageState extends State<homePage> {
           log('Booking Start Time: $bookingStartTime');
           log('Booking End time: $bookingEndTime');
           log('Booking SpotID: $bookingSpotID');
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => qrCode(
-              bookingId: bookingID,
-              duration: bookingDuration,
-              stationID: bookingStation,
-              type: bookingTpye,
-              spotSlot: bookingSpotslot,
-              StationName: bookingStationName,
-              date: bookingDate,
-              start: bookingStartTime,
-              end: bookingEndTime,
-              userBookID: booking.id,
-              selectedCar: bookingCar,
-              spotID: bookingSpotID,
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => qrCode(
+                bookingId: bookingID,
+                duration: bookingDuration,
+                stationID: bookingStation,
+                type: bookingTpye,
+                spotSlot: bookingSpotslot,
+                StationName: bookingStationName,
+                date: bookingDate,
+                start: bookingStartTime,
+                end: bookingEndTime,
+                userBookID: booking.id,
+                selectedCar: bookingCar,
+                spotID: bookingSpotID,
+              ),
             ),
-          ));
+          );
         }
       }
     }
@@ -209,14 +212,11 @@ class _homePageState extends State<homePage> {
   }
 
   // Function to get User Current Location
-  Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission().then((value) {}).onError(
-      (error, stackTrace) {
-        log("Error");
-      },
-    );
-    Position position = await Geolocator.getCurrentPosition();
+  Future<Position?> getUserCurrentLocation() async {
     try {
+      log('Try');
+      await Geolocator.requestPermission();
+      Position position = await Geolocator.getCurrentPosition();
       List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -230,27 +230,54 @@ class _homePageState extends State<homePage> {
         latitude: position.latitude,
         longitude: position.longitude,
       );
-      await dbManager.saveCurrentLocation(userLocation);
+      if (auth.currentUser != null && auth.currentUser!.isAnonymous) {
+        log("Guest location");
+        await dbManager.guestsaveCurrenLocation(userLocation);
+      } else {
+        log("Member location");
+        await dbManager.saveCurrentLocation(userLocation);
+      }
+
+      return position;
     } catch (error) {
-      log('Error getting description: $error');
+      log('Error getting location: $error');
+      return null;
     }
-    return position;
   }
 
   //Set Destination Maker
   Future<void> markDestination() async {
     log('markDestination');
-    Map<String, dynamic>? destinationLocation =
-        await dbManager.fetchDestinationLocation();
-    if (destinationLocation != null) {
-      log('fetchDestinationLocation complete ');
-      destination_latitude = destinationLocation['destination_latitude'] ?? 0.0;
-      destination_longitude =
-          destinationLocation['destination_longitude'] ?? 0.0;
-      destination_description = destinationLocation['description'] ?? '';
-      log('mark Destination_Latitude: $destination_latitude, Destination_Longitude: $destination_longitude, Destination_escription: $destination_description');
+    if (auth.currentUser != null && auth.currentUser!.isAnonymous) {
+      log('guest try mark destination');
+      Map<String, dynamic>? destinationLocation =
+          await dbManager.guestfetchDestinationLocation();
+      if (destinationLocation != null) {
+        destination_latitude =
+            double.parse(destinationLocation['destination_latitude'] ?? "0.0");
+        destination_longitude =
+            double.parse(destinationLocation['destination_longitude'] ?? "0.0");
+        destination_description = destinationLocation['description'] ?? '';
+        log('guest fetchDestinationLocation complete ');
+        log('guest mark Destination_Latitude: $destination_latitude, Destination_Longitude: $destination_longitude, Destination_escription: $destination_description');
+      } else {
+        log('guest Destination location is null');
+      }
     } else {
-      log('Destination location is null');
+      Map<String, dynamic>? destinationLocation =
+          await dbManager.fetchDestinationLocation();
+      if (destinationLocation != null) {
+        log('member try mark destination');
+        destination_latitude =
+            destinationLocation['destination_latitude'] ?? 0.0;
+        destination_longitude =
+            destinationLocation['destination_longitude'] ?? 0.0;
+        destination_description = destinationLocation['description'] ?? '';
+        log('fetchDestinationLocation complete ');
+        log('member mark Destination_Latitude: $destination_latitude, Destination_Longitude: $destination_longitude, Destination_escription: $destination_description');
+      } else {
+        log('member Destination location is null');
+      }
     }
 
     Marker destinationMarker = await Marker(
@@ -273,8 +300,9 @@ class _homePageState extends State<homePage> {
     log("Marker");
 
     try {
-      await markDestination();
-      await _getPolylinesWithLocation();
+      await markDestination().whenComplete(() async {
+        await _getPolylinesWithLocation();
+      });
     } catch (error) {
       log('Error in marker: $error');
     }
@@ -313,16 +341,23 @@ class _homePageState extends State<homePage> {
                 ),
                 icon: BitmapDescriptor.fromBytes(iconData),
                 onTap: () {
+                  log('location marker');
                   if (isAvailable) {
-                    log('Select pump ${docId}');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => parkOrcharging(
-                          id: docId,
+                    if (auth.currentUser!.isAnonymous) {
+                      log("Guest select pump");
+                      alertBox.showAlertBox(context, "Please login",
+                          "Login to use this function");
+                    } else {
+                      log('Select pump ${docId}');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => parkOrcharging(
+                            id: docId,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   } else {
                     alertBox.showFullStationBox(
                         context, 'Charging Station Full!');
@@ -340,51 +375,107 @@ class _homePageState extends State<homePage> {
   // Load Current Location and Mark on Map
   Future<void> loadData() async {
     log("loadData");
-    getUserCurrentLocation().then(
+    await getUserCurrentLocation().then(
       (value) async {
         // Mark User current location
-        Map<String, dynamic>? currentLocation =
-            await dbManager.fetchCurrentLocation();
-        if (currentLocation != null) {
-          log('fetchCurrentLocation complete ');
-          current_latitude = currentLocation['current_latitude'];
-          current_longitude = currentLocation['current_longitude'];
-          current_description = currentLocation['description'];
+        log('Fetch current');
+        try {
+          if (auth.currentUser != null && auth.currentUser!.isAnonymous) {
+            log('gest load');
+            Map<String, dynamic>? currentLocation =
+                await dbManager.guestfetchCurrentLocation();
+            if (currentLocation != null) {
+              log('fetchCurrentLocation complete ');
+              current_latitude = currentLocation['current_latitude'];
+              current_longitude = currentLocation['current_longitude'];
+              current_description = currentLocation['description'];
 
-          log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
-        } else {
-          log('Current location is null');
+              log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+            } else {
+              log('Current location is null');
+            }
+
+            _markers.add(
+              await Marker(
+                markerId: MarkerId("1"),
+                position: LatLng(
+                  current_latitude,
+                  current_longitude,
+                ),
+                infoWindow: InfoWindow(title: current_description),
+              ),
+            );
+
+            // Set camera postion to zoom in your location
+            CameraPosition cameraPosition = CameraPosition(
+              zoom: 18,
+              target: LatLng(
+                current_latitude,
+                current_longitude,
+              ),
+            );
+
+            // move camera to new position
+            _controller.future.then((controller) {
+              controller.animateCamera(
+                  CameraUpdate.newCameraPosition(cameraPosition));
+            });
+
+            await marker();
+            await _loadLocations();
+
+            // update widget state
+            setState(() {});
+          } else {
+            log('member load');
+            Map<String, dynamic>? currentLocation =
+                await dbManager.fetchCurrentLocation();
+            if (currentLocation != null) {
+              log('fetchCurrentLocation complete ');
+              current_latitude = currentLocation['current_latitude'];
+              current_longitude = currentLocation['current_longitude'];
+              current_description = currentLocation['description'];
+
+              log('load Current_Latitude: $current_latitude, Current_Longitude: $current_longitude, Current_Description: $current_description');
+            } else {
+              log('Current location is null');
+            }
+
+            _markers.add(
+              await Marker(
+                markerId: MarkerId("1"),
+                position: LatLng(
+                  current_latitude,
+                  current_longitude,
+                ),
+                infoWindow: InfoWindow(title: current_description),
+              ),
+            );
+
+            // Set camera postion to zoom in your location
+            CameraPosition cameraPosition = CameraPosition(
+              zoom: 18,
+              target: LatLng(
+                current_latitude,
+                current_longitude,
+              ),
+            );
+
+            // move camera to new position
+            _controller.future.then((controller) {
+              controller.animateCamera(
+                  CameraUpdate.newCameraPosition(cameraPosition));
+            });
+
+            await marker();
+            await _loadLocations();
+
+            // update widget state
+            setState(() {});
+          }
+        } catch (e) {
+          log('load error : ' + e.toString());
         }
-
-        _markers.add(
-          await Marker(
-            markerId: MarkerId("1"),
-            position: LatLng(
-              current_latitude,
-              current_longitude,
-            ),
-            infoWindow: InfoWindow(title: current_description),
-          ),
-        );
-
-        // Set camera postion to zoom in your location
-        CameraPosition cameraPosition = CameraPosition(
-          zoom: 18,
-          target: LatLng(
-            current_latitude,
-            current_longitude,
-          ),
-        );
-        // move camera to new position
-        _controller.future.then((controller) {
-          controller
-              .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-        });
-
-        await marker();
-        await _loadLocations();
-        // update widget state
-        setState(() {});
       },
     );
   }
@@ -402,181 +493,182 @@ class _homePageState extends State<homePage> {
     double screenHeight = mediaQueryData.size.height;
 
     return Scaffold(
-        key: scaffoldKey,
-        drawer: SafeArea(
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            ),
-            child: myDrawer(),
+      key: scaffoldKey,
+      drawer: SafeArea(
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(20),
           ),
+          child: myDrawer(),
         ),
-        body: Stack(
-          children: [
-            GoogleMap(
-              myLocationButtonEnabled: false,
-              myLocationEnabled: true,
-              compassEnabled: false,
-              markers: Set<Marker>.of(_markers),
-              polylines: Set<Polyline>.of(_polylines.values),
-              mapType: MapType.normal,
-              initialCameraPosition: _current,
-              onMapCreated: _onMapCreated,
-            ),
-            SafeArea(
-              child: Column(
-                children: [
-                  // Drawer and select car button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      //Drawer
-                      IconButton(
-                        icon: Icon(
-                          Icons.menu,
-                          color: Colors.blue,
-                          size: 45,
+      ),
+      body: Stack(
+        children: [
+          GoogleMap(
+            myLocationButtonEnabled: false,
+            myLocationEnabled: true,
+            compassEnabled: false,
+            markers: Set<Marker>.of(_markers),
+            polylines: Set<Polyline>.of(_polylines.values),
+            mapType: MapType.normal,
+            initialCameraPosition: _current,
+            onMapCreated: _onMapCreated,
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                // Drawer and select car button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //Drawer
+                    IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.blue,
+                        size: 45,
+                      ),
+                      onPressed: () => scaffoldKey.currentState?.openDrawer(),
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                    ),
+                    //select car button
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15)
+                          .add(EdgeInsets.only(top: 15)),
+                      child: GestureDetector(
+                        onTap: () {
+                          print("Car");
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => selectVehicle()),
+                          );
+                        },
+                        child: iconButton(
+                          width: 45,
+                          height: 45,
+                          name: Icons.directions_car_outlined,
+                          size: 35,
+                          backColor: Colors.white,
+                          iconColor: Colors.blue,
                         ),
-                        onPressed: () => scaffoldKey.currentState?.openDrawer(),
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                      ),
-                      //select car button
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15)
-                            .add(EdgeInsets.only(top: 15)),
-                        child: GestureDetector(
-                          onTap: () {
-                            print("Car");
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => selectVehicle()),
-                            );
-                          },
-                          child: iconButton(
-                            width: 45,
-                            height: 45,
-                            name: Icons.directions_car_outlined,
-                            size: 35,
-                            backColor: Colors.white,
-                            iconColor: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Search button
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
-                    child: searchButton(),
-                  ),
-                  // Time remining button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: GestureDetector(
-                          onTap: () {
-                            print("Time");
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => timeRemining(),
-                              ),
-                            );
-                          },
-                          child: iconButton(
-                            width: 45,
-                            height: 45,
-                            name: Icons.notifications_none,
-                            size: 35,
-                            backColor: Colors.white,
-                            iconColor: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Current location button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 15),
-                        child: GestureDetector(
-                          onTap: () {
-                            loadData();
-                          },
-                          child: iconButton(
-                            width: 45,
-                            height: 45,
-                            name: Icons.explore_outlined,
-                            size: 35,
-                            backColor: Colors.white,
-                            iconColor: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: screenHeight / 2.6,
-                  ),
-                  // Go to current QRcode
-                  GestureDetector(
-                    onTap: () {
-                      getUserBookinfo(context);
-                    },
-                    child: Container(
-                      width: 330,
-                      height: 115,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: primaryColor,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 130,
-                            height: 110,
-                            child: Icon(
-                              Icons.qr_code_scanner,
-                              color: Colors.white,
-                              size: 90,
-                            ),
-                          ),
-                          Container(
-                            width: 195,
-                            height: 110,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'QRcode ',
-                                  style: Qrcodes,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'See your booking now',
-                                  style: Qrcodes,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
                       ),
                     ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ));
+                  ],
+                ),
+                // Search button
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  child: searchButton(),
+                ),
+                // Time remining button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: GestureDetector(
+                        onTap: () {
+                          print("Time");
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => timeRemining(),
+                            ),
+                          );
+                        },
+                        child: iconButton(
+                          width: 45,
+                          height: 45,
+                          name: Icons.notifications_none,
+                          size: 35,
+                          backColor: Colors.white,
+                          iconColor: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Current location button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 15),
+                      child: GestureDetector(
+                        onTap: () {
+                          loadData();
+                        },
+                        child: iconButton(
+                          width: 45,
+                          height: 45,
+                          name: Icons.explore_outlined,
+                          size: 35,
+                          backColor: Colors.white,
+                          iconColor: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: screenHeight / 2.6,
+                ),
+                // Go to current QRcode
+                GestureDetector(
+                  onTap: () {
+                    getUserBookinfo(context);
+                  },
+                  child: Container(
+                    width: 330,
+                    height: 115,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: primaryColor,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 130,
+                          height: 110,
+                          child: Icon(
+                            Icons.qr_code_scanner,
+                            color: Colors.white,
+                            size: 90,
+                          ),
+                        ),
+                        Container(
+                          width: 195,
+                          height: 110,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'QRcode ',
+                                style: Qrcodes,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'See your booking now',
+                                style: Qrcodes,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:myapp/Database/saveState.dart';
 import 'package:myapp/Screen/addFirstvehicle.dart';
 import 'package:myapp/Screen/addprofile.dart';
-import 'package:myapp/Screen/addvehicle.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/letyouin.dart';
 import 'package:myapp/Widget/alertBox.dart';
@@ -31,6 +30,7 @@ class authService extends ChangeNotifier {
           'uid': userCredential.user?.uid,
           'Email': email,
           'password': password,
+          'EviePoints': ''
         },
       ).then((value) {
         Navigator.of(context).push(
@@ -72,7 +72,18 @@ class authService extends ChangeNotifier {
           .doc('guest')
           .collection('ID')
           .doc(anonymous.user?.uid)
-          .set({}).then(
+          .set({
+        "Current_Location": {
+          'description': '',
+          'current_latitude': '',
+          'current_longitude': '',
+        },
+        "Destination": {
+          'description': '',
+          'destination_latitude': '',
+          'destination_longitude': '',
+        },
+      }).then(
         (value) {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -81,7 +92,6 @@ class authService extends ChangeNotifier {
           );
         },
       );
-      ;
 
       return anonymous;
     } catch (error) {

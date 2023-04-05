@@ -418,75 +418,77 @@ class _qrCodeState extends State<qrCode> {
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       TextButton(
-                          child: Text("Cancel", style: TextDisplay),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  backgroundColor:
-                                      Color.fromARGB(255, 243, 100, 112),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  title: Center(
-                                    child: Text('Are you sure ?',
-                                        style: TextDisplay),
-                                  ),
-                                  content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      // ignore: prefer_const_literals_to_create_immutables
-                                      children: [
-                                        Text(
-                                          "If you cancel your booking, your ",
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                        Text(
-                                          " payment will not be refunded.",
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                      ]),
-                                  actions: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        width: 200,
-                                        height: 52,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8.0)),
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 1)),
-                                        child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            // ignore: prefer_const_literals_to_create_immutables
-                                            children: <Widget>[
-                                              TextButton(
-                                                child: Text("Confirm",
-                                                    style: TextDisplay),
-                                                onPressed: () {
-                                                  deleteBooking().whenComplete(
-                                                    () => {
-                                                      log('DELETE ALL BOOKING'),
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              homePage(),
-                                                        ),
-                                                      )
-                                                    },
-                                                  );
-                                                },
-                                              )
-                                            ]),
+                        child: Text("Cancel", style: TextDisplay),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor:
+                                    Color.fromARGB(255, 243, 100, 112),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25)),
+                                title: Center(
+                                  child: Text('Are you sure ?',
+                                      style: TextDisplay),
+                                ),
+                                content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    // ignore: prefer_const_literals_to_create_immutables
+                                    children: [
+                                      Text(
+                                        "If you cancel your booking, your ",
+                                        style: TextStyle(fontSize: 18),
                                       ),
-                                    )
-                                  ],
-                                );
-                              },
-                            );
-                          })
+                                      Text(
+                                        " payment will not be refunded.",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    ]),
+                                actions: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      width: 200,
+                                      height: 52,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8.0)),
+                                          color:
+                                              Color.fromRGBO(255, 255, 255, 1)),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        // ignore: prefer_const_literals_to_create_immutables
+                                        children: <Widget>[
+                                          TextButton(
+                                            child: Text("Confirm",
+                                                style: TextDisplay),
+                                            onPressed: () {
+                                              deleteBooking().whenComplete(
+                                                () => {
+                                                  log('DELETE ALL BOOKING'),
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          homePage(),
+                                                    ),
+                                                  )
+                                                },
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),
