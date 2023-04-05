@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
-
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 
@@ -42,11 +41,11 @@ class myPaymentState extends State<myPayment> {
           leading: GestureDetector(
             onTap: () {
               print("pressed");
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => homePage(),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => homePage(),
+                ),
+              );
             },
             child: Icon(
               Icons.arrow_back,

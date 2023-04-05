@@ -64,20 +64,25 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
   CollectionReference bookingsRef = FirebaseFirestore.instance.collection(
       '/web/owner/charging Station/$charging/charging Spot/$spot/booking');
 
-  DocumentReference stationRef = FirebaseFirestore.instance
-      .collection('/web/owner/charging Station')
-      .doc(station);
+  // DocumentReference stationRef = FirebaseFirestore.instance
+  //     .collection('/web/owner/charging Station')
+  //     .doc(station);
 
   Future<void> addBookinfo(
-      String station,
-      String booking,
-      String type,
-      num duration,
-      int spotslot,
-      String date,
-      String start,
-      String end,
-      String StationName) async {
+    String station,
+    String booking,
+    String type,
+    num duration,
+    int spotslot,
+    String date,
+    String start,
+    String end,
+    String StationName,
+  ) async {
+    final db = FirebaseFirestore.instance;
+    var userRefs = db.collection('/app/member/ID').doc(userUID);
+    var user = await userRefs.get();
+    log(user['Selected Vehicle']['Brand']);
     log('ADD BOOKING INFO');
     final userRef = await FirebaseFirestore.instance
         .collection('/app/member/ID/$userUID/Booking');
@@ -90,7 +95,10 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
       'Spotslot': spotslot,
       'Date': date,
       'Start': start,
-      'end': end
+      'end': end,
+      'Car': user['Selected Vehicle']['Brand'],
+      'Spot ID': widget.spotID,
+      'Price': price
     });
     String userBookingID = docRef.id;
 
@@ -108,6 +116,7 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
           end: widget.end,
           spotID: spot,
           userBookID: userBookingID,
+          selectedCar: user['Selected Vehicle']['Brand'],
         ),
       ),
     );
@@ -452,13 +461,6 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                               content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    // Text(
-                                    //   "Your payment is successful!",
-                                    //   style: TextStyle(
-                                    //       fontFamily: 'Montserrat',
-                                    //       color: Color(0xFF1A74E2),
-                                    //       fontWeight: FontWeight.bold),
-                                    // ),
                                     RichText(
                                         text: TextSpan(children: <TextSpan>[
                                       TextSpan(

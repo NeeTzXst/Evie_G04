@@ -80,11 +80,22 @@ class _homePageState extends State<homePage> {
   //     .collection('charging Station')
   //     .snapshots();
 
-  Future<QuerySnapshot> _locationsFuture = FirebaseFirestore.instance
-      .collection("web")
-      .doc('owner')
-      .collection('charging Station')
-      .get();
+  // Future<QuerySnapshot> _locationsFuture = FirebaseFirestore.instance
+  //     .collection("web")
+  //     .doc('owner')
+  //     .collection('charging Station')
+  //     .get();
+
+  Future<void> _loadLocations() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection("web")
+        .doc('owner')
+        .collection('charging Station')
+        .get();
+    final locations = snapshot.docs;
+    log('locations : ' + locations.length.toString());
+    await _locationMarkers(locations);
+  }
 
   Future<void> getUserBookinfo(BuildContext context) async {
     log('user ID :' + userUID);
@@ -113,7 +124,8 @@ class _homePageState extends State<homePage> {
           final bookingDate = bookingData['Date'];
           final bookingStartTime = bookingData['Start'];
           final bookingEndTime = bookingData['end'];
-          // Do something with the booking data
+          final bookingCar = bookingData['Car'];
+          final bookingSpotID = bookingData['Spot ID'];
           log('Booking BookingID: $bookingID');
           log('Booking Station: $bookingStation');
           log('Booking Station Name: $bookingStationName');
@@ -123,6 +135,7 @@ class _homePageState extends State<homePage> {
           log('Booking Date: $bookingDate');
           log('Booking Start Time: $bookingStartTime');
           log('Booking End time: $bookingEndTime');
+          log('Booking SpotID: $bookingSpotID');
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => qrCode(
               bookingId: bookingID,
@@ -135,12 +148,13 @@ class _homePageState extends State<homePage> {
               start: bookingStartTime,
               end: bookingEndTime,
               userBookID: booking.id,
+              selectedCar: bookingCar,
+              spotID: bookingSpotID,
             ),
           ));
         }
       }
     }
-    // Loop through all documents in the 'Booking' subcollection
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -263,7 +277,7 @@ class _homePageState extends State<homePage> {
 
     try {
       await markDestination();
-      //await _getPolylinesWithLocation();
+      await _getPolylinesWithLocation();
     } catch (error) {
       log('Error in marker: $error');
     }
@@ -371,7 +385,7 @@ class _homePageState extends State<homePage> {
         });
 
         await marker();
-
+        await _loadLocations();
         // update widget state
         setState(() {});
       },
@@ -391,201 +405,181 @@ class _homePageState extends State<homePage> {
     double screenHeight = mediaQueryData.size.height;
 
     return Scaffold(
-      key: scaffoldKey,
-      drawer: SafeArea(
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            bottomRight: Radius.circular(20),
+        key: scaffoldKey,
+        drawer: SafeArea(
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+            child: myDrawer(),
           ),
-          child: myDrawer(),
         ),
-      ),
-      body: FutureBuilder<QuerySnapshot>(
-        future: _locationsFuture,
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            log(snapshot.hasError.toString());
-          }
-          if (snapshot.hasData) {
-            final locations = snapshot.data!.docs;
-            _locationMarkers(locations);
-            return Stack(
-              children: [
-                GoogleMap(
-                  myLocationButtonEnabled: false,
-                  myLocationEnabled: true,
-                  compassEnabled: false,
-                  markers: Set<Marker>.of(_markers),
-                  polylines: Set<Polyline>.of(_polylines.values),
-                  mapType: MapType.normal,
-                  initialCameraPosition: _current,
-                  onMapCreated: _onMapCreated,
-                ),
-                SafeArea(
-                  child: Column(
+        body: Stack(
+          children: [
+            GoogleMap(
+              myLocationButtonEnabled: false,
+              myLocationEnabled: true,
+              compassEnabled: false,
+              markers: Set<Marker>.of(_markers),
+              polylines: Set<Polyline>.of(_polylines.values),
+              mapType: MapType.normal,
+              initialCameraPosition: _current,
+              onMapCreated: _onMapCreated,
+            ),
+            SafeArea(
+              child: Column(
+                children: [
+                  // Drawer and select car button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Drawer and select car button
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          //Drawer
-                          IconButton(
-                            icon: Icon(
-                              Icons.menu,
-                              color: Colors.blue,
-                              size: 45,
-                            ),
-                            onPressed: () =>
-                                scaffoldKey.currentState?.openDrawer(),
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                          ),
-                          //select car button
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15)
-                                .add(EdgeInsets.only(top: 15)),
-                            child: GestureDetector(
-                              onTap: () {
-                                print("Car");
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) => selectVehicle()),
-                                );
-                              },
-                              child: iconButton(
-                                width: 45,
-                                height: 45,
-                                name: Icons.directions_car_outlined,
-                                size: 35,
-                                backColor: Colors.white,
-                                iconColor: Colors.blue,
-                              ),
-                            ),
-                          ),
-                        ],
+                      //Drawer
+                      IconButton(
+                        icon: Icon(
+                          Icons.menu,
+                          color: Colors.blue,
+                          size: 45,
+                        ),
+                        onPressed: () => scaffoldKey.currentState?.openDrawer(),
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
                       ),
-                      // Search button
+                      //select car button
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15)
+                            .add(EdgeInsets.only(top: 15)),
+                        child: GestureDetector(
+                          onTap: () {
+                            print("Car");
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => selectVehicle()),
+                            );
+                          },
+                          child: iconButton(
+                            width: 45,
+                            height: 45,
+                            name: Icons.directions_car_outlined,
+                            size: 35,
+                            backColor: Colors.white,
+                            iconColor: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Search button
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    child: searchButton(),
+                  ),
+                  // Time remining button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: GestureDetector(
+                          onTap: () {
+                            print("Time");
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => timeRemining(),
+                              ),
+                            );
+                          },
+                          child: iconButton(
+                            width: 45,
+                            height: 45,
+                            name: Icons.notifications_none,
+                            size: 35,
+                            backColor: Colors.white,
+                            iconColor: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Current location button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 15),
-                        child: searchButton(),
-                      ),
-                      // Time remining button
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: GestureDetector(
-                              onTap: () {
-                                print("Time");
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => timeRemining(),
-                                  ),
-                                );
-                              },
-                              child: iconButton(
-                                width: 45,
-                                height: 45,
-                                name: Icons.notifications_none,
-                                size: 35,
-                                backColor: Colors.white,
-                                iconColor: Colors.blue,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Current location button
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            child: GestureDetector(
-                              onTap: () {
-                                loadData();
-                              },
-                              child: iconButton(
-                                width: 45,
-                                height: 45,
-                                name: Icons.explore_outlined,
-                                size: 35,
-                                backColor: Colors.white,
-                                iconColor: Colors.blue,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: screenHeight / 2.6,
-                      ),
-                      // Go to current QRcode
-                      GestureDetector(
-                        onTap: () {
-                          getUserBookinfo(context);
-                        },
-                        child: Container(
-                          width: 330,
-                          height: 115,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: primaryColor,
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 130,
-                                height: 110,
-                                child: Icon(
-                                  Icons.qr_code_scanner,
-                                  color: Colors.white,
-                                  size: 90,
-                                ),
-                              ),
-                              Container(
-                                width: 195,
-                                height: 110,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'QRcode ',
-                                      style: Qrcodes,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'See your booking now',
-                                      style: Qrcodes,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                        child: GestureDetector(
+                          onTap: () {
+                            loadData();
+                          },
+                          child: iconButton(
+                            width: 45,
+                            height: 45,
+                            name: Icons.explore_outlined,
+                            size: 35,
+                            backColor: Colors.white,
+                            iconColor: Colors.blue,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
-                )
-              ],
-            );
-          }
-          return Text('Error have not control');
-        },
-      ),
-    );
+                  SizedBox(
+                    height: screenHeight / 2.6,
+                  ),
+                  // Go to current QRcode
+                  GestureDetector(
+                    onTap: () {
+                      getUserBookinfo(context);
+                    },
+                    child: Container(
+                      width: 330,
+                      height: 115,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: primaryColor,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 130,
+                            height: 110,
+                            child: Icon(
+                              Icons.qr_code_scanner,
+                              color: Colors.white,
+                              size: 90,
+                            ),
+                          ),
+                          Container(
+                            width: 195,
+                            height: 110,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'QRcode ',
+                                  style: Qrcodes,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'See your booking now',
+                                  style: Qrcodes,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ));
   }
 }

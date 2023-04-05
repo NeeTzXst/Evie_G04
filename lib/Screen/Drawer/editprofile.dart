@@ -6,6 +6,7 @@ import 'package:myapp/Widget/styles.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'profile.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class editprofile extends StatefulWidget {
   const editprofile({super.key});
@@ -16,6 +17,7 @@ class editprofile extends StatefulWidget {
 
 class _MyWidgetState extends State<editprofile> {
   File? _image;
+  String? _imageUrl;
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
   final TextEditingController _fullNameController = TextEditingController();
@@ -47,7 +49,33 @@ class _MyWidgetState extends State<editprofile> {
     return await userDocument.get();
   }
 
-  void _updateUserData() {
+  Future<void> _uploadImage() async {
+    if (_image == null) {
+      return;
+    }
+
+    try {
+      final reference =
+          FirebaseStorage.instance.ref().child('$userUID').child('profile.jpg');
+
+      await reference.putFile(_image!);
+      final url = await reference.getDownloadURL();
+      setState(() {
+        _imageUrl = url;
+      });
+      print(url);
+    } on FirebaseException catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to upload image: ${error.message}'),
+        ),
+      );
+    }
+  }
+
+  void _updateUserData() async {
+    await _uploadImage();
+
     final userUid = FirebaseAuth.instance.currentUser!.uid;
     final userDocument = FirebaseFirestore.instance
         .collection('app')
@@ -55,14 +83,18 @@ class _MyWidgetState extends State<editprofile> {
         .collection('ID')
         .doc(userUid);
 
-    userDocument.update(
-      {
-        'Fullname': _fullNameController.text.trim(),
-        'Nickname': _nicknameController.text.trim(),
-        'Phone': _phoneNumberController.text.trim(),
-        'Email': _emailController.text.trim(),
-      },
-    ).then(
+    final dataToUpdate = {
+      'Fullname': _fullNameController.text.trim(),
+      'Nickname': _nicknameController.text.trim(),
+      'Phone': _phoneNumberController.text.trim(),
+      'Email': _emailController.text.trim(),
+    };
+
+    if (_imageUrl != null) {
+      dataToUpdate['imageUrl'] = _imageUrl!;
+    }
+
+    userDocument.update(dataToUpdate).then(
       (_) {
         alertBox
             .showAlertBox(context, 'Successful', 'Edited successfully')
@@ -149,14 +181,15 @@ class _MyWidgetState extends State<editprofile> {
                           Stack(
                             children: [
                               CircleAvatar(
-                                backgroundColor: Colors.white,
+                                backgroundColor:
+                                    Color.fromARGB(255, 255, 255, 255),
                                 minRadius: 60.0,
                                 child: CircleAvatar(
                                   radius: 90.0,
                                   backgroundImage: _image != null
                                       ? FileImage(_image!)
                                       : NetworkImage(
-                                              'https://serving.photos.photobox.com/853892988c364763c7aad97da7e68041ca985eb1b1ba353fdbb4d95a917073bf11ccdaf4.jpg')
+                                              'https://cdn.discordapp.com/attachments/1056191443657572372/1092811770193776751/pngaaa.com-81468.png')
                                           as ImageProvider<Object>,
                                 ),
                               ),
