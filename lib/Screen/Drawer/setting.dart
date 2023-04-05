@@ -1,4 +1,9 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/login.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class setting extends StatefulWidget {
@@ -8,7 +13,40 @@ class setting extends StatefulWidget {
   State<setting> createState() => _settingState();
 }
 
+final userUid = FirebaseAuth.instance.currentUser!.uid;
+
+Future<void> deleteAccount(String userUid) async {
+  CollectionReference UserID =
+      FirebaseFirestore.instance.collection('/app/member/ID/');
+  try {
+    await UserID.doc(userUid).delete();
+  } catch (e) {
+    print('Error deleting user data from Firestore: $e');
+  }
+  try {
+    await FirebaseAuth.instance.currentUser!.delete();
+    await FirebaseAuth.instance.signOut();
+    print('User with UID $userUid has been deleted.');
+  } catch (e) {
+    print('Error deleting user from Firebase Authentication: $e');
+  }
+}
+
 class _settingState extends State<setting> {
+  String get userUID => FirebaseAuth.instance.currentUser!.uid;
+
+  DocumentReference get userDocument {
+    return FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userUID);
+  }
+
+  Future<DocumentSnapshot> getUserData() async {
+    return await userDocument.get();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,10 +127,23 @@ class _settingState extends State<setting> {
                                           // ignore: prefer_const_literals_to_create_immutables
                                           children: <Widget>[
                                             TextButton(
-                                              child: Text("Confirm",
-                                                  style: TextDisplay),
-                                              onPressed: () {},
-                                            )
+                                                child: Text("Confirm",
+                                                    style: TextDisplay),
+                                                onPressed: () async {
+                                                  deleteAccount(userUid)
+                                                      .whenComplete(
+                                                    () => {
+                                                      log('DELETE ALL BOOKING'),
+                                                      Navigator.of(context)
+                                                          .pushReplacement(
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              LoginScreen(),
+                                                        ),
+                                                      )
+                                                    },
+                                                  );
+                                                })
                                           ]),
                                     ),
                                   )

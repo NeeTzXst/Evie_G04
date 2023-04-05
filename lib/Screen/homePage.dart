@@ -49,10 +49,7 @@ class _homePageState extends State<homePage> {
   PolylinePoints polylinePoints = PolylinePoints();
 
   List<LatLng> routeCoords = [];
-  // List of Current location
-  List<currentLocation> currentLocations = [];
-  // List of Destination location
-  List<destination> destinations = [];
+
   // List of Marker
   List<Marker> _markers = <Marker>[];
 

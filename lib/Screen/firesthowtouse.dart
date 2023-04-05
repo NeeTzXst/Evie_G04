@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/letyouin.dart';
 import 'package:myapp/Widget/howToUsePage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class howToUse extends StatefulWidget {
-  const howToUse({super.key});
+class firsthowToUse extends StatefulWidget {
+  const firsthowToUse({super.key});
 
   @override
-  State<howToUse> createState() => _howToUseState();
+  State<firsthowToUse> createState() => _firsthowToUseState();
 }
 
-class _howToUseState extends State<howToUse> {
+class _firsthowToUseState extends State<firsthowToUse> {
   PageController _controller = PageController();
 
   bool onLastPage = false;
@@ -47,7 +46,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Welcome to Evie',
                   subtitle: "Let's get to know what you can do with evie",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -55,7 +54,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Nearby charging station',
                   subtitle: "Explore charging spot and parking lots around you",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -63,7 +62,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Choose your own spots',
                   subtitle: "Up to you. Charging or Parking?",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -71,7 +70,7 @@ class _howToUseState extends State<howToUse> {
                   title: 'Use QR code',
                   subtitle: "Use this QR Code to access your spots",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
                 howToUsePage(
                   color: Colors.white,
@@ -80,7 +79,7 @@ class _howToUseState extends State<howToUse> {
                   subtitle:
                       "Receive special privileges and great deals from us",
                   context: context,
-                  name: homePage(),
+                  name: LetyouIn(),
                 ),
               ],
             ),
@@ -133,7 +132,7 @@ class _howToUseState extends State<howToUse> {
                           onTap: () {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: ((context) => homePage())));
+                                    builder: ((context) => LetyouIn())));
                           },
                           child: Container(
                             child: CircleAvatar(
