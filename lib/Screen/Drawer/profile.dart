@@ -7,11 +7,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
 import 'package:myapp/Widget/alertBox.dart';
+// import 'package:myapp/Widget/alertBox.dart';
 import 'editprofile.dart';
 
 class profile extends StatefulWidget {
   const profile({super.key});
-
   @override
   State<profile> createState() => _MyWidgetState();
 }
@@ -20,21 +20,13 @@ class _MyWidgetState extends State<profile> {
   File? _image;
   String? _imageUrl;
   
-  
+  var alertBox;
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-
-  DocumentReference get userDocument {
-    return FirebaseFirestore.instance
-        .collection('app')
-        .doc('member')
-        .collection('ID')
-        .doc(userUID);
-  }
 
   Future<void> getImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -60,6 +52,15 @@ class _MyWidgetState extends State<profile> {
     return await userDocument.get();
   }
 
+  DocumentReference get userDocument {
+    return FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userUID);
+  }
+
+
   Future<void> _uploadImage() async {
     if (_image == null) {
       return;
@@ -82,6 +83,50 @@ class _MyWidgetState extends State<profile> {
         ),
       );
     }
+  }
+
+  void _updateUserData() async {
+    await _uploadImage();
+
+    final userUid = FirebaseAuth.instance.currentUser!.uid;
+    final userDocument = FirebaseFirestore.instance
+        .collection('app')
+        .doc('member')
+        .collection('ID')
+        .doc(userUid);
+
+    final dataToUpdate = {
+      'Fullname': _fullNameController.text.trim(),
+      'Nickname': _nicknameController.text.trim(),
+      'Phone': _phoneNumberController.text.trim(),
+      'Email': _emailController.text.trim(),
+    };
+
+    if (_imageUrl != null) {
+      dataToUpdate['imageUrl'] = _imageUrl!;
+    }
+
+    userDocument.update(dataToUpdate).then(
+      (_) {
+        alertBox
+            .then((value) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => profile(),
+            ),
+          );
+        });
+      },
+    ).catchError(
+      (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update profile.'),
+          ),
+        );
+      },
+    );
   }
 
 
@@ -126,14 +171,22 @@ class _MyWidgetState extends State<profile> {
           future: getUserData(),
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Show a loading indicator while waiting for the data.
-            } else if (snapshot.hasError) {
+              return Center(
+              child: CircularProgressIndicator(),
+            );
+            } 
+            
+            else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            } else {
+            } 
+            
+            else {
               final userData = snapshot.data!;
               final userUid = FirebaseAuth.instance.currentUser!.uid;
               final image =
                   FirebaseStorage.instance.ref().child('$userUid/profile.jpg');
+
+              // ignore: body_might_complete_normally_catch_error
               final imageUrlFuture = image.getDownloadURL().catchError((error) {
                 if (error is FirebaseException &&
                     error.code == 'object-not-found') {
