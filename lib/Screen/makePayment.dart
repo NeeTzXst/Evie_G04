@@ -82,7 +82,6 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
     final db = FirebaseFirestore.instance;
     var userRefs = db.collection('/app/member/ID').doc(userUID);
     var user = await userRefs.get();
-    log(user['Selected Vehicle']['Brand']);
     log('ADD BOOKING INFO');
     final userRef = await FirebaseFirestore.instance
         .collection('/app/member/ID/$userUID/Booking');
@@ -121,6 +120,28 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
       ),
     );
     log('ADD BOOKING INFO COMPLETE');
+  }
+
+  Future<void> saveHistory(
+      String StationName, int price, String start, String end) async {
+    final db = FirebaseFirestore.instance;
+    var userRefs = db.collection('/app/member/ID').doc(userUID);
+    var user = await userRefs.get();
+    log('Save history');
+    final Time = DateTime.now();
+    log('Time : ' + Time.toString());
+    final userRef = await FirebaseFirestore.instance
+        .collection('/app/member/ID/$userUID/History');
+    await userRef.add({
+      'Station Name': StationName,
+      'Price': price,
+      'Time': Time,
+      'Start time': start,
+      'End time': end,
+      'Car': user['Selected Vehicle']['Brand']
+    }).whenComplete(() {
+      log('Save history COMPLETE');
+    });
   }
 
   Future<int?> getData() async {
@@ -505,6 +526,8 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                                         widget.end,
                                         widget.StationName,
                                       );
+                                      saveHistory(widget.StationName, price,
+                                          widget.start, widget.end);
                                     },
                                     text: 'Continue',
                                     options: FFButtonOptions(
