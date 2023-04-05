@@ -25,22 +25,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// void updateReward25(int newValue, var uid) {
-//   FirebaseFirestore.instance
-//       .collection('/app/member/')
-//       .doc('widget.document.id')
-//       .update({'charging_spot': newValue}).then((value) {
-//     // Navigator.of(context).pop();
-//   }).catchError((error) {
-//     print("Failed to update: $error");
-//   });
-//   // databaseReference.child('your/path/to/the/number').set(newValue);
-// }
-
-// void updateReward50(int newValue) {
-//   // databaseReference.child('your/path/to/the/number').set(newValue);
-// }
-
 class eviePoints extends StatefulWidget {
   @override
   State<eviePoints> createState() => _eviePointsState();
@@ -51,6 +35,19 @@ class _eviePointsState extends State<eviePoints> {
   final _unfocusNode = FocusNode();
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
   var count = 0;
+
+  // call > ดึงเลข reward > reward+1 > update
+  void addRewards25() {
+    // FirebaseFirestore.instance.collection('/app/member/ID/').doc();
+    // FirebaseFirestore.instance.collection('collect');
+    print('addReward25 call');
+  }
+
+  // call > ดึงเลข reward > reward+1 > update
+  void addRewards50() {
+    // FirebaseFirestore.instance.collection('/app/member/ID/').doc();
+    print('addReward50 call');
+  }
 
   @override
   void initState() {
@@ -399,6 +396,7 @@ class _eviePointsState extends State<eviePoints> {
                                 onTap: () {
                                   // Perform the desired action when the card is tapped.
                                   print("reward 25% card pressed..");
+
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -491,6 +489,7 @@ class _eviePointsState extends State<eviePoints> {
                                               child: FFButtonWidget(
                                                 // redeem pressed 25
                                                 onPressed: () {
+                                                  addRewards25();
                                                   print(
                                                       'Redeem 25% pressed ...');
                                                   Navigator.of(context).pop();
@@ -571,6 +570,7 @@ class _eviePointsState extends State<eviePoints> {
                                 onTap: () {
                                   // Perform the desired action when the card is tapped.
                                   print("reward 50% card pressed..");
+
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -663,6 +663,7 @@ class _eviePointsState extends State<eviePoints> {
                                               child: FFButtonWidget(
                                                 // redeem pressed 50
                                                 onPressed: () {
+                                                  addRewards50();
                                                   print(
                                                       'Redeem 50% pressed ...');
                                                   Navigator.of(context).pop();
