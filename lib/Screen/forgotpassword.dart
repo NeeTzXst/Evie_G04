@@ -3,6 +3,7 @@
 // import 'package:evie/via_email.dart';
 // import 'package:evie/via_sms.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/via_email.dart';
 import 'package:myapp/flutter_flow/flutter_flow_theme.dart';
 
 class ForgotpasswordScreen extends StatefulWidget {
@@ -121,10 +122,10 @@ class ForgotpasswordScreenState extends State<ForgotpasswordScreen> {
                                 fontSize: 20.0),
                           ),
                           onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => EMAILScreen()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EMAILScreen()));
                           },
                         ),
                       ]
