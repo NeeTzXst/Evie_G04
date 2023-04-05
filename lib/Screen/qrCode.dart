@@ -161,7 +161,7 @@ class _qrCodeState extends State<qrCode> {
                     height: 230,
                     child: QrImage(
                       version: QrVersions.auto,
-                      data: "1234567890",
+                      data: "$userUID",
                       padding: EdgeInsets.all(25),
                       foregroundColor: Colors.white,
                     ),
