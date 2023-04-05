@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
 
@@ -36,222 +39,257 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-          child: InkWell(
-            onTap: () async {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => helpCenter()));
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Color(0xFF1A74E2),
-              size: 33,
+        key: scaffoldKey,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          leading: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+            child: InkWell(
+              onTap: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => helpCenter()));
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: Color(0xFF1A74E2),
+                size: 33,
+              ),
             ),
           ),
-        ),
-        title: Align(
-          alignment: AlignmentDirectional(-1, 0),
-          child: Text(
-            'Feedback',
-            style: FlutterFlowTheme.of(context).title1.override(
-                  fontFamily: 'Montserrat',
-                  color: Color(0xFF1A74E2),
-                ),
-          ),
-        ),
-        actions: [],
-        centerTitle: false,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
-          child: Align(
-            alignment: AlignmentDirectional(0, 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: AlignmentDirectional(-1, 0),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(30, 20, 0, 0),
-                    child: Text(
-                      'แอพสะดวกมากๆเลย เยี่ยมมาก',
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Montserrat',
-                            color: Color(0xFF6BCFFF),
-                            fontSize: 18,
-                          ),
-                    ),
+          title: Align(
+            alignment: AlignmentDirectional(-1, 0),
+            child: Text(
+              'Feedback',
+              style: FlutterFlowTheme.of(context).title1.override(
+                    fontFamily: 'Montserrat',
+                    color: Color(0xFF1A74E2),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(30, 20, 30, 0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0)),
-                      hintText: 'Search topics',
-                      hintStyle: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Montserrat',
-                        color: Color(0xFF9E9E9E),
-                      ),
-                    ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF1A74E2),
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal,
-                        ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        print(value);
-                      }
-                    },
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {
-                      // do something when the text is changed
-                      print(value);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                  child: FFButtonWidget(
-                    icon: Icon(
-                      Icons.car_rental,
-                      color: Colors.black,
-                      size: 26,
-                    ),
-                    onPressed: () async {
-                      print('Technicianand Button pressed ...');
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  TechnicianandServiceWidget()));
-                    },
-                    text: 'Technician and Service',
-                    options: FFButtonOptions(
-                      width: 320,
-                      height: 60,
-                      color: Color(0xFF6BCFFF),
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Montserrat',
-                                color: Colors.black,
-                              ),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
-                      ),
-                      borderRadius: 8,
-                      decoration: BoxDecoration(),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                  child: FFButtonWidget(
-                    icon: Icon(
-                      Icons.gps_fixed,
-                      color: Colors.black,
-                      size: 26,
-                    ),
-                    onPressed: () async {
-                      print('GPS Button pressed ...');
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GPSandTrackingWidget()));
-                    },
-                    text: 'GPS  and Tracking ',
-                    options: FFButtonOptions(
-                      width: 320,
-                      height: 60,
-                      color: Color(0xFF6BCFFF),
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Montserrat',
-                                color: Colors.black,
-                              ),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
-                      ),
-                      borderRadius: 8,
-                      decoration: BoxDecoration(),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(30, 30, 20, 0),
-                  child: TextFormField(
-                    maxLines: 10,
-                    textCapitalization: TextCapitalization.none,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      hintText: 'Put your feedback here!',
-                      hintStyle: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF9E9E9E),
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xff6bcfff))),
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 152, 216, 246),
-                    ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
-                          fontFamily: 'Montserrat',
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter your feedback';
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.text,
-                    onSaved: (value) {
-                      // Do something with the feedback value
-                    },
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(0, 0),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
-                    child: Text(
-                      'Contact Us',
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Montserrat',
-                            color: Color(0xFF9E9E9E),
-                            fontSize: 16,
-                            decoration: TextDecoration.underline,
-                          ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
+          actions: [],
+          centerTitle: false,
+          elevation: 0,
         ),
-      ),
-    );
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('web')
+                .doc('helpcenter')
+                .collection('feedback')
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (snapshot.hasData) {
+                return Column(children: [
+                  Expanded(
+                      child: ListView.builder(
+                          itemCount: snapshot.data?.docs.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SingleChildScrollView(
+                                  child: GestureDetector(
+                                    onTap: () => FocusScope.of(context)
+                                        .requestFocus(_unfocusNode),
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0, 0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        // mainAxisAlignment:
+                                        //     MainAxisAlignment.start,
+                                        children: [
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(-1, 0),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(30, 0, 0, 0),
+                                              child: Text(
+                                                "${snapshot.data!.docs[index].get('opinion')}",
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyText1
+                                                    .override(
+                                                      fontFamily: 'Montserrat',
+                                                      color: Color(0xFF3FA0EF),
+                                                      fontSize: 16,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 30, 0, 0),
+                                            child: FFButtonWidget(
+                                              icon: Icon(
+                                                Icons.car_rental,
+                                                color: Colors.black,
+                                                size: 26,
+                                              ),
+                                              onPressed: () async {
+                                                print(
+                                                    'Technicianand Button pressed ...');
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            TechnicianandServiceWidget()));
+                                              },
+                                              text: 'Technician and Service',
+                                              options: FFButtonOptions(
+                                                width: 320,
+                                                height: 60,
+                                                color: Color(0xFF6BCFFF),
+                                                textStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .subtitle2
+                                                        .override(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          color: Colors.black,
+                                                        ),
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: 8,
+                                                decoration: BoxDecoration(),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 30, 0, 0),
+                                            child: FFButtonWidget(
+                                              icon: Icon(
+                                                Icons.gps_fixed,
+                                                color: Colors.black,
+                                                size: 26,
+                                              ),
+                                              onPressed: () async {
+                                                print('GPS Button pressed ...');
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            GPSandTrackingWidget()));
+                                              },
+                                              text: 'GPS  and Tracking ',
+                                              options: FFButtonOptions(
+                                                width: 320,
+                                                height: 60,
+                                                color: Color(0xFF6BCFFF),
+                                                textStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .subtitle2
+                                                        .override(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          color: Colors.black,
+                                                        ),
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: 8,
+                                                decoration: BoxDecoration(),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    30, 30, 20, 0),
+                                            child: TextFormField(
+                                              maxLines: 10,
+                                              textCapitalization:
+                                                  TextCapitalization.none,
+                                              obscureText: false,
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Put your feedback here!',
+                                                hintStyle: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    color: Color(0xFF9E9E9E),
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                                border: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Color(0xff6bcfff))),
+                                                filled: true,
+                                                fillColor: Color.fromARGB(
+                                                    255, 152, 216, 246),
+                                              ),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyText1
+                                                      .override(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.normal,
+                                                      ),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Please enter your feedback';
+                                                }
+                                                return null;
+                                              },
+                                              keyboardType: TextInputType.text,
+                                              onSaved: (value) {
+                                                // Do something with the feedback value
+                                                print(value);
+                                              },
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment:
+                                                AlignmentDirectional(0, 0),
+                                            child: Padding(
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0, 160, 0, 0),
+                                              child: Text(
+                                                'Contact Us',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyText1
+                                                    .override(
+                                                      fontFamily: 'Montserrat',
+                                                      color: Color(0xFF9E9E9E),
+                                                      fontSize: 16,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ));
+                          })),
+                ]);
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }));
   }
 }

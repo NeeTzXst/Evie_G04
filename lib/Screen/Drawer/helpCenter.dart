@@ -92,41 +92,41 @@ class _helpCenterState extends State<helpCenter> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(30, 20, 30, 0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0)),
-                        hintText: 'Search topics such as Evie',
-                        hintStyle: TextStyle(
-                          fontSize: 18,
-                          fontFamily: 'Montserrat',
-                          color: Color(0xFF9E9E9E),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Montserrat',
-                            color: Color(0xFF1A74E2),
-                            fontSize: 18,
-                            fontWeight: FontWeight.normal,
-                          ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          print(value);
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.text,
-                      onChanged: (value) {
-                        // do something when the text is changed
-                        print(value);
-                      },
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsetsDirectional.fromSTEB(30, 20, 30, 0),
+                  //   child: TextFormField(
+                  //     decoration: InputDecoration(
+                  //       prefixIcon: Icon(Icons.search),
+                  //       filled: true,
+                  //       fillColor: Colors.white,
+                  //       border: OutlineInputBorder(
+                  //           borderRadius: BorderRadius.circular(20.0)),
+                  //       hintText: 'Search topics such as Evie',
+                  //       hintStyle: TextStyle(
+                  //         fontSize: 18,
+                  //         fontFamily: 'Montserrat',
+                  //         color: Color(0xFF9E9E9E),
+                  //       ),
+                  //     ),
+                  //     style: FlutterFlowTheme.of(context).bodyText1.override(
+                  //           fontFamily: 'Montserrat',
+                  //           color: Color(0xFF1A74E2),
+                  //           fontSize: 18,
+                  //           fontWeight: FontWeight.normal,
+                  //         ),
+                  //     validator: (value) {
+                  //       if (value!.isEmpty) {
+                  //         print(value);
+                  //       }
+                  //       return null;
+                  //     },
+                  //     keyboardType: TextInputType.text,
+                  //     onChanged: (value) {
+                  //       // do something when the text is changed
+                  //       print(value);
+                  //     },
+                  //   ),
+                  // ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 0),
                     child: FFButtonWidget(
@@ -234,7 +234,7 @@ class _helpCenterState extends State<helpCenter> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 170, 0, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 270, 0, 0),
                     child: Text(
                       'Contact Us',
                       style: FlutterFlowTheme.of(context).bodyText1.override(
