@@ -324,6 +324,10 @@ class _homePageState extends State<homePage> {
         await getBytesFromAssests('assets/pin_locate_red.png', 90);
     final Uint8List greenIcon =
         await getBytesFromAssests('assets/pin_locate_green.png', 90);
+    final userRef = FirebaseFirestore.instance
+        .collection('/app/member/ID/$userUID/Booking');
+    final userBookings = await userRef.get();
+    log('User booking : ' + userBookings.docs.toString());
     if (mounted) {
       setState(
         () {
@@ -347,7 +351,8 @@ class _homePageState extends State<homePage> {
                       log("Guest select pump");
                       alertBox.showAlertBox(context, "Please login",
                           "Login to use this function");
-                    } else {
+                    } else if (userBookings.docs.isEmpty) {
+                      log('userBookings is emtpy');
                       log('Select pump ${docId}');
                       Navigator.push(
                         context,
@@ -357,6 +362,9 @@ class _homePageState extends State<homePage> {
                           ),
                         ),
                       );
+                    } else {
+                      alertBox.showAlertBox(
+                          context, 'Booking Status', 'You can booking 1 time ');
                     }
                   } else {
                     alertBox.showFullStationBox(

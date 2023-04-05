@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Screen/BookTimes.dart';
+import 'package:myapp/Widget/alertBox.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class ParkingScreen extends StatefulWidget {
@@ -418,16 +419,22 @@ class _ParkingScreenState extends State<ParkingScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BookingTimeScreen(
-                            stationid: widget.id,
-                            spotid: spotId,
-                            type: 'Parking',
-                            StationName: widget.Stationname,
+                      log('isAvailable : ' + isAvailable.toString());
+                      if (isAvailable) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => BookingTimeScreen(
+                              stationid: widget.id,
+                              spotid: spotId,
+                              type: 'Parking',
+                              StationName: widget.Stationname,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        alertBox.showAlertBox(context, "SpotStatus",
+                            'This Parking spot is unavailable');
+                      }
                     },
                     child: Container(
                       color: Colors.amber,
