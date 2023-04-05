@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/Database/saveState.dart';
+import 'package:myapp/Screen/Drawer/helpCenter.dart';
 import 'package:myapp/Screen/Drawer/myPayment.dart';
 import 'package:myapp/Screen/addFirstvehicle.dart';
 import 'package:myapp/Screen/addprofile.dart';
@@ -243,11 +244,15 @@ class authService extends ChangeNotifier {
       String expirationY,
       String cvv) async {
     log('add card');
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final userId = FirebaseAuth.instance.currentUser!.uid; // call uid of user
     try {
-      await saveState.saveUserLoggedInStatus(true);
+      await saveState.saveUserLoggedInStatus(true); // check user is login
       log(await saveState.getUserLoggedInStatus().toString());
-      await FirebaseFirestore.instance
+      await FirebaseFirestore.instance // return data to firebase
+          // fo to path /app/member/ID/
+          // if no collection Card it'll create collection Card
+          // then set feild
+          // set success then navigate to myPayment page
           .collection('app')
           .doc('member')
           .collection('ID')
@@ -266,6 +271,32 @@ class authService extends ChangeNotifier {
           context,
           MaterialPageRoute(
             builder: (context) => myPayment(),
+          ),
+        );
+      });
+    } catch (error) {
+      alertBox.showAlertBox(context, 'Error', error.toString());
+      // Handle the error as appropriate for your app.
+    }
+  }
+
+  // send feedback
+  Future<void> sendFeedback(BuildContext context, String feedback) async {
+    log('send feedback');
+    // final userId = FirebaseAuth.instance.currentUser!.uid;
+    try {
+      await saveState.saveUserLoggedInStatus(true); // check user is login
+      log(await saveState.getUserLoggedInStatus().toString());
+      await FirebaseFirestore.instance
+          .collection('web')
+          .doc('helpcenter')
+          .collection('feedback')
+          .doc()
+          .set({'opinion': feedback}).then((value) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => helpCenter(),
           ),
         );
       });
