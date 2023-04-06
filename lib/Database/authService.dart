@@ -246,8 +246,8 @@ class authService extends ChangeNotifier {
     log('add card');
     final userId = FirebaseAuth.instance.currentUser!.uid; // call uid of user
     try {
-      await saveState.saveUserLoggedInStatus(true); // check user is login
-      log(await saveState.getUserLoggedInStatus().toString());
+      // await saveState.saveUserLoggedInStatus(true); // check user is login
+      // log(await saveState.getUserLoggedInStatus().toString());
       await FirebaseFirestore.instance // return data to firebase
           // fo to path /app/member/ID/
           // if no collection Card it'll create collection Card
@@ -285,8 +285,8 @@ class authService extends ChangeNotifier {
     log('send feedback');
     // final userId = FirebaseAuth.instance.currentUser!.uid;
     try {
-      await saveState.saveUserLoggedInStatus(true); // check user is login
-      log(await saveState.getUserLoggedInStatus().toString());
+      // await saveState.saveUserLoggedInStatus(true); // check user is login
+      // log(await saveState.getUserLoggedInStatus().toString());
       await FirebaseFirestore.instance
           .collection('web')
           .doc('helpcenter')

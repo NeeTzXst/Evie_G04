@@ -1,4 +1,5 @@
 import 'dart:developer';
+// import 'dart:html';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -34,18 +35,64 @@ class _eviePointsState extends State<eviePoints> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final _unfocusNode = FocusNode();
   String get userUID => FirebaseAuth.instance.currentUser!.uid;
-  var count = 0;
 
-  // call > ดึงเลข reward > reward+1 > update
-  void addRewards25() {
-    // FirebaseFirestore.instance.collection('/app/member/ID/').doc();
-    // FirebaseFirestore.instance.collection('collect');
+  get databaseReference => null;
+
+  Future<void> addReward25(
+      BuildContext context, int newValue, int newEviePoints) async {
+    log('send addReward25');
+    // int currentValue = await FirebaseFirestore.instance.collection('app').doc('member')
+    //     .then((snapshot) => snapshot.value);
+    // int newValue = currentValue + 1;
+    // log(currentValue.toString());
+    // log(newValue.toString());
+    try {
+      await FirebaseFirestore.instance
+          .collection('app')
+          .doc('member')
+          .collection('ID')
+          .doc(userUID)
+          .update({'reward25': newValue, 'EviePoints': newEviePoints}).then(
+              (value) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => eviePoints(),
+          ),
+        );
+      });
+    } catch (error) {
+      Text("Error");
+    }
     print('addReward25 call');
   }
 
-  // call > ดึงเลข reward > reward+1 > update
-  void addRewards50() {
-    // FirebaseFirestore.instance.collection('/app/member/ID/').doc();
+  Future<void> addReward50(
+      BuildContext context, int newValue, int newEviePoints) async {
+    log('send addReward50');
+    // int currentValue = await FirebaseFirestore.instance.collection('app').doc('member')
+    //     .then((snapshot) => snapshot.value);
+    // int newValue = currentValue + 1;
+    // log(currentValue.toString());
+    // log(newValue.toString());
+    try {
+      await FirebaseFirestore.instance
+          .collection('app')
+          .doc('member')
+          .collection('ID')
+          .doc(userUID)
+          .update({'reward50': newValue, 'EviePoints': newEviePoints}).then(
+              (value) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => eviePoints(),
+          ),
+        );
+      });
+    } catch (error) {
+      Text("Error");
+    }
     print('addReward50 call');
   }
 
@@ -489,7 +536,18 @@ class _eviePointsState extends State<eviePoints> {
                                               child: FFButtonWidget(
                                                 // redeem pressed 25
                                                 onPressed: () {
-                                                  addRewards25();
+                                                  int currentValue = snapshot
+                                                      .data!
+                                                      .get('reward25');
+                                                  int currentPoint = snapshot
+                                                      .data!
+                                                      .get('EviePoints');
+                                                  int newEviePoints =
+                                                      currentPoint - 1200;
+                                                  int newValue =
+                                                      currentValue + 1;
+                                                  addReward25(context, newValue,
+                                                      newEviePoints);
                                                   print(
                                                       'Redeem 25% pressed ...');
                                                   Navigator.of(context).pop();
@@ -663,7 +721,18 @@ class _eviePointsState extends State<eviePoints> {
                                               child: FFButtonWidget(
                                                 // redeem pressed 50
                                                 onPressed: () {
-                                                  addRewards50();
+                                                  int currentValue = snapshot
+                                                      .data!
+                                                      .get('reward50');
+                                                  int currentPoint = snapshot
+                                                      .data!
+                                                      .get('EviePoints');
+                                                  int newEviePoints =
+                                                      currentPoint - 2000;
+                                                  int newValue =
+                                                      currentValue + 1;
+                                                  addReward50(context, newValue,
+                                                      newEviePoints);
                                                   print(
                                                       'Redeem 50% pressed ...');
                                                   Navigator.of(context).pop();
