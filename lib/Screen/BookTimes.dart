@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/Screen/makePayment.dart';
+import 'package:myapp/Widget/styles.dart';
 
 class BookingTimeScreen extends StatefulWidget {
   var stationid;
@@ -138,6 +139,7 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
         },
       );
       return;
+      //
     } else if (endTime.difference(startTime).inMinutes == 0) {
       AlertDialog alert = AlertDialog(
         title: Text('Booking Status',
@@ -528,32 +530,24 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
             SizedBox(height: 100),
             Align(
               alignment: Alignment.center,
-              child: Container(
-                  width: 320,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    color: Color.fromRGBO(107, 207, 255, 0.4),
-                  ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        TextButton(
-                            child: Text(
-                              "Continue",
-                              style: TextStyle(
-                                  color: Color.fromRGBO(26, 116, 226, 1),
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: "Montserrat",
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: 21.0),
-                            ),
-                            onPressed: () => {
-                                  storeBooking(
-                                      context, timeStart, timeEnd, userUID),
-                                })
-                      ])),
+              child: GestureDetector(
+                onTap: () {
+                  storeBooking(context, timeStart, timeEnd, userUID);
+                },
+                child: Container(
+                    width: 320,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      color: Color.fromRGBO(107, 207, 255, 0.4),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Continue',
+                        style: BlueDisplayBold,
+                      ),
+                    )),
+              ),
             ),
           ],
         ),
