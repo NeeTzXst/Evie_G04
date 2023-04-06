@@ -32,16 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isRememberMe = false;
   bool isObscure = true;
 
-  Future<void> signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => homePage()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -266,9 +256,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   TextButton(
                     onPressed: () {
-                      signIn();
+                      log('Press sign in');
                       print(
                           '${_emailController.text} , ${_passwordController.text}');
+                      authService().signIn(_emailController.text,
+                          _passwordController.text, context);
                     },
                     child: Text(
                       "Sign in",

@@ -15,7 +15,7 @@ class authService extends ChangeNotifier {
   // Sign up
   Future<void> signUp(
       String email, String password, BuildContext context) async {
-    log('signUp ');
+    log('Function Sign Up ');
     try {
       await saveState.saveUserEmail(email);
       UserCredential userCredential = await FirebaseAuth.instance
@@ -36,15 +36,18 @@ class authService extends ChangeNotifier {
           'reward25': 0,
           'reward50': 0
         },
-      ).then((value) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => ProfileScreen(),
-          ),
-        );
-      });
+      ).then(
+        (value) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProfileScreen(),
+            ),
+          );
+        },
+      );
       log((userCredential.user?.uid).toString());
     } on FirebaseAuthException catch (error) {
+      log('Sign up error : ' + error.toString());
       String errorMessage;
       if (error.code == 'email-already-in-use') {
         errorMessage = 'This email is already in use.';
@@ -108,8 +111,9 @@ class authService extends ChangeNotifier {
   //Sign In
   Future<void> signIn(
       String email, String password, BuildContext context) async {
-    log('sign in');
+    log('Function Sign in');
     try {
+      log('Try sign in ');
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(
         email: email,
@@ -127,6 +131,7 @@ class authService extends ChangeNotifier {
         },
       );
     } on FirebaseAuthException catch (error) {
+      log('Sign in Error : ' + error.toString());
       String errorMessage;
       if (error.code == 'user-not-found') {
         errorMessage = 'No user found with this email.';
