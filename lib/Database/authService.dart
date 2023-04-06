@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class authService extends ChangeNotifier {
       } else if (error.code == 'weak-password') {
         errorMessage = 'Password should be at least 6 characters';
       } else {
-        errorMessage = 'An unknown error occurred. Please try again later.';
+        errorMessage = 'Please enter your email and password';
       }
       alertBox.showAlertBox(context, 'Error', errorMessage);
       log('FirebaseAuthException: $error');
@@ -169,7 +170,7 @@ class authService extends ChangeNotifier {
 
   //Add Profile
   Future<void> addProfile(String fullname, String nickname, String number,
-      String email, BuildContext context) async {
+      String email, File _image, BuildContext context) async {
     log('AddProfile');
     log('fullname : $fullname');
     log('nickname : $nickname');
@@ -177,29 +178,44 @@ class authService extends ChangeNotifier {
     log('email : $email ');
     final userId = FirebaseAuth.instance.currentUser!.uid;
     try {
+      assert(_image != null);
+
       await saveState.saveFullname(fullname);
       await saveState.saveNickname(nickname);
       await saveState.savePhone(number);
       log(await saveState.saveFullname(fullname).toString());
       log(await saveState.saveNickname(nickname).toString());
       log(await saveState.savePhone(number).toString());
-      await FirebaseFirestore.instance
-          .collection('app')
-          .doc('member')
-          .collection('ID')
-          .doc(userId)
-          .update({
-        'Fullname': fullname,
-        'Nickname': nickname,
-        'Phone': number,
-      }).then((value) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddFirstVehicle(),
-          ),
-        );
-      });
+      if (fullname.isEmpty) {
+        alertBox.showAlertBox(context, 'Error', 'Please enter Fullname');
+      } else if (nickname.isEmpty) {
+        alertBox.showAlertBox(context, 'Error', 'Please enter Nickname');
+      } else if (number.isEmpty) {
+        alertBox.showAlertBox(context, 'Error', 'Please enter Phone Number');
+      } else if (email.isEmpty) {
+        alertBox.showAlertBox(context, 'Error', 'Please enter Email');
+      } else if (_image == null) {
+        alertBox.showAlertBox(
+            context, 'Error', 'Please select your Profile Picture');
+      } else {
+        await FirebaseFirestore.instance
+            .collection('app')
+            .doc('member')
+            .collection('ID')
+            .doc(userId)
+            .update({
+          'Fullname': fullname,
+          'Nickname': nickname,
+          'Phone': number,
+        }).then((value) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddFirstVehicle(),
+            ),
+          );
+        });
+      }
     } catch (error) {
       alertBox.showAlertBox(
           context, 'Error updating user profile', error.toString());
