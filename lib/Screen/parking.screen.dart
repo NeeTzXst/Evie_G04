@@ -90,7 +90,7 @@ class _ParkingScreenState extends State<ParkingScreen> {
                             ),
                           );
                         } else {
-                          alertBox.showAlertBox(context, "SpotStatus",
+                          alertBox.showAlertBox(context, "Spot status",
                               'This Parking spot is unavailable');
                         }
                       },

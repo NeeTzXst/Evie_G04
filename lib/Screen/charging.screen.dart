@@ -87,7 +87,7 @@ class _ChargingScreenState extends State<ChargingScreen> {
                           ),
                         );
                       } else {
-                        alertBox.showAlertBox(context, "SpotStatus",
+                        alertBox.showAlertBox(context, "Spot status",
                             'This Charging spot is unavailable');
                       }
                     },
