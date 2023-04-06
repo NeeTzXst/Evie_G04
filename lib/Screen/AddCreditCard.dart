@@ -679,7 +679,11 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                 // padding: EdgeInsetsDirectional.fromSTEB(0, 150, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () {
-                    if (_fullname.text.isEmpty) {
+                    if (typeCard == null) {
+                      log('type is not complete');
+                      alertBox.showAlertBox(
+                          context, 'Error', 'Please selecte your card type');
+                    } else if (_fullname.text.isEmpty) {
                       log('fullname is not complete');
                       alertBox.showAlertBox(
                           context, 'Error', 'Please enter your Fullname.');
