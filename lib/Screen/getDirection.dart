@@ -100,6 +100,7 @@ class _getDirectionState extends State<getDirection> {
       onDestinationChange();
     });
     getCurrentLocation();
+    log('Current location : ' + current_description);
   }
 
   @override
