@@ -38,19 +38,18 @@ class myPaymentState extends State<myPayment> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          leading: GestureDetector(
-            onTap: () {
-              print("pressed");
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => homePage(),
-                ),
-              );
-            },
-            child: Icon(
-              Icons.arrow_back,
-              size: 40,
-              color: Color.fromRGBO(26, 116, 226, 1),
+          leading: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+            child: InkWell(
+              onTap: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => homePage()));
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: Color(0xFF1A74E2),
+                size: 33,
+              ),
             ),
           ),
           title: Text(
