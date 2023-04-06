@@ -40,7 +40,7 @@ class _eviePointsState extends State<eviePoints> {
   get databaseReference => null;
 
   Future<void> addReward25(
-      BuildContext context, var newValue, var newEviePoints) async {
+      BuildContext context, int newValue, int newEviePoints) async {
     log('send addReward25');
     // int currentValue = await FirebaseFirestore.instance.collection('app').doc('member')
     //     .then((snapshot) => snapshot.value);
@@ -69,7 +69,7 @@ class _eviePointsState extends State<eviePoints> {
   }
 
   Future<void> addReward50(
-      BuildContext context, var newValue, var newEviePoints) async {
+      BuildContext context, int newValue, int newEviePoints) async {
     log('send addReward50');
     // int currentValue = await FirebaseFirestore.instance.collection('app').doc('member')
     //     .then((snapshot) => snapshot.value);
@@ -157,6 +157,9 @@ class _eviePointsState extends State<eviePoints> {
             );
           }
           if (snapshot.hasData) {
+            var EvieStr = snapshot.data!.get('EviePoints');
+            String Evie = EvieStr.toStringAsFixed(2);
+
             log('snapshot : ' + snapshot.data!.data().toString());
             print('snapshpt has data');
             return SingleChildScrollView(
@@ -230,7 +233,7 @@ class _eviePointsState extends State<eviePoints> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
-                                      "${snapshot.data!.get('EviePoints').toString()}",
+                                      Evie,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1
                                           .override(
@@ -544,10 +547,21 @@ class _eviePointsState extends State<eviePoints> {
                                                       .data!
                                                       .get('EviePoints');
                                                   if (currentPoint < 1200) {
-                                                    alertBox.showAlertBox(
+                                                    log('cant redeem');
+                                                    Navigator.push(
                                                         context,
-                                                        "Can't redeem reward ",
-                                                        "You don't have enough points.");
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                eviePoints())).then(
+                                                        (value) => alertBox
+                                                            .showAlertBox(
+                                                                context,
+                                                                "Can't redeem reward",
+                                                                "You don't have enough points."));
+                                                    // alertBox.showAlertBox(
+                                                    //     context,
+                                                    //     'Cann\'t redeem reward ',
+                                                    //     'ํYou have not enough points.');
                                                   } else {
                                                     var newEviePoints =
                                                         currentPoint - 1200;
@@ -738,12 +752,18 @@ class _eviePointsState extends State<eviePoints> {
                                                   var currentPoint = snapshot
                                                       .data!
                                                       .get('EviePoints');
-                                                  if (currentPoint as int <
-                                                      2000) {
-                                                    alertBox.showAlertBox(
+                                                  if (currentPoint < 2000) {
+                                                    log('cant redeem');
+                                                    Navigator.push(
                                                         context,
-                                                        'Cann\'t redeem reward ',
-                                                        'ํYou have not enough points.');
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                eviePoints())).then(
+                                                        (value) => alertBox
+                                                            .showAlertBox(
+                                                                context,
+                                                                "Can't redeem reward",
+                                                                "You don't have enough points."));
                                                   } else {
                                                     var newEviePoints =
                                                         currentPoint - 2000;

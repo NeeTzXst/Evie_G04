@@ -187,7 +187,7 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
           .doc('member')
           .collection('ID')
           .doc(userUID)
-          .update({'EviePoints': newEviePoints.toStringAsFixed(2)});
+          .update({'EviePoints': newEviePoints});
     } catch (error) {
       Text("Error");
     }
