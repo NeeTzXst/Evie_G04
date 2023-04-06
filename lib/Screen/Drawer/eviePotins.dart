@@ -723,7 +723,7 @@ class _eviePointsState extends State<eviePoints> {
                                                   int currentPoint = snapshot
                                                       .data!
                                                       .get('EviePoints');
-                                                  if (currentPoint < 1200) {
+                                                  if (currentPoint < 2000) {
                                                     alertBox.showAlertBox(
                                                         context,
                                                         'Cann\'t redeem reward ',
