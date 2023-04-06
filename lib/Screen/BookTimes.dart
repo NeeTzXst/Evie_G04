@@ -233,43 +233,45 @@ class _BookingTimeScreenState extends State<BookingTimeScreen> {
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Container(
-                    width: 200,
-                    height: 52,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        color: Color.fromRGBO(255, 255, 255, 1)),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: <Widget>[
-                          TextButton(
-                            child: Text("Accept", style: hintText),
-                            onPressed: () {
-                              log('Booking Id : ' + bookId);
-                              log('Station Id : ' + charging);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => makePaymentWidget(
-                                    bookingId: bookId,
-                                    duration: duration,
-                                    stationID: charging,
-                                    type: types,
-                                    spotSlot: spotSlot,
-                                    StationName: widget.StationName,
-                                    date: date,
-                                    start: startTimeString,
-                                    end: endTimeString,
-                                    spotID: spot,
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        ]),
-                  ),
-                ),
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        log('Booking Id : ' + bookId);
+                        log('Station Id : ' + charging);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => makePaymentWidget(
+                              bookingId: bookId,
+                              duration: duration,
+                              stationID: charging,
+                              type: types,
+                              spotSlot: spotSlot,
+                              StationName: widget.StationName,
+                              date: date,
+                              start: startTimeString,
+                              end: endTimeString,
+                              spotID: spot,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 200,
+                        height: 52,
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                            color: Color.fromRGBO(255, 255, 255, 1)),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: <Widget>[
+                              Center(
+                                child: Text("Accept", style: hintText),
+                              )
+                            ]),
+                      ),
+                    )),
               )
             ],
           );

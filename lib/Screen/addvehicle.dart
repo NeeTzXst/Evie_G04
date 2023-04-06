@@ -233,32 +233,31 @@ class AddVehicleState extends State<AddVehicle> {
             height: 40,
           ),
           Align(
-            alignment: Alignment.center,
-            child: Container(
-                width: 350,
-                height: 52,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    color: Color.fromRGBO(142, 219, 255, 0.543)),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: <Widget>[
-                      TextButton(
-                        child: Text("Confirm", style: itemDrawerText),
-                        onPressed: () {
-                          log('message');
-                          authService()
-                              .addVehicle(_selectedBrand!, _selectedType!,
-                                  _LicenseNum.text, context)
-                              .then((value) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => myCar())));
-                        },
-                      )
-                    ])),
-          ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {
+                  log('message');
+                  authService()
+                      .addVehicle(_selectedBrand!, _selectedType!,
+                          _LicenseNum.text, context)
+                      .then((value) => Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => myCar())));
+                },
+                child: Container(
+                    width: 350,
+                    height: 52,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        color: Color.fromRGBO(142, 219, 255, 0.543)),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: <Widget>[
+                          Center(
+                            child: Text("Confirm", style: itemDrawerText),
+                          )
+                        ])),
+              )),
           SizedBox(
             height: 20,
           ),
