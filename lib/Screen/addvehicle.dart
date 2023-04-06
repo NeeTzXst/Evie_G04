@@ -9,6 +9,7 @@ import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/Drawer/myCar.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
+import 'package:myapp/Widget/alertBox.dart';
 
 class AddVehicle extends StatefulWidget {
   const AddVehicle({Key? key}) : super(key: key);
@@ -236,12 +237,19 @@ class AddVehicleState extends State<AddVehicle> {
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: () {
-                  log('message');
-                  authService()
-                      .addVehicle(_selectedBrand!, _selectedType!,
-                          _LicenseNum.text, context)
-                      .then((value) => Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => myCar())));
+                  if (_selectedBrand == null) {
+                    alertBox.showAlertBox(
+                        context, 'Error', 'Please select Car Brand');
+                  } else if (_selectedType == null) {
+                    alertBox.showAlertBox(
+                        context, 'Error', 'Please select Charger type');
+                  } else if (_LicenseNum.text.isEmpty) {
+                    alertBox.showAlertBox(
+                        context, 'Error', 'Please Enter License Number');
+                  } else {
+                    authService().addVehicle(_selectedBrand!, _selectedType!,
+                        _LicenseNum.text, context);
+                  }
                 },
                 child: Container(
                     width: 350,
