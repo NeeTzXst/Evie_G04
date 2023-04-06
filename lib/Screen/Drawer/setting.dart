@@ -21,14 +21,14 @@ Future<void> deleteAccount(String userUid) async {
   try {
     await UserID.doc(userUid).delete();
   } catch (e) {
-    print('Error deleting user data from Firestore: $e');
+    log('Error deleting user data from Firestore: $e');
   }
   try {
     await FirebaseAuth.instance.currentUser!.delete();
     await FirebaseAuth.instance.signOut();
-    print('User with UID $userUid has been deleted.');
+    log('User with UID $userUid has been deleted.');
   } catch (e) {
-    print('Error deleting user from Firebase Authentication: $e');
+    log('Error deleting user from Firebase Authentication: $e');
   }
 }
 

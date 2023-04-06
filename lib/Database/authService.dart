@@ -170,12 +170,11 @@ class authService extends ChangeNotifier {
 
   //Add Profile
   Future<void> addProfile(String fullname, String nickname, String number,
-      String email, File _image, BuildContext context) async {
+      File _image, BuildContext context) async {
     log('AddProfile');
     log('fullname : $fullname');
     log('nickname : $nickname');
     log('number : $number');
-    log('email : $email ');
     final userId = FirebaseAuth.instance.currentUser!.uid;
     try {
       assert(_image != null);
@@ -192,8 +191,6 @@ class authService extends ChangeNotifier {
         alertBox.showAlertBox(context, 'Error', 'Please enter Nickname');
       } else if (number.isEmpty) {
         alertBox.showAlertBox(context, 'Error', 'Please enter Phone Number');
-      } else if (email.isEmpty) {
-        alertBox.showAlertBox(context, 'Error', 'Please enter Email');
       } else if (_image == null) {
         alertBox.showAlertBox(
             context, 'Error', 'Please select your Profile Picture');

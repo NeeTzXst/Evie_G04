@@ -43,11 +43,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   final _fullname = TextEditingController();
   final _nickname = TextEditingController();
   final _number = TextEditingController();
-  final _email = TextEditingController();
 
   final picker = ImagePicker();
 
-  Future<void> getImage() async {
+  Future<void> getImage(ImageSource source) async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     try {
       if (pickedFile != null) {
@@ -152,7 +151,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                               GestureDetector(
                                 onTap: () async {
                                   log('get Image');
-                                  await getImage();
+                                  await getImage(ImageSource.gallery);
                                 },
                                 child: CircleAvatar(
                                   radius: 90,
@@ -267,31 +266,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 23, right: 23),
-                            child: Container(
-                              height: 47,
-                              alignment: Alignment.centerRight,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF6BCFFF),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: TextField(
-                                  controller: _email,
-                                  keyboardType: TextInputType.emailAddress,
-                                  style: TextStyle(color: Colors.black87),
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(top: 2),
-                                      hintText: 'Email',
-                                      hintStyle: hintText),
-                                ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -353,9 +327,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                                       _fullname.text,
                                       _nickname.text,
                                       _number.text,
-                                      _email.text,
                                       _image!,
                                       context);
+                                  _uploadImage();
                                 }
                               },
                             )

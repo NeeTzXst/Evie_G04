@@ -40,7 +40,7 @@ class _eviePointsState extends State<eviePoints> {
   get databaseReference => null;
 
   Future<void> addReward25(
-      BuildContext context, int newValue, int newEviePoints) async {
+      BuildContext context, var newValue, var newEviePoints) async {
     log('send addReward25');
     // int currentValue = await FirebaseFirestore.instance.collection('app').doc('member')
     //     .then((snapshot) => snapshot.value);
@@ -69,7 +69,7 @@ class _eviePointsState extends State<eviePoints> {
   }
 
   Future<void> addReward50(
-      BuildContext context, int newValue, int newEviePoints) async {
+      BuildContext context, var newValue, var newEviePoints) async {
     log('send addReward50');
     // int currentValue = await FirebaseFirestore.instance.collection('app').doc('member')
     //     .then((snapshot) => snapshot.value);
@@ -537,21 +537,21 @@ class _eviePointsState extends State<eviePoints> {
                                               child: FFButtonWidget(
                                                 // redeem pressed 25
                                                 onPressed: () {
-                                                  int currentValue = snapshot
+                                                  var currentValue = snapshot
                                                       .data!
                                                       .get('reward25');
-                                                  int currentPoint = snapshot
+                                                  var currentPoint = snapshot
                                                       .data!
                                                       .get('EviePoints');
                                                   if (currentPoint < 1200) {
                                                     alertBox.showAlertBox(
                                                         context,
-                                                        'Cann\'t redeem reward ',
-                                                        'ํYou have not enough points.');
+                                                        "Can't redeem reward ",
+                                                        "You don't have enough points.");
                                                   } else {
-                                                    int newEviePoints =
+                                                    var newEviePoints =
                                                         currentPoint - 1200;
-                                                    int newValue =
+                                                    var newValue =
                                                         currentValue + 1;
                                                     addReward25(
                                                         context,
@@ -732,21 +732,22 @@ class _eviePointsState extends State<eviePoints> {
                                               child: FFButtonWidget(
                                                 // redeem pressed 50
                                                 onPressed: () {
-                                                  int currentValue = snapshot
+                                                  var currentValue = snapshot
                                                       .data!
                                                       .get('reward50');
-                                                  int currentPoint = snapshot
+                                                  var currentPoint = snapshot
                                                       .data!
                                                       .get('EviePoints');
-                                                  if (currentPoint < 2000) {
+                                                  if (currentPoint as int <
+                                                      2000) {
                                                     alertBox.showAlertBox(
                                                         context,
                                                         'Cann\'t redeem reward ',
                                                         'ํYou have not enough points.');
                                                   } else {
-                                                    int newEviePoints =
+                                                    var newEviePoints =
                                                         currentPoint - 2000;
-                                                    int newValue =
+                                                    var newValue =
                                                         currentValue + 1;
                                                     addReward50(
                                                         context,
