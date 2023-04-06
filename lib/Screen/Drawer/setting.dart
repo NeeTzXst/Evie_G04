@@ -112,41 +112,42 @@ class _settingState extends State<setting> {
                                     ]),
                                 actions: [
                                   Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      width: 200,
-                                      height: 52,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0)),
-                                          color:
-                                              Color.fromRGBO(255, 255, 255, 1)),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          // ignore: prefer_const_literals_to_create_immutables
-                                          children: <Widget>[
-                                            TextButton(
-                                                child: Text("Confirm",
-                                                    style: TextDisplay),
-                                                onPressed: () async {
-                                                  deleteAccount(userUid)
-                                                      .whenComplete(
-                                                    () => {
-                                                      log('DELETE ALL BOOKING'),
-                                                      Navigator.of(context)
-                                                          .pushReplacement(
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              LoginScreen(),
-                                                        ),
-                                                      )
-                                                    },
-                                                  );
-                                                })
-                                          ]),
-                                    ),
-                                  )
+                                      alignment: Alignment.center,
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          deleteAccount(userUid).whenComplete(
+                                            () => {
+                                              log('DELETE ALL BOOKING'),
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginScreen(),
+                                                ),
+                                              )
+                                            },
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 200,
+                                          height: 52,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0)),
+                                              color: Color.fromRGBO(
+                                                  255, 255, 255, 1)),
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              // ignore: prefer_const_literals_to_create_immutables
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Text("Confirm",
+                                                      style: TextDisplay),
+                                                )
+                                              ]),
+                                        ),
+                                      ))
                                 ],
                               );
                             },
