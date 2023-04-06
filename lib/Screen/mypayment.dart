@@ -60,10 +60,15 @@ class myPaymentState extends State<myPayment> {
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Colors.white,
           leading: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              print("pressed");
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => homePage(),
+                ),
+              );
             },
             child: Icon(
               Icons.arrow_back,
