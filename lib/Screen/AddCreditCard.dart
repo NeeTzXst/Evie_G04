@@ -679,14 +679,26 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                 // padding: EdgeInsetsDirectional.fromSTEB(0, 150, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () {
-                    if (_fullname.text.isEmpty ||
-                        _cardNumber.text.isEmpty ||
-                        _expirationM.text.isEmpty ||
-                        _expirationY.text.isEmpty ||
-                        _cvv.text.isEmpty) {
-                      log('infomation is not complete');
-                      alertBox.showAlertBox(context, 'Error',
-                          'Please enter complete information.');
+                    if (_fullname.text.isEmpty) {
+                      log('fullname is not complete');
+                      alertBox.showAlertBox(
+                          context, 'Error', 'Please enter your Fullname.');
+                    } else if (_cardNumber.text.isEmpty) {
+                      log('card num is not complete');
+                      alertBox.showAlertBox(
+                          context, 'Error', 'Please enter Card Number.');
+                    } else if (_expirationM.text.isEmpty) {
+                      log('expie m is not complete');
+                      alertBox.showAlertBox(
+                          context, 'Error', 'Please enter expiration month.');
+                    } else if (_expirationY.text.isEmpty) {
+                      log('expire y is not complete');
+                      alertBox.showAlertBox(
+                          context, 'Error', 'Please enter expiration year.');
+                    } else if (_cvv.text.isEmpty) {
+                      log('cvv is not complete');
+                      alertBox.showAlertBox(
+                          context, 'Error', 'Please enter CVV.');
                     } else {
                       authService().addCard(
                           context,
