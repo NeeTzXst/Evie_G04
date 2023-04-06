@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myapp/Database/authService.dart';
+import 'package:myapp/Widget/alertBox.dart';
 import 'dart:developer';
 
 import '../../flutter_flow/flutter_flow_radio_button.dart';
@@ -678,14 +679,24 @@ class _AddCreditCardWidgetState extends State<AddCreditCardWidget> {
                 // padding: EdgeInsetsDirectional.fromSTEB(0, 150, 0, 0),
                 child: FFButtonWidget(
                   onPressed: () {
-                    authService().addCard(
-                        context,
-                        typeCard as String,
-                        _fullname.text,
-                        _cardNumber.text,
-                        _expirationM.text,
-                        _expirationY.text,
-                        _cvv.text);
+                    if (_fullname.text.isEmpty ||
+                        _cardNumber.text.isEmpty ||
+                        _expirationM.text.isEmpty ||
+                        _expirationY.text.isEmpty ||
+                        _cvv.text.isEmpty) {
+                      log('infomation is not complete');
+                      alertBox.showAlertBox(context, 'Error',
+                          'Please enter complete information.');
+                    } else {
+                      authService().addCard(
+                          context,
+                          typeCard as String,
+                          _fullname.text,
+                          _cardNumber.text,
+                          _expirationM.text,
+                          _expirationY.text,
+                          _cvv.text);
+                    }
                     // print(typeCard);
                     print('Save pressed ...');
                     // Navigator.push(context,
