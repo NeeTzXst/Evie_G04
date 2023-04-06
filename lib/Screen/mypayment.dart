@@ -103,84 +103,83 @@ class myPaymentState extends State<myPayment> {
                 return ListView.builder(
                   itemCount: snapshot.data?.docs.length,
                   itemBuilder: (context, index) {
-                    body: ListView(children: <Widget>[
-          Container(
-              width: 460,
-              child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-                          child: GestureDetector(
-                            onTap: () {
-                              print("card pressed..");
-                            },
-                            child: Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
-                              child: SizedBox(
-                                height: 120,
-                                width: 360,
-                                child: Card(
-                                  elevation: 0,
-                                  color: Color.fromARGB(255, 107, 207, 255),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      ListTile(
-                                        title: Text(
-                                          "${snapshot.data!.docs[index].get('cardNumber')}",
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF001D42),
-                                            fontFamily: 'Montserrat',
+                  return ListView(children: <Widget>[
+                      Container(
+                        width: 460,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      10, 10, 10, 0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      print("card pressed..");
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          5, 0, 5, 0),
+                                      child: SizedBox(
+                                        height: 120,
+                                        width: 360,
+                                        child: Card(
+                                          elevation: 0,
+                                          color: Color.fromARGB(
+                                              255, 107, 207, 255),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
                                           ),
-                                        ),
-                                        subtitle: Text(
-                                          "${snapshot.data!.docs[index].get('expirationM')}",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            // fontWeight: FontWeight.bold,
-                                            color: Color(0xFF001D42),
-                                            fontFamily: 'Montserrat',
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                title: Text(
+                                                  "${snapshot.data!.docs[index].get('cardNumber')}",
+                                                  style: TextStyle(
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0xFF001D42),
+                                                    fontFamily: 'Montserrat',
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  "${snapshot.data!.docs[index].get('expirationM')}",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    // fontWeight: FontWeight.bold,
+                                                    color: Color(0xFF001D42),
+                                                    fontFamily: 'Montserrat',
+                                                  ),
+                                                ),
+                                                leading: Icon(
+                                                  Icons.credit_card,
+                                                  size: 80,
+                                                  // color: Color(0xFF3FA0EF),
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        leading: Icon(
-                                          Icons.credit_card,
-                                          size: 80,
-                                          // color: Color(0xFF3FA0EF),
-                                          color: Colors.black,
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ]
-          );
-        },
-      );
-    }
+                      ),
+                    ]);
+                  },
+                );
+              }
               return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      )
-    );
+                child: CircularProgressIndicator(),
+              );
+            }));
   }
 }
