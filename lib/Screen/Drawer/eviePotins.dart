@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Widget/alertBox.dart';
 
 import '../../flutter_flow/flutter_flow_theme.dart';
 import '../../flutter_flow/flutter_flow_widgets.dart';
@@ -542,12 +543,7 @@ class _eviePointsState extends State<eviePoints> {
                                                   int currentPoint = snapshot
                                                       .data!
                                                       .get('EviePoints');
-                                                  int newEviePoints =
-                                                      currentPoint - 1200;
-                                                  int newValue =
-                                                      currentValue + 1;
-                                                  addReward25(context, newValue,
-                                                      newEviePoints);
+
                                                   print(
                                                       'Redeem 25% pressed ...');
                                                   Navigator.of(context).pop();
@@ -727,12 +723,21 @@ class _eviePointsState extends State<eviePoints> {
                                                   int currentPoint = snapshot
                                                       .data!
                                                       .get('EviePoints');
-                                                  int newEviePoints =
-                                                      currentPoint - 2000;
-                                                  int newValue =
-                                                      currentValue + 1;
-                                                  addReward50(context, newValue,
-                                                      newEviePoints);
+                                                  if (currentPoint < 1200) {
+                                                    alertBox.showAlertBox(
+                                                        context,
+                                                        'Cann\'t redeem reward ',
+                                                        'ํYou have not enough points.');
+                                                  } else {
+                                                    int newEviePoints =
+                                                        currentPoint - 2000;
+                                                    int newValue =
+                                                        currentValue + 1;
+                                                    addReward50(
+                                                        context,
+                                                        newValue,
+                                                        newEviePoints);
+                                                  }
                                                   print(
                                                       'Redeem 50% pressed ..');
                                                   Navigator.of(context).pop();
