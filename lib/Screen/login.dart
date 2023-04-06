@@ -12,6 +12,7 @@ import 'package:myapp/Widget/styles.dart';
 
 // ignore: unused_import
 import 'flutter_flow/flutter_flow_theme.dart';
+import 'letyouin.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -40,7 +41,17 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: BackButton(color: Color.fromRGBO(26, 116, 226, 1)),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => LetyouIn()));
+          },
+          child: Icon(
+            Icons.arrow_back,
+            size: 40,
+            color: Color.fromRGBO(26, 116, 226, 1),
+          ),
+        ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,

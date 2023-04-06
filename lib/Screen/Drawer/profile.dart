@@ -85,49 +85,6 @@ class _MyWidgetState extends State<profile> {
     }
   }
 
-  void _updateUserData() async {
-    await _uploadImage();
-
-    final userUid = FirebaseAuth.instance.currentUser!.uid;
-    final userDocument = FirebaseFirestore.instance
-        .collection('app')
-        .doc('member')
-        .collection('ID')
-        .doc(userUid);
-
-    final dataToUpdate = {
-      'Fullname': _fullNameController.text.trim(),
-      'Nickname': _nicknameController.text.trim(),
-      'Phone': _phoneNumberController.text.trim(),
-      'Email': _emailController.text.trim(),
-    };
-
-    if (_imageUrl != null) {
-      dataToUpdate['imageUrl'] = _imageUrl!;
-    }
-
-    userDocument.update(dataToUpdate).then(
-      (_) {
-        alertBox.then((value) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => profile(),
-            ),
-          );
-        });
-      },
-    ).catchError(
-      (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to update profile.'),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();

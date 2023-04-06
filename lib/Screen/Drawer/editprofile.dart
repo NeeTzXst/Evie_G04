@@ -93,29 +93,38 @@ class _MyWidgetState extends State<editprofile> {
     if (_imageUrl != null) {
       dataToUpdate['imageUrl'] = _imageUrl!;
     }
-
-    userDocument.update(dataToUpdate).then(
-      (_) {
-        alertBox
-            .showAlertBox(context, 'Successful', 'Edited successfully')
-            .then((value) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => profile(),
+    if (_fullNameController.text.isEmpty) {
+      alertBox.showAlertBox(context, 'Error', 'Please enter Fullname');
+    } else if (_nicknameController.text.isEmpty) {
+      alertBox.showAlertBox(context, 'Error', 'Please enter Nickname');
+    } else if (_phoneNumberController.text.isEmpty) {
+      alertBox.showAlertBox(context, 'Error', 'Please enter Phone Number');
+    } else if (_emailController.text.isEmpty) {
+      alertBox.showAlertBox(context, 'Error', 'Please enter Email');
+    } else {
+      userDocument.update(dataToUpdate).then(
+        (_) {
+          alertBox
+              .showAlertBox(context, 'Successful', 'Edited successfully')
+              .then((value) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => profile(),
+              ),
+            );
+          });
+        },
+      ).catchError(
+        (error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to update profile.'),
             ),
           );
-        });
-      },
-    ).catchError(
-      (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to update profile.'),
-          ),
-        );
-      },
-    );
+        },
+      );
+    }
   }
 
   @override
@@ -161,243 +170,275 @@ class _MyWidgetState extends State<editprofile> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
-            ); // Show a loading indicator while waiting for the data.
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
             final userData = snapshot.data!;
-            return ListView(
-              children: <Widget>[
-                Container(
-                  height: 250,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: <Widget>[
-                          Stack(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor:
-                                    Color.fromARGB(255, 255, 255, 255),
-                                minRadius: 60.0,
-                                child: CircleAvatar(
-                                  radius: 90.0,
-                                  backgroundImage: _image != null
-                                      ? FileImage(_image!)
-                                      : NetworkImage(
-                                              'https://cdn.discordapp.com/attachments/1056191443657572372/1092811770193776751/pngaaa.com-81468.png')
-                                          as ImageProvider<Object>,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 1,
-                                right: 1,
-                                child: Container(
-                                  // ignore: sort_child_properties_last
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        getImage(ImageSource.gallery);
-                                      },
-                                      child: Icon(Icons.add_a_photo,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 3,
-                                      color: Colors.white,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        50,
+            final userUid = FirebaseAuth.instance.currentUser!.uid;
+            final image =
+                FirebaseStorage.instance.ref().child('$userUid/profile.jpg');
+
+            // ignore: body_might_complete_normally_catch_error
+            final imageUrlFuture = image.getDownloadURL().catchError((error) {
+              if (error is FirebaseException &&
+                  error.code == 'object-not-found') {
+                return 'assets/Imageholder.png';
+              }
+            });
+            return FutureBuilder(
+                future: imageUrlFuture,
+                builder: (context, imageUrlSnapshot) {
+                  if (imageUrlSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (imageUrlSnapshot.hasError) {
+                    return Text('Error: ${imageUrlSnapshot.error}');
+                  } else {
+                    final imageUrl = imageUrlSnapshot.data!;
+                    return ListView(
+                      children: <Widget>[
+                        Container(
+                          height: 250,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                // ignore: prefer_const_literals_to_create_immutables
+                                children: <Widget>[
+                                  Stack(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        minRadius: 60.0,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          minRadius: 60.0,
+                                          child: CircleAvatar(
+                                            radius: 90.0,
+                                            backgroundImage: _image != null
+                                                ? FileImage(_image!)
+                                                    as ImageProvider<Object>
+                                                : NetworkImage(imageUrl),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    color: Colors.white,
+                                      Positioned(
+                                        bottom: 1,
+                                        right: 1,
+                                        child: Container(
+                                          // ignore: sort_child_properties_last
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: InkWell(
+                                              onTap: () {
+                                                getImage(ImageSource.gallery);
+                                              },
+                                              child: Icon(Icons.add_a_photo,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              width: 3,
+                                              color: Colors.white,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                50,
+                                              ),
+                                            ),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
                               ),
                             ],
                           ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 23),
-                  child: Text("Full name", style: hintText),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 350,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromARGB(255, 107, 207, 255),
-                    ),
-                    padding: const EdgeInsets.only(left: 13),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 23),
+                          child: Text("Full name", style: hintText),
+                        ),
                         Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextField(
-                            keyboardType: TextInputType.text,
-                            controller: _fullNameController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 350,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: Color.fromARGB(255, 107, 207, 255),
                             ),
-                            style: TextDisplay,
+                            padding: const EdgeInsets.only(left: 13),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TextField(
+                                    keyboardType: TextInputType.text,
+                                    controller: _fullNameController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextDisplay,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 23),
+                          child: Text("Nickname", style: hintText),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 350,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: Color.fromARGB(255, 107, 207, 255),
+                            ),
+                            padding: const EdgeInsets.only(left: 13),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TextField(
+                                      keyboardType: TextInputType.text,
+                                      controller: _nicknameController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      style: TextDisplay),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 23),
+                          child: Text("Phone Number", style: hintText),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 350,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: Color.fromARGB(255, 107, 207, 255),
+                            ),
+                            padding: const EdgeInsets.only(left: 13),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      controller: _phoneNumberController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      style: TextDisplay),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 23),
+                          child: Text("Email", style: hintText),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 350,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: Color.fromARGB(255, 107, 207, 255),
+                            ),
+                            padding: const EdgeInsets.only(left: 13),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TextField(
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: _emailController,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
+                                    style: TextDisplay,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Container(
+                            width: 150,
+                            height: 52,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                color: Color.fromRGBO(26, 116, 226, 1)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: <Widget>[
+                                TextButton(
+                                  child:
+                                      Text("Save", style: itemWhiteDrawerText),
+                                  onPressed: () {
+                                    _updateUserData();
+                                  },
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 23),
-                  child: Text("Nickname", style: hintText),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 350,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromARGB(255, 107, 207, 255),
-                    ),
-                    padding: const EdgeInsets.only(left: 13),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextField(
-                              keyboardType: TextInputType.text,
-                              controller: _nicknameController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              style: TextDisplay),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 23),
-                  child: Text("Phone Number", style: hintText),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 350,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromARGB(255, 107, 207, 255),
-                    ),
-                    padding: const EdgeInsets.only(left: 13),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextField(
-                              keyboardType: TextInputType.number,
-                              controller: _phoneNumberController,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                              ),
-                              style: TextDisplay),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 23),
-                  child: Text("Email", style: hintText),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 350,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      color: Color.fromARGB(255, 107, 207, 255),
-                    ),
-                    padding: const EdgeInsets.only(left: 13),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _emailController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                            style: TextDisplay,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 150,
-                    height: 52,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        color: Color.fromRGBO(26, 116, 226, 1)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        TextButton(
-                          child: Text("Save", style: itemWhiteDrawerText),
-                          onPressed: () {
-                            _updateUserData();
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            );
+                    );
+                  }
+                });
           }
         }),
       ),
