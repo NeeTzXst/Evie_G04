@@ -103,7 +103,7 @@ class _homePageState extends State<homePage> {
     if (userBookings.docs.isEmpty) {
       // Show Dialog
       alertBox.showAlertBox(
-          context, "Booking status", "You haven't made a booking yet");
+          context, "Booking status", "You haven't made a booking");
     } else {
       log('YOU BOOKING');
       for (var booking in userBookings.docs) {
@@ -363,8 +363,8 @@ class _homePageState extends State<homePage> {
                         ),
                       );
                     } else {
-                      alertBox.showAlertBox(
-                          context, 'Booking Status', 'You can booking 1 time ');
+                      alertBox.showAlertBox(context, 'Booking Status',
+                          'You can only make one booking at a time.');
                     }
                   } else {
                     alertBox.showFullStationBox(

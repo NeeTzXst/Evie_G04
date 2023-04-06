@@ -222,7 +222,11 @@ class _timeReminingState extends State<timeRemining> {
                 ],
               );
             } else {
-              return Center(child: Text("You haven't made booking"));
+              return Center(
+                  child: Text(
+                "You haven't made booking",
+                style: StationFull,
+              ));
             }
           },
         ),

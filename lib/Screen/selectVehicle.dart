@@ -143,7 +143,7 @@ class _selectVehicleState extends State<selectVehicle> {
                             child: Row(
                               children: [
                                 Container(
-                                  width: 145,
+                                  width: 140,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
