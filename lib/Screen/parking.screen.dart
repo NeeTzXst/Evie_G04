@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Screen/BookTimes.dart';
 import 'package:myapp/Widget/alertBox.dart';
 import 'package:myapp/Widget/styles.dart';
@@ -99,7 +100,7 @@ class _ParkingScreenState extends State<ParkingScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              width: 250,
+                              width: 300,
                               height: 120,
                               decoration: BoxDecoration(
                                 border: Border.all(
@@ -111,10 +112,36 @@ class _ParkingScreenState extends State<ParkingScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text('Spot : ' +
-                                      chargingSpot['charging_spot'].toString()),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Spot : ' +
+                                            chargingSpot['charging_spot']
+                                                .toString(),
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        chargingSpot['charging_type']
+                                            .toString(),
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   isAvailable
-                                      ? Text('Available')
+                                      ? Text(
+                                          'Available',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        )
                                       : Image.asset(
                                           'assets/blue-car.png',
                                         ),
