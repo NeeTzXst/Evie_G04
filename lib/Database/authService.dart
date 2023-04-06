@@ -54,15 +54,15 @@ class authService extends ChangeNotifier {
       } else if (error.code == 'invalid-email') {
         errorMessage = 'The email address is not valid.';
       } else if (error.code == 'weak-password') {
-        errorMessage = 'The password is too weak.';
+        errorMessage = 'Password should be at least 6 characters';
       } else {
         errorMessage = 'An unknown error occurred. Please try again later.';
       }
       alertBox.showAlertBox(context, 'Error', errorMessage);
       log('FirebaseAuthException: $error');
     } catch (error, stackTrace) {
-      alertBox.showAlertBox(context, 'Error',
-          'An unknown error occurred. Please try again later.');
+      alertBox.showAlertBox(
+          context, 'Error', 'Please enter your email and password');
       log('Error: $error\n$stackTrace');
     }
   }
@@ -138,7 +138,7 @@ class authService extends ChangeNotifier {
       } else if (error.code == 'wrong-password') {
         errorMessage = 'Wrong password provided for this user';
       } else {
-        errorMessage = 'An unknown error occurred. Please try again later.';
+        errorMessage = 'Please enter your email and password';
       }
       alertBox.showAlertBox(context, 'Error', errorMessage);
     } catch (error, stackTrace) {

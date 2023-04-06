@@ -563,42 +563,43 @@ class _qrCodeState extends State<qrCode> {
                                     ]),
                                 actions: [
                                   Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      width: 200,
-                                      height: 52,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0)),
-                                          color:
-                                              Color.fromRGBO(255, 255, 255, 1)),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        // ignore: prefer_const_literals_to_create_immutables
-                                        children: <Widget>[
-                                          TextButton(
-                                            child: Text("Confirm",
-                                                style: TextDisplay),
-                                            onPressed: () {
-                                              deleteBooking().whenComplete(
-                                                () => {
-                                                  log('DELETE ALL BOOKING'),
-                                                  Navigator.of(context)
-                                                      .pushReplacement(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          homePage(),
-                                                    ),
-                                                  )
-                                                },
-                                              );
+                                      alignment: Alignment.center,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          deleteBooking().whenComplete(
+                                            () => {
+                                              log('DELETE ALL BOOKING'),
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      homePage(),
+                                                ),
+                                              )
                                             },
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  )
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 200,
+                                          height: 52,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0)),
+                                              color: Color.fromRGBO(
+                                                  255, 255, 255, 1)),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            // ignore: prefer_const_literals_to_create_immutables
+                                            children: <Widget>[
+                                              Center(
+                                                child: Text("Confirm",
+                                                    style: TextDisplay),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ))
                                 ],
                               );
                             },

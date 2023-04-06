@@ -21,8 +21,12 @@ class alertBox extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          title: Center(child: Text(title)),
-          content: Text(body),
+          title:
+              Center(child: Text(title, style: TextStyle(color: Colors.white))),
+          content: Text(
+            body,
+            style: TextStyle(color: Colors.white),
+          ),
           actions: [
             TextButton(
               onPressed: () {

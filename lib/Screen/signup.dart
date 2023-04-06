@@ -8,6 +8,7 @@ import 'package:myapp/Screen/addprofile.dart';
 import 'package:myapp/Screen/addvehicle.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/login.dart';
+import 'package:myapp/Widget/styles.dart';
 
 // ignore: unused_import
 import 'flutter_flow/flutter_flow_theme.dart';
@@ -184,40 +185,53 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Widget buildRegisterBtn() {
-    return Container(
-      width: 450,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          color: Color(0xff1A74E2)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Divider(
-            height: 1,
-            thickness: 5,
-            color: Color(0xff1A74E2),
-          ),
-          SizedBox(height: 1),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 1.0),
-            child: TextButton(
-              onPressed: () {
-                authService().signUp(
-                    _emailController.text, _passwordController.text, context);
-              },
+    return GestureDetector(
+      onTap: () {
+        authService()
+            .signUp(_emailController.text, _passwordController.text, context);
+      },
+      child: Container(
+          width: 450,
+          height: 50,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              color: Color(0xff1A74E2)),
+          child: Center(
               child: Text(
-                "Register",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Montserrat",
-                    fontStyle: FontStyle.normal,
-                    fontSize: 21.0),
-              ),
-            ),
+            'Register',
+            style: itemWhiteDrawerText,
+          ))
+
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: <Widget>[
+          //     Divider(
+          //       height: 1,
+          //       thickness: 5,
+          //       color: Color(0xff1A74E2),
+          //     ),
+          //     SizedBox(height: 1),
+          //     Padding(
+          //       padding: const EdgeInsets.symmetric(horizontal: 1.0),
+          //       child: TextButton(
+          //         onPressed: () {
+          //           authService().signUp(
+          //               _emailController.text, _passwordController.text, context);
+          //         },
+          //         child: Text(
+          //           "Register",
+          //           style: TextStyle(
+          //               color: Colors.white,
+          //               fontWeight: FontWeight.w500,
+          //               fontFamily: "Montserrat",
+          //               fontStyle: FontStyle.normal,
+          //               fontSize: 21.0),
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           ),
-        ],
-      ),
     );
   }
 

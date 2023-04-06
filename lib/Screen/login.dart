@@ -8,6 +8,7 @@ import 'package:myapp/Database/saveState.dart';
 import 'package:myapp/Screen/forgotpassword.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Screen/signup.dart';
+import 'package:myapp/Widget/styles.dart';
 
 // ignore: unused_import
 import 'flutter_flow/flutter_flow_theme.dart';
@@ -245,34 +246,49 @@ class _LoginScreenState extends State<LoginScreen> {
       height: 100,
       child: Align(
         alignment: Alignment.center,
-        child: Container(
-            width: 450,
-            height: 50,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                color: Color(0xff1A74E2)),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      log('Press sign in');
-                      print(
-                          '${_emailController.text} , ${_passwordController.text}');
-                      authService().signIn(_emailController.text,
-                          _passwordController.text, context);
-                    },
-                    child: Text(
-                      "Sign in",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Montserrat",
-                          fontStyle: FontStyle.normal,
-                          fontSize: 21.0),
-                    ),
-                  )
-                ])),
+        child: InkWell(
+          onTap: () {
+            log('Press sign in');
+            print('${_emailController.text} , ${_passwordController.text}');
+            authService().signIn(
+                _emailController.text, _passwordController.text, context);
+          },
+          child: Container(
+              width: 450,
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  color: Color(0xff1A74E2)),
+              child: Center(
+                  child: Text(
+                'Sign in',
+                style: itemWhiteDrawerText,
+              ))
+              // Column(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //     TextButton(
+              //       onPressed: () {
+              //         log('Press sign in');
+              //         print(
+              //             '${_emailController.text} , ${_passwordController.text}');
+              //         authService().signIn(_emailController.text,
+              //             _passwordController.text, context);
+              //       },
+              //       child: Text(
+              //         "Sign in",
+              //         style: TextStyle(
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.w500,
+              //             fontFamily: "Montserrat",
+              //             fontStyle: FontStyle.normal,
+              //             fontSize: 21.0),
+              //       ),
+              //     )
+              //   ],
+              // ),
+              ),
+        ),
       ),
     );
   }

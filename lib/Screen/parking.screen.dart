@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/Screen/BookTimes.dart';
 import 'package:myapp/Widget/alertBox.dart';
 import 'package:myapp/Widget/styles.dart';
@@ -65,350 +66,7 @@ class _ParkingScreenState extends State<ParkingScreen> {
             if (snapshot.hasError) {
               log(snapshot.hasError.toString());
             }
-            // return Container(
-            //   margin: const EdgeInsets.symmetric(vertical: 50),
-            //   child: Column(
-            //     children: [
-            //       Stack(
-            //         children: [
-            //           Column(
-            //             children: [
-            //               SizedBox(
-            //                 height: 100,
-            //                 child: Row(
-            //                   children: [
-            //                     Expanded(
-            //                       flex: 5,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                             right: BorderSide(),
-            //                           ),
-            //                         ),
-            //                         child: Container(),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 35,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                           ),
-            //                         ),
-            //                         child: Row(
-            //                           mainAxisAlignment: MainAxisAlignment.end,
-            //                           crossAxisAlignment:
-            //                               CrossAxisAlignment.end,
-            //                           children: [
-            //                             const Expanded(
-            //                                 flex: 15, child: Text('01')),
-            //                           ],
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 20,
-            //                       child: Container(
-            //                         height: 200,
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 35,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                           ),
-            //                         ),
-            //                         child: GestureDetector(
-            //                           onTap: () => setState(
-            //                               () => isSelected = !isSelected),
-            //                           child: Container(
-            //                             decoration: isSelected
-            //                                 ? const BoxDecoration(
-            //                                     gradient: LinearGradient(
-            //                                       colors: [
-            //                                         Colors.white,
-            //                                         Colors.blue,
-            //                                       ],
-            //                                     ),
-            //                                   )
-            //                                 : const BoxDecoration(),
-            //                             child: Row(
-            //                               mainAxisAlignment:
-            //                                   MainAxisAlignment.start,
-            //                               crossAxisAlignment:
-            //                                   CrossAxisAlignment.end,
-            //                               children: [
-            //                                 const Expanded(
-            //                                     flex: 15, child: Text('04')),
-            //                                 Expanded(
-            //                                   flex: 85,
-            //                                   child: Center(
-            //                                     child: Text(
-            //                                       isSelected
-            //                                           ? 'Selected'
-            //                                           : 'Avaliable',
-            //                                       style: const TextStyle(
-            //                                           fontSize: 24),
-            //                                     ),
-            //                                   ),
-            //                                 ),
-            //                               ],
-            //                             ),
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 5,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                             left: BorderSide(),
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //               SizedBox(
-            //                 height: 100,
-            //                 child: Row(
-            //                   children: [
-            //                     Expanded(
-            //                       flex: 5,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             right: BorderSide(),
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 35,
-            //                       child: SizedBox(
-            //                         height: 200,
-            //                         child: Row(
-            //                           mainAxisAlignment: MainAxisAlignment.end,
-            //                           crossAxisAlignment:
-            //                               CrossAxisAlignment.end,
-            //                           children: [
-            //                             Expanded(
-            //                               flex: 85,
-            //                               child: Container(),
-            //                             ),
-            //                             const Expanded(
-            //                                 flex: 15, child: Text('02')),
-            //                           ],
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 20,
-            //                       child: Container(
-            //                         height: 200,
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 35,
-            //                       child: SizedBox(
-            //                         height: 200,
-            //                         child: Row(
-            //                           mainAxisAlignment: MainAxisAlignment.end,
-            //                           crossAxisAlignment:
-            //                               CrossAxisAlignment.end,
-            //                           children: [
-            //                             const Expanded(
-            //                                 flex: 15, child: Text('05')),
-            //                           ],
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 5,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             left: BorderSide(),
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //               SizedBox(
-            //                 height: 100,
-            //                 child: Row(
-            //                   children: [
-            //                     Expanded(
-            //                       flex: 5,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                             right: BorderSide(),
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 35,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                           ),
-            //                         ),
-            //                         child: Row(
-            //                           mainAxisAlignment: MainAxisAlignment.end,
-            //                           crossAxisAlignment:
-            //                               CrossAxisAlignment.end,
-            //                           children: [
-            //                             Expanded(
-            //                               flex: 85,
-            //                               child: Container(),
-            //                             ),
-            //                             const Expanded(
-            //                                 flex: 15, child: Text('03')),
-            //                           ],
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 20,
-            //                       child: Container(
-            //                         height: 200,
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 35,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                           ),
-            //                         ),
-            //                         child: Row(
-            //                           mainAxisAlignment: MainAxisAlignment.end,
-            //                           crossAxisAlignment:
-            //                               CrossAxisAlignment.end,
-            //                           children: [
-            //                             const Expanded(
-            //                                 flex: 15, child: Text('06')),
-            //                           ],
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Expanded(
-            //                       flex: 5,
-            //                       child: Container(
-            //                         height: 200,
-            //                         decoration: const BoxDecoration(
-            //                           border: Border(
-            //                             top: BorderSide(),
-            //                             bottom: BorderSide(),
-            //                             left: BorderSide(),
-            //                           ),
-            //                         ),
-            //                         child: Container(),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //           SizedBox(
-            //             height: 300,
-            //             child: Row(
-            //               children: [
-            //                 Expanded(flex: 5, child: Container()),
-            //                 Expanded(
-            //                   flex: 35,
-            //                   child: Container(
-            //                     color: Colors.blue.withOpacity(0.4),
-            //                     height: 300,
-            //                   ),
-            //                 ),
-            //                 Expanded(flex: 20, child: Container()),
-            //                 Expanded(flex: 35, child: Container()),
-            //                 Expanded(flex: 5, child: Container()),
-            //               ],
-            //             ),
-            //           ),
-            //           SizedBox(
-            //             height: 300,
-            //             child: Row(
-            //               children: [
-            //                 Expanded(flex: 5, child: Container()),
-            //                 const Expanded(
-            //                   flex: 35,
-            //                   child: Center(
-            //                     child: RotatedBox(
-            //                       quarterTurns: 3,
-            //                       child: Text(
-            //                         'For Charging',
-            //                         style: TextStyle(
-            //                             fontSize: 24,
-            //                             fontWeight: FontWeight.bold),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ),
-            //                 Expanded(flex: 20, child: Container()),
-            //                 Expanded(flex: 35, child: Container()),
-            //                 Expanded(flex: 5, child: Container()),
-            //               ],
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //       if (isSelected) const SizedBox(height: 100),
-            //       if (isSelected)
-            //         Container(
-            //           padding: const EdgeInsets.all(20),
-            //           width: MediaQuery.of(context).size.width,
-            //           child: ElevatedButton(
-            //             onPressed: () => Navigator.of(context).pop(),
-            //             style: ElevatedButton.styleFrom(
-            //               backgroundColor: Colors.blue[100],
-            //             ),
-            //             child: Text(
-            //               'Continue',
-            //               style: TextStyle(
-            //                 color: Colors.blue[400],
-            //                 fontWeight: FontWeight.bold,
-            //                 fontSize: 18,
-            //               ),
-            //             ),
-            //           ),
-            //         )
-            //     ],
-            //   ),
-            // );
+
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (BuildContext context, int index) {
@@ -418,51 +76,106 @@ class _ParkingScreenState extends State<ParkingScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
-                    onTap: () {
-                      log('isAvailable : ' + isAvailable.toString());
-                      if (isAvailable) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => BookingTimeScreen(
-                              stationid: widget.id,
-                              spotid: spotId,
-                              type: 'Parking',
-                              StationName: widget.Stationname,
+                      onTap: () {
+                        log('isAvailable : ' + isAvailable.toString());
+                        if (isAvailable) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BookingTimeScreen(
+                                stationid: widget.id,
+                                spotid: spotId,
+                                type: 'Parking',
+                                StationName: widget.Stationname,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        alertBox.showAlertBox(context, "SpotStatus",
-                            'This Parking spot is unavailable');
-                      }
-                    },
-                    child: Container(
-                      color: Colors.amber,
-                      width: 200,
-                      height: 100,
+                          );
+                        } else {
+                          alertBox.showAlertBox(context, "Spot status",
+                              'This Parking spot is unavailable');
+                        }
+                      },
                       child: Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('Spot : ' +
-                                chargingSpot['charging_spot'].toString()),
-                            const SizedBox(
-                              width: 15,
+                            Container(
+                              width: 300,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Color.fromRGBO(26, 116, 226, 1),
+                                  width: 3,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Spot : ' +
+                                            chargingSpot['charging_spot']
+                                                .toString(),
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        chargingSpot['charging_type']
+                                            .toString(),
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  isAvailable
+                                      ? Text(
+                                          'Available',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        )
+                                      : Image.asset(
+                                          'assets/blue-car.png',
+                                        ),
+                                ],
+                              ),
                             ),
-                            Text('Type : ' +
-                                chargingSpot['charging_type'].toString()),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Text(isAvailable
-                                ? 'Status : Available'
-                                : 'Status : Unavailable'),
                           ],
                         ),
+                      )
+
+                      // Container(
+                      //   color: secondColor,
+                      //   width: 200,
+                      //   height: 100,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(15.0),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //       children: [
+                      //         Text('Spot : ' +
+                      //             chargingSpot['charging_spot'].toString()),
+                      //         Text(
+                      //           'Type : ' +
+                      //               chargingSpot['charging_type'].toString(),
+                      //           overflow: TextOverflow.fade,
+                      //         ),
+                      //         Text(isAvailable
+                      //             ? 'Status : Available'
+                      //             : 'Status : Unavailable'),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       ),
-                    ),
-                  ),
                 );
               },
             );
