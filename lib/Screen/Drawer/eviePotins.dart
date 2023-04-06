@@ -734,7 +734,7 @@ class _eviePointsState extends State<eviePoints> {
                                                   addReward50(context, newValue,
                                                       newEviePoints);
                                                   print(
-                                                      'Redeem 50% pressed ...');
+                                                      'Redeem 50% pressed ..');
                                                   Navigator.of(context).pop();
                                                 },
                                                 text: 'Redeem',
