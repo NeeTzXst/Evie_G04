@@ -543,6 +543,21 @@ class _eviePointsState extends State<eviePoints> {
                                                   int currentPoint = snapshot
                                                       .data!
                                                       .get('EviePoints');
+                                                  if (currentPoint < 1200) {
+                                                    alertBox.showAlertBox(
+                                                        context,
+                                                        'Cann\'t redeem reward ',
+                                                        'ํYou have not enough points.');
+                                                  } else {
+                                                    int newEviePoints =
+                                                        currentPoint - 1200;
+                                                    int newValue =
+                                                        currentValue + 1;
+                                                    addReward25(
+                                                        context,
+                                                        newValue,
+                                                        newEviePoints);
+                                                  }
 
                                                   print(
                                                       'Redeem 25% pressed ...');
