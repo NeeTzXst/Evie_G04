@@ -56,6 +56,7 @@ var price;
 class _MakePaymentWidgetState extends State<makePaymentWidget> {
   final _unfocusNode = FocusNode();
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  var points;
   static const List<String> coupon = [
     "25% off Charging prices",
     "50% off Charging prices"
@@ -178,6 +179,22 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
     log('Delete complete');
   }
 
+  Future<void> addEviePoint(BuildContext context, double newEviePoints) async {
+    log('add evie point');
+    try {
+      await FirebaseFirestore.instance
+          .collection('app')
+          .doc('member')
+          .collection('ID')
+          .doc(userUID)
+          .update({'EviePoints': newEviePoints.toStringAsFixed(2)});
+    } catch (error) {
+      Text("Error");
+    }
+    log('evie points : ' + newEviePoints.toString());
+    log('addEviePoint call');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -260,6 +277,20 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                                   fontWeight: FontWeight.normal),
                         ),
                       ),
+                      // StreamBuilder<DocumentSnapshot>(
+                      //     stream: FirebaseFirestore.instance
+                      //         .collection('app')
+                      //         .doc('member')
+                      //         .collection('ID')
+                      //         .doc(userUID)
+                      //         .snapshots(),
+                      //     builder: (context, snapshot) {
+                      //       int currentPoints =
+                      //           snapshot.data!.get('EviePoints');
+                      //       int newPoints = currentPoints + 1000;
+
+                      //       return Text("data");
+                      //     }),
                       FutureBuilder<int?>(
                         future: getData(),
                         builder: (context, snapshot) {
@@ -271,6 +302,11 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                           } else if (snapshot.hasData) {
                             num totalPrice =
                                 (snapshot.data! * widget.duration) / 60;
+                            if (widget.type == 'Parking') {
+                              points = (8 / 100 * totalPrice);
+                            } else if (widget.type == 'Charging') {
+                              points = (10 / 100 * totalPrice);
+                            }
                             log('Duration : ' + widget.duration.toString());
                             log('Total price : ' + totalPrice.toString());
                             return Padding(
@@ -528,6 +564,7 @@ class _MakePaymentWidgetState extends State<makePaymentWidget> {
                                       );
                                       saveHistory(widget.StationName, price,
                                           widget.start, widget.end);
+                                      addEviePoint(context, points);
                                     },
                                     text: 'Continue',
                                     options: FFButtonOptions(

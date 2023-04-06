@@ -200,6 +200,11 @@ class _qrCodeState extends State<qrCode> {
       log('try');
       log('webBookingsRef : ' + webBookingsRef.toString());
       await webBookingsRef.doc(widget.bookingId).delete().whenComplete(() {
+        FirebaseFirestore.instance
+            .collection(
+                '/web/owner/charging Station/${widget.stationID}/charging Spot/')
+            .doc(widget.spotID)
+            .update({'status': "true"});
         log('DELETE WEB BOOKING');
       });
       await userBookingsRef.doc(widget.userBookID).delete().whenComplete(() {
