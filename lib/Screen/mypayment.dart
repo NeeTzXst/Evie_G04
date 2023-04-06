@@ -1,9 +1,12 @@
 // ignore_for_file: unused_local_variable
 import 'package:flutter/material.dart';
+import 'package:myapp/Screen/AddCreditCard.dart';
 import 'package:myapp/Screen/homePage.dart';
 import 'package:myapp/Widget/styles.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,29 +26,44 @@ class MyApp extends StatelessWidget {
 
 class myPayment extends StatefulWidget {
   const myPayment({Key? key}) : super(key: key);
+
   @override
-  // ignore: library_private_types_in_public_api
   myPaymentState createState() => myPaymentState();
 }
 
 class myPaymentState extends State<myPayment> {
+  String get userUID => FirebaseAuth.instance.currentUser!.uid;
   bool isObscure = true;
   @override
   Widget build(BuildContext context) {
-    FocusNode? _unfocusNode;
     return Scaffold(
-        //  extendBodyBehindAppBar: true,
+        floatingActionButton: SizedBox(
+          width: 350,
+          height: 60,
+          child: FloatingActionButton.extended(
+            backgroundColor: primaryColor,
+            label: Text(
+              "Add Payment Methods",
+              style: itemWhiteDrawerText,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddCreditCardWidget()));
+            },
+          ),
+        ),
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
           leading: GestureDetector(
             onTap: () {
-              print("pressed");
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => homePage(),
-                ),
-              );
+              Navigator.of(context).pop();
             },
             child: Icon(
               Icons.arrow_back,
@@ -58,25 +76,42 @@ class myPaymentState extends State<myPayment> {
             style: headerText,
           ),
         ),
-        body: ListView(children: <Widget>[
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('app')
+                .doc('member')
+                .collection('ID')
+                .doc(userUID)
+                .collection('Card')
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (context, index) {
+                    body: ListView(children: <Widget>[
           Container(
               width: 460,
-              // height: 510,
               child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
-                          // padding: const EdgeInsets.symmetric(horizontal: 10),
                           padding:
                               EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                           child: GestureDetector(
                             onTap: () {
-                              // Perform the desired action when the card is tapped.
                               print("card pressed..");
                             },
                             child: Padding(
@@ -95,7 +130,7 @@ class myPaymentState extends State<myPayment> {
                                     children: [
                                       ListTile(
                                         title: Text(
-                                          '\n1111 2222 3333 4444',
+                                          "${snapshot.data!.docs[index].get('cardNumber')}",
                                           style: TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,
@@ -104,7 +139,7 @@ class myPaymentState extends State<myPayment> {
                                           ),
                                         ),
                                         subtitle: Text(
-                                          '\nExpires 09/28',
+                                          "${snapshot.data!.docs[index].get('expirationM')}",
                                           style: TextStyle(
                                             fontSize: 18,
                                             // fontWeight: FontWeight.bold,
@@ -128,7 +163,19 @@ class myPaymentState extends State<myPayment> {
                         ),
                       ],
                     ),
-                  ]))
-        ]));
+                  ],
+                ),
+              ),
+            ]
+          );
+        },
+      );
+    }
+              return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      )
+    );
   }
 }
