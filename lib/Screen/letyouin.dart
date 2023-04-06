@@ -215,7 +215,7 @@ class _LetyouInState extends State<LetyouIn> {
                           borderRadius:
                               BorderRadius.all(Radius.circular(10.0))),
                       color: const Color(0xFF1A74E2),
-                      textStyle: TextDisplay,
+                      textStyle: itemWhiteDrawerText,
 
                       // ignore: prefer_const_constructors
                       borderSide: BorderSide(

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/Database/authService.dart';
 import 'package:myapp/Screen/homePage.dart';
+import 'package:myapp/Widget/alertBox.dart';
 import 'package:myapp/Widget/styles.dart';
 
 class AddFirstVehicle extends StatefulWidget {
@@ -208,7 +209,8 @@ class AddFirstVehicleState extends State<AddFirstVehicle> {
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
                 padding: const EdgeInsets.only(left: 13),
-                child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     // ignore: prefer_const_literals_to_create_immutables
                     children: <Widget>[
                       Align(
@@ -227,34 +229,38 @@ class AddFirstVehicleState extends State<AddFirstVehicle> {
             height: 40,
           ),
           Align(
-            alignment: Alignment.center,
-            child: Container(
-                width: 350,
-                height: 52,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    color: Color.fromRGBO(142, 219, 255, 0.543)),
-                child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: <Widget>[
-                      TextButton(
-                        child: Text("Confirm", style: itemDrawerText),
-                        onPressed: () {
-                          authService()
-                              .addVehicle(_selectedBrand!, _selectedType!,
-                                  _LicenseNum.text, context)
-                              .then(
-                                (value) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => homePage(),
-                                  ),
-                                ),
-                              );
-                        },
-                      )
-                    ])),
-          ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {
+                  if (_selectedBrand == null) {
+                    alertBox.showAlertBox(
+                        context, 'Error', 'Please select Car Brand');
+                  } else if (_selectedType == null) {
+                    alertBox.showAlertBox(
+                        context, 'Error', 'Please select Charger type');
+                  } else if (_LicenseNum.text.isEmpty) {
+                    alertBox.showAlertBox(
+                        context, 'Error', 'Please Enter License Number');
+                  } else {
+                    authService().addVehicle(_selectedBrand!, _selectedType!,
+                        _LicenseNum.text, context);
+                  }
+                },
+                child: Container(
+                    width: 350,
+                    height: 52,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        color: Color.fromRGBO(142, 219, 255, 0.543)),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: <Widget>[
+                          Center(
+                            child: Text("Confirm", style: itemDrawerText),
+                          )
+                        ])),
+              )),
           SizedBox(
             height: 20,
           ),
